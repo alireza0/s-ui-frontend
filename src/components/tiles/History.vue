@@ -28,7 +28,7 @@ export default {
   components: {
     Line
   },
-  props: ['tilesData','type'],
+  props: ['tilesData','type', 'isDocker'],
   data() {
     return {
       loaded: false,
@@ -175,7 +175,7 @@ export default {
           this.updateData1(v.cpu)
           break
         case 'h-mem':
-          this.updateData1(v.mem.current*100/v.mem.total)
+          this.updateData1(v.mem.current*100/(this.$props.isDocker ? v.mem.limit : v.mem.total))
           break
         case 'h-net':
           if (this.oldValues.sent) {

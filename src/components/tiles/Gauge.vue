@@ -4,7 +4,8 @@ import { computed } from 'vue'
 
 const props = defineProps({
   tilesData: <any>{},
-  type: String
+  type: String,
+  isDocker: { type: Boolean, default: false }
 })
 
 const data = computed(() => {
@@ -15,10 +16,13 @@ const data = computed(() => {
       return { percent: d.cpu, text: Math.ceil(d.cpu) + "%" }
     case 'g-mem':
       const curr = HumanReadable.sizeFormat(d.mem.current,0).split(' ')
-      const total = HumanReadable.sizeFormat(d.mem.total,0).split(' ')
+      const total = HumanReadable.sizeFormat(
+        props.isDocker ? d.mem.limit : d.mem.total,
+        0
+      ).split(' ')
       if (curr[1] == total[1]) curr[1] = ''
       return {
-        percent: Math.ceil(d.mem.current*100/d.mem.total),
+        percent: Math.ceil(d.mem.current*100/(props.isDocker ? d.mem.limit : d.mem.total)),
         text: curr[0] + "<sup>" + (curr[1]?? ' ') + "</sup>/" +  total[0] + "<sup>" + (total[1]?? '') + "</sup>"
       }
   }
