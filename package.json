@@ -32,7 +32,7 @@
     "@babel/types": "^7.27.6",
     "@types/node": "^22.15.29",
     "@vitejs/plugin-vue": "^5.2.1",
-    "eslint-plugin-vue": "^10.1.0",
+    "eslint-plugin-vue": "^10.2.0",
     "material-design-icons-iconfont": "^6.7.0",
     "sass": "1.89.1",
     "typescript": "^5.7.3",
