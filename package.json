@@ -22,7 +22,7 @@
     "roboto-fontface": "^0.10.0",
     "vue": "^3.5.16",
     "vue-chartjs": "^5.3.2",
-    "vue-i18n": "^11.1.5",
+    "vue-i18n": "^11.1.7",
     "vue-router": "^4.5.0",
     "vue3-persian-datetime-picker": "^1.2.2",
     "vuetify": "^3.8.9",
