@@ -269,15 +269,15 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          color="blue-darken-1"
-          variant="text"
+          color="primary"
+          variant="outlined"
           @click="closeModal"
         >
           {{ $t('actions.close') }}
         </v-btn>
         <v-btn
-          color="blue-darken-1"
-          variant="text"
+          color="primary"
+          variant="tonal"
           :loading="loading"
           @click="saveChanges"
         >

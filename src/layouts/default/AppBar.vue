@@ -20,7 +20,7 @@ const darkMode = ref(localStorage.getItem('theme') == "dark")
 
 const toggleTheme = () => {
   darkMode.value = !darkMode.value
-  theme.global.name.value = darkMode.value ? "dark" : "light"
+  theme.change(darkMode.value ? "dark" : "light")
   localStorage.setItem('theme', theme.global.name.value)
 }
 </script>

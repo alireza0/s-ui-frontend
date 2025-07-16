@@ -2,8 +2,8 @@
   <v-card :loading="loading">
     <v-tabs
     v-model="tab"
+    color="primary"
     align-tabs="center"
-    bg-color="secondary"
     show-arrows
   >
     <v-tab value="t1">{{ $t('setting.interface') }}</v-tab>

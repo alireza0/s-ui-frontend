@@ -55,7 +55,7 @@ export default {
             min: 0,
             max: 100,
             grid: {
-              color: () => { return this.$vuetify.theme.current.colors.secondary },
+              color: '#777777',
             },
             beginAtZero: true,
             ticks: {
@@ -86,7 +86,7 @@ export default {
         scales: {
           y: {
             grid: {
-              color: () => { return this.$vuetify.theme.current.colors.secondary },
+              color: '#777777',
             },
             beginAtZero: true,
             ticks: {

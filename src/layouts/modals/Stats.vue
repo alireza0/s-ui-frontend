@@ -1,6 +1,6 @@
 <template>
   <v-dialog transition="dialog-bottom-transition" width="800">
-    <v-card class="rounded-lg" :loading="loading" color="background">
+    <v-card class="rounded-lg" :loading="loading">
       <v-card-title>
         <v-row>
           <v-col cols="auto">
@@ -113,7 +113,7 @@ export default {
         scales: {
           y: {
             grid: {
-              color: () => { return this.$vuetify.theme.current.colors.secondary },
+              color: '#777777',
             },
             beginAtZero: true,
             ticks: {

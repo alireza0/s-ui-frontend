@@ -44,7 +44,7 @@ const cssTransformRotateValue = computed(() => {
 const gaugeColor = computed(() => {
   if (data.value.percent > 90) return 'error'
   if (data.value.percent > 70) return 'warning'
-  return 'primary'
+  return 'info'
 })
 </script>
 
