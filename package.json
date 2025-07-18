@@ -38,6 +38,6 @@
     "typescript": "^5.7.3",
     "vite": "^7.0.4",
     "vite-plugin-vuetify": "^2.1.0",
-    "vue-tsc": "^3.0.1"
+    "vue-tsc": "^3.0.2"
   }
 }
