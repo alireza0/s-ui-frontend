@@ -7,7 +7,6 @@
     :groups="groups"
     :inboundTags="inboundTags"
     @close="closeModal"
-    @save="saveModal"
   />
   <ClientBulk 
     v-model="addBulkModal"
@@ -15,7 +14,6 @@
     :groups="groups"
     :inboundTags="inboundTags"
     @close="closeBulk"
-    @save="saveBulk"
   />
   <QrCode
     v-model="qrcode.visible"
@@ -236,7 +234,6 @@ import { Client } from '@/types/clients'
 import { computed, ref } from 'vue'
 import { HumanReadable } from '@/plugins/utils'
 import { i18n } from '@/locales'
-import { push } from 'notivue'
 import { useDisplay } from 'vuetify'
 
 const { smAndDown } = useDisplay()
@@ -313,20 +310,6 @@ const showModal = async (id: number) => {
 }
 const closeModal = () => {
   modal.value.visible = false
-}
-const saveModal = async (data:any) => {
-  // Check duplicate name
-  const oldName = modal.value.id > 0 ? clients.value.findLast(i => i.id == modal.value.id)?.name : null
-  if (data.name != oldName && clients.value.findIndex(c => c.name == data.name) != -1) {
-    push.error({
-      message: i18n.global.t('error.dplData') + ": " + i18n.global.t('client.name')
-    })
-    return
-  }
-
-  // save data
-  const success = await Data().save("clients", modal.value.id == 0 ? "new" : "edit", data)
-  if (success) modal.value.visible = false
 }
 
 const delClient = async (id: number) => {
@@ -407,23 +390,6 @@ const addBulk = () => {
 
 const closeBulk = () => {
   addBulkModal.value = false
-}
-
-const saveBulk = async (bulkClients: Client[]) => {
-  // Check duplicate name
-  const oldNames = new Set(clients.value.map(c => c.name))
-  const newNames = new Set(bulkClients.map(c => c.name))
-  const allNames = new Set([...clients.value.map(c => c.name), ...bulkClients.map(c => c.name)])
-  if (newNames.size != bulkClients.length || oldNames.size + newNames.size != allNames.size) {
-    push.error({
-      message: i18n.global.t('error.dplData') + ": " + i18n.global.t('client.name')
-    })
-    return
-  }
-
-  // save data
-  const success = await Data().save("clients", "addbulk", bulkClients)
-  if (success) closeBulk()
 }
 
 const percent = (c: Client) => { return c.volume>0 ? Math.round((c.up+c.down) *100 / c.volume) : 0 }

@@ -7,7 +7,6 @@
     :outTags="outTags"
     :tlsConfigs="tlsConfigs"
     @close="closeModal"
-    @save="saveModal"
   />
   <Stats
     v-model="stats.visible"
@@ -111,8 +110,6 @@ import Stats from '@/layouts/modals/Stats.vue'
 import { Config } from '@/types/config'
 import { computed, ref } from 'vue'
 import { Inbound } from '@/types/inbounds'
-import { i18n } from '@/locales'
-import { push } from 'notivue'
 
 const appConfig = computed((): Config => {
   return <Config> Data().config
@@ -151,20 +148,6 @@ const showModal = (id: number) => {
 }
 const closeModal = () => {
   modal.value.visible = false
-}
-const saveModal = async (data:Inbound, initUsers?: number[]) => {
-  // Check duplicate tag
-  const oldInbound = modal.value.id > 0 ? inbounds.value.findLast(i => i.id == modal.value.id) : null
-  if (data.tag != oldInbound?.tag && inTags.value.includes(data.tag)) {
-    push.error({
-      message: i18n.global.t('error.dplData') + ": " + i18n.global.t('objects.tag')
-    })
-    return
-  }
-
-  // save data
-  const success = await Data().save("inbounds", modal.value.id == 0 ? "new" : "edit", data, initUsers)
-  if (success) modal.value.visible = false
 }
 
 const delInbound = async (id: number) => {

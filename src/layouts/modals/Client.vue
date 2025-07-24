@@ -201,7 +201,7 @@ import Data from '@/store/modules/data'
 
 export default {
   props: ['visible', 'id', 'inboundTags', 'groups'],
-  emits: ['close', 'save'],
+  emits: ['close'],
   data() {
     return {
       client: createClient(),
@@ -215,10 +215,10 @@ export default {
     }
   },
   methods: {
-    async updateData() {
-      if (this.$props.id > 0) {
+    async updateData(id: number) {
+      if (id > 0) {
         this.loading = true
-        const newData = await Data().loadClients(this.$props.id)
+        const newData = await Data().loadClients(id)
         this.client = createClient(newData)
         this.title = "edit"
         this.clientConfig = this.client.config
@@ -233,18 +233,26 @@ export default {
       this.extLinks = this.client.links?.filter(l => l.type == 'external')?? []
       this.subLinks = this.client.links?.filter(l => l.type == 'sub')?? []
       this.tab = "t1"
+      this.loading = false
     },
     closeModal() {
-      this.updateData() // reset
+      this.updateData(0) // reset
       this.$emit('close')
     },
-    saveChanges() {
+    async saveChanges() {
+      if (!this.$props.visible.value) return
+      // check duplicate name
+      const isDuplicateName = Data().checkClientName(this.$props.id, this.client.name)
+      if (isDuplicateName) return
+
+      // save data
       this.loading = true
       this.client.config = updateConfigs(this.clientConfig, this.client.name)
       this.client.links = [
                         ...this.extLinks.filter(l => l.uri != ''),
                         ...this.subLinks.filter(l => l.uri != '')]
-      this.$emit('save', this.client)
+      const success = await Data().save("clients", this.$props.id == 0 ? "new" : "edit", this.client)
+      if (success) this.closeModal()
       this.loading = false
     },
     setDate(newDate:number){
@@ -279,7 +287,7 @@ export default {
   watch: {
     visible(newValue) {
       if (newValue) {
-        this.updateData()
+        this.updateData(this.$props.id)
       }
     },
   },

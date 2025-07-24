@@ -55,9 +55,10 @@ import Listen from '@/components/Listen.vue'
 import Derp from '@/components/services/Derp.vue'
 import InTLS from '@/components/tls/InTLS.vue'
 import SSMapi from '@/components/services/SSMAPI.vue'
+import Data from '@/store/modules/data'
 export default {
   props: ['visible', 'data', 'id', 'inTags', 'outTags', 'tsTags', 'ssTags', 'tlsConfigs'],
-  emits: ['close', 'save'],
+  emits: ['close'],
   data() {
     return {
       srv: createSrv("derp",{ "tag": "" }),
@@ -69,8 +70,8 @@ export default {
     }
   },
   methods: {
-    async updateData() {
-      if (this.$props.id > 0) {
+    async updateData(id: number) {
+      if (id > 0) {
         const newData = JSON.parse(this.$props.data)
         this.srv = createSrv(newData.type, newData)
         this.title = "edit"
@@ -94,19 +95,27 @@ export default {
       this.srv = createSrv(this.srv.type, prevConfig)
     },
     closeModal() {
-      this.updateData() // reset
+      this.updateData(0) // reset
       this.$emit('close')
     },
-    saveChanges() {
+    async saveChanges() {
+      if (!this.visible) return
+
+      // check duplicate tag
+      const isDuplicatedTag = Data().checkTag("service",this.srv.id, this.srv.tag)
+      if (isDuplicatedTag) return
+
+      // save data
       this.loading = true
-      this.$emit('save', this.srv)
+      const success = await Data().save("services", this.srv.id == 0 ? "new" : "edit", this.srv)
+      if (success) this.closeModal()
       this.loading = false
     },
   },
   watch: {
     visible(v) {
       if (v) {
-        this.updateData()
+        this.updateData(this.$props.id)
       }
     },
   },

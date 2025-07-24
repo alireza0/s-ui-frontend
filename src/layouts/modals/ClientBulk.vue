@@ -74,6 +74,7 @@
         <v-btn
           color="primary"
           variant="tonal"
+          :loading="loading"
           @click="saveChanges"
         >
           {{ $t('actions.save') }}
@@ -89,10 +90,11 @@ import { push } from 'notivue'
 import RandomUtil from '@/plugins/randomUtil'
 import { Client, createClient, randomConfigs } from '@/types/clients'
 import { i18n } from '@/locales'
+import Data from '@/store/modules/data'
 
 export default {
   props: ['visible', 'inboundTags', 'groups'],
-  emits: ['close', 'save'],
+  emits: ['close'],
   data() {
     return {
       count: 1,
@@ -128,7 +130,8 @@ export default {
     closeModal() {
       this.$emit('close')
     },
-    saveChanges() {
+    async saveChanges() {
+      if (!this.visible) return
       if (this.bulkData.name.findIndex(n => typeof(n) == 'object') == -1) {
         push.error(i18n.global.t('error.dplData'))
         return
@@ -151,7 +154,11 @@ export default {
           group: this.bulkData.group
         }))
       }
-      this.$emit('save', this.clients)
+      // Check duplicate names
+      const isDuplicateName = Data().checkBulkClientNames(this.clients.map(c => c.name))
+      if (isDuplicateName) return
+      const success = await Data().save("clients", "addbulk", this.clients)
+      if (success) this.closeModal()
       this.loading = false
     },
     genByPattern(pattern: any[], order :number){

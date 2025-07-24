@@ -6,7 +6,6 @@
     :data="modal.data"
     :tags="outboundTags"
     @close="closeModal"
-    @save="saveModal"
   />
   <Stats
     v-model="stats.visible"
@@ -97,8 +96,6 @@ import OutboundVue from '@/layouts/modals/Outbound.vue'
 import Stats from '@/layouts/modals/Stats.vue'
 import { Outbound } from '@/types/outbounds'
 import { computed, ref } from 'vue'
-import { i18n } from '@/locales'
-import { push } from 'notivue'
 
 const outbounds = computed((): Outbound[] => {
   return <Outbound[]> Data().outbounds
@@ -127,24 +124,6 @@ const showModal = (id: number) => {
 }
 
 const closeModal = () => {
-  modal.value.visible = false
-}
-const saveModal = async (data:Outbound) => {
-  // Check duplicate tag
-  const oldTag = modal.value.id > 0 ? outbounds.value.findLast(i => i.id == modal.value.id)?.tag : null
-  if (data.tag != oldTag && outboundTags.value.includes(data.tag)) {
-    push.error({
-      message: i18n.global.t('error.dplData') + ": " + i18n.global.t('objects.tag')
-    })
-    return
-  }
-
-  // save data
-  const success = await Data().save("outbounds", modal.value.id == 0 ? "new" : "edit", data)
-  if (!success) {
-    return
-  }
-
   modal.value.visible = false
 }
 

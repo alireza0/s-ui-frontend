@@ -82,7 +82,60 @@ const Data = defineStore('Data', {
         this.setNewData(msg.obj)
       }
       return msg.success
-    }
+    },
+    // Check duplicate client name
+    checkClientName (id: number, newName: string): boolean {
+      const oldName = id > 0 ? this.clients.findLast((i: any) => i.id == id)?.name : null
+      if (newName != oldName && this.clients.findIndex((c: any) => c.name == newName) != -1) {
+        push.error({
+          message: i18n.global.t('error.dplData') + ": " + i18n.global.t('client.name')
+        })
+        return true
+      }
+      return false
+    },
+    // Check bulk client names
+    checkBulkClientNames (names: string[]): boolean {
+      const newNames = new Set(names)
+      const oldNames = new Set(this.clients.map((c: any) => c.name))
+      const allNames = new Set([...oldNames, ...newNames])
+      console.log(oldNames, newNames, allNames)
+      if (newNames.size != names.length || oldNames.size + newNames.size != allNames.size) {
+        push.error({
+          message: i18n.global.t('error.dplData') + ": " + i18n.global.t('client.name')
+        })
+        return true
+      }
+      return false
+    },
+    // check duplicate tag
+    checkTag (object: string, id: number, tag: string): boolean {
+      let objects = <any[]>[]
+      switch (object) {
+        case 'inbound':
+          objects = this.inbounds
+          break
+        case 'outbound':
+          objects = this.outbounds
+          break
+        case 'service':
+          objects = this.services
+          break
+        case 'endpoint':
+          objects = this.endpoints
+          break
+        default:
+          return false
+      }
+      const oldObject = id > 0 ? objects.findLast((i: any) => i.id == id) : null
+      if (tag != oldObject?.tag && objects.findIndex((i: any) => i.tag == tag) != -1) {
+        push.error({
+          message: i18n.global.t('error.dplData') + ": " + i18n.global.t('objects.tag')
+        })
+        return true
+      }
+      return false
+    },
   }
 })
 

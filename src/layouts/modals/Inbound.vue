@@ -1,5 +1,5 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" width="800" @after-enter="updateData">
+  <v-dialog transition="dialog-bottom-transition" width="800" @after-enter="updateData(id)">
     <v-card class="rounded-lg" :loading="loading">
       <v-card-title>
         {{ $t('actions.' + title) + " " + $t('objects.inbound') }}
@@ -118,7 +118,7 @@ import OutJsonVue from '@/components/OutJson.vue'
 import Data from '@/store/modules/data'
 export default {
   props: ['visible', 'id', 'inTags', 'outTags', 'tlsConfigs'],
-  emits: ['close', 'save'],
+  emits: ['close'],
   data() {
     return {
       inbound: createInbound("direct",{ id:0, "tag": "" }),
@@ -161,15 +161,15 @@ export default {
     }
   },
   methods: {
-    async loadData() {
+    async loadData(id: number) {
       this.loading = true
-      const inboundArray = await Data().loadInbounds([this.$props.id])
+      const inboundArray = await Data().loadInbounds([id])
       this.inbound = inboundArray[0]
       this.loading = false
     },
-    updateData() {
-      if (this.$props.id > 0) {
-        this.loadData()
+    updateData(id: number) {
+      if (id > 0) {
+        this.loadData(id)
         this.title = "edit"
       }
       else {
@@ -211,13 +211,19 @@ export default {
       this.inbound.addrs?.push(<Addr>{ server: location.hostname, server_port: this.inbound.listen_port })
     },
     closeModal() {
-      this.updateData() // reset
+      this.updateData(0) // reset
       this.$emit('close')
     },
-    saveChanges() {
+    async saveChanges() {
+      if (!this.$props.visible.value) return
+      // check duplicate tag
+      const isDuplicatedTag = Data().checkTag("inbound", this.inbound.id, this.inbound.tag)
+      if (isDuplicatedTag) return
+
+      // save data
       this.loading = true
+      let clientIds = []
       if (this.hasUser) {
-        let clientIds = []
         switch (this.initUsers.model) {
           case 'all':
             clientIds = this.clients.map((c:any) => c.id)
@@ -228,10 +234,9 @@ export default {
           case 'client':
             clientIds = this.initUsers.values
         }
-        this.$emit('save', this.inbound, clientIds.length > 0 ? clientIds : undefined)
-      } else {
-        this.$emit('save', this.inbound)
       }
+      const success = await Data().save("inbounds", this.inbound.id == 0 ? "new" : "edit", this.inbound, clientIds)
+      if (success) this.closeModal()
       this.loading = false
     },
   },

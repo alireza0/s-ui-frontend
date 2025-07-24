@@ -6,7 +6,6 @@
     :data="modal.data"
     :tags="endpointTags"
     @close="closeModal"
-    @save="saveModal"
   />
   <Stats
     v-model="stats.visible"
@@ -97,8 +96,6 @@ import EndpointVue from '@/layouts/modals/Endpoint.vue'
 import Stats from '@/layouts/modals/Stats.vue'
 import { Endpoint } from '@/types/endpoints'
 import { computed, ref } from 'vue'
-import { i18n } from '@/locales'
-import { push } from 'notivue'
 
 const endpoints = computed((): Endpoint[] => {
   return <Endpoint[]> Data().endpoints
@@ -128,20 +125,6 @@ const showModal = (id: number) => {
 
 const closeModal = () => {
   modal.value.visible = false
-}
-const saveModal = async (data:Endpoint) => {
-  // Check duplicate tag
-  const oldTag = modal.value.id > 0  ? endpoints.value.findLast(i => i.id == modal.value.id)?.tag : null
-  if (data.tag != oldTag && endpointTags.value.includes(data.tag)) {
-    push.error({
-      message: i18n.global.t('error.dplData') + ": " + i18n.global.t('objects.tag')
-    })
-    return
-  }
-
-  // save data
-  const success = await Data().save("endpoints", modal.value.id == 0 ? "new" : "edit", data)
-  if (success) modal.value.visible = false
 }
 
 const stats = ref({

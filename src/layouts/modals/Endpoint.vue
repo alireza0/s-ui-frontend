@@ -58,9 +58,10 @@ import TailscaleVue from '@/components/protocols/Tailscale.vue'
 import HttpUtils from '@/plugins/httputil'
 import { push } from 'notivue'
 import { i18n } from '@/locales'
+import Data from '@/store/modules/data'
 export default {
   props: ['visible', 'data', 'id', 'tags'],
-  emits: ['close', 'save'],
+  emits: ['close'],
   data() {
     return {
       endpoint: createEndpoint("wireguard",{ "tag": "" }),
@@ -72,8 +73,8 @@ export default {
     }
   },
   methods: {
-    async updateData() {
-      if (this.$props.id > 0) {
+    async updateData(id: number) {
+      if (id > 0) {
         const newData = JSON.parse(this.$props.data)
         this.endpoint = createEndpoint(newData.type, newData)
         this.options = {}
@@ -121,12 +122,20 @@ export default {
       this.endpoint = createEndpoint(this.endpoint.type, prevConfig)
     },
     closeModal() {
-      this.updateData() // reset
+      this.updateData(0) // reset
       this.$emit('close')
     },
-    saveChanges() {
+    async saveChanges() {
+      if (!this.visible) return
+      
+      // check duplicate tag
+      const isDuplicatedTag = Data().checkTag("endpoint",this.endpoint.id, this.endpoint.tag)
+      if (isDuplicatedTag) return
+
+      // save data
       this.loading = true
-      this.$emit('save', this.endpoint)
+      const success = await Data().save("endpoints", this.endpoint.id == 0 ? "new" : "edit", this.endpoint)
+      if (success) this.closeModal()
       this.loading = false
     },
     async genWgKey(){
@@ -167,7 +176,7 @@ export default {
   watch: {
     visible(v) {
       if (v) {
-        this.updateData()
+        this.updateData(this.$props.id)
       }
     },
   },

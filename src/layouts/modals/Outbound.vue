@@ -129,9 +129,10 @@ import Selector from '@/components/protocols/Selector.vue'
 import UrlTest from '@/components/protocols/UrlTest.vue'
 import HttpUtils from '@/plugins/httputil'
 import AnyTls from '@/components/protocols/AnyTls.vue'
+import Data from '@/store/modules/data'
 export default {
   props: ['visible', 'data', 'id', 'tags'],
-  emits: ['close', 'save'],
+  emits: ['close'],
   data() {
     return {
       outbound: createOutbound("direct",{ "tag": "" }),
@@ -145,8 +146,8 @@ export default {
     }
   },
   methods: {
-    updateData() {
-      if (this.$props.id > 0) {
+    updateData(id: number) {
+      if (id > 0) {
         const newData = JSON.parse(this.$props.data)
         this.outbound = createOutbound(newData.type, newData)
         this.title = "edit"
@@ -165,12 +166,19 @@ export default {
       this.outbound = createOutbound(this.outbound.type, prevConfig)
     },
     closeModal() {
-      this.updateData() // reset
+      this.updateData(0) // reset
       this.$emit('close')
     },
-    saveChanges() {
+    async saveChanges() {
+      if (!this.visible) return
+      // check duplicate tag
+      const isDuplicatedTag = Data().checkTag("outbound",this.outbound.id, this.outbound.tag)
+      if (isDuplicatedTag) return
+
+      // save data
       this.loading = true
-      this.$emit('save', this.outbound)
+      const success = await Data().save("outbounds", this.outbound.id == 0 ? "new" : "edit", this.outbound)
+      if (success) this.closeModal()
       this.loading = false
     },
     async linkConvert() {
@@ -189,7 +197,7 @@ export default {
   watch: {
     visible(newValue) {
       if (newValue) {
-        this.updateData()
+        this.updateData(this.$props.id)
       }
     },
   },

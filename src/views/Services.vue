@@ -10,7 +10,6 @@
     :ssTags="ssTags"
     :tlsConfigs="tlsConfigs"
     @close="closeModal"
-    @save="saveModal"
   />
   <v-row>
     <v-col cols="12" justify="center" align="center">
@@ -76,10 +75,8 @@
 </template>
 
 <script lang="ts" setup>
-import { i18n } from '@/locales'
 import Data from '@/store/modules/data'
 import { Srv } from '@/types/services'
-import { push } from 'notivue'
 import { computed, ref } from 'vue'
 import ServiceVue from '@/layouts/modals/Service.vue'
 
@@ -127,20 +124,6 @@ const showModal = (id: number) => {
 
 const closeModal = () => {
   modal.value.visible = false
-}
-const saveModal = async (data:Srv) => {
-  // Check duplicate tag
-  const oldTag = modal.value.id > 0  ? services.value.findLast(i => i.id == modal.value.id)?.tag : null
-  if (data.tag != oldTag && srvTags.value.includes(data.tag)) {
-    push.error({
-      message: i18n.global.t('error.dplData') + ": " + i18n.global.t('objects.tag')
-    })
-    return
-  }
-
-  // save data
-  const success = await Data().save("services", modal.value.id == 0 ? "new" : "edit", data)
-  if (success) modal.value.visible = false
 }
 
 const delSrv = async (id: number) => {

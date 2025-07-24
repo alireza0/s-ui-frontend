@@ -347,8 +347,8 @@ export default {
     }
   },
   methods: {
-    updateData() {
-      if (this.$props.id > 0) {
+    updateData(id: number) {
+      if (id > 0) {
         const newData = <tls>JSON.parse(this.$props.data)
         this.tls = newData
         if (this.tls.server == null) this.tls.server = { enabled: true }
@@ -377,7 +377,7 @@ export default {
       }
     },
     closeModal() {
-      this.updateData() // reset
+      this.updateData(0) // reset
       this.$emit('close')
     },
     saveChanges() {
@@ -538,7 +538,7 @@ export default {
   watch: {
     visible(v) {
       if (v) {
-        this.updateData()
+        this.updateData(this.$props.id)
       }
     },
   },
