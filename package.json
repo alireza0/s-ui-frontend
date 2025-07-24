@@ -36,7 +36,7 @@
     "material-design-icons-iconfont": "^6.7.0",
     "sass": "1.89.2",
     "typescript": "^5.7.3",
-    "vite": "^7.0.5",
+    "vite": "^7.0.6",
     "vite-plugin-vuetify": "^2.1.0",
     "vue-tsc": "^3.0.2"
   }
