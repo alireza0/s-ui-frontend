@@ -240,7 +240,7 @@ export default {
       this.$emit('close')
     },
     async saveChanges() {
-      if (!this.$props.visible.value) return
+      if (!this.$props.visible) return
       // check duplicate name
       const isDuplicateName = Data().checkClientName(this.$props.id, this.client.name)
       if (isDuplicateName) return

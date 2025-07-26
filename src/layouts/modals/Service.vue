@@ -99,7 +99,7 @@ export default {
       this.$emit('close')
     },
     async saveChanges() {
-      if (!this.visible) return
+      if (!this.$props.visible) return
 
       // check duplicate tag
       const isDuplicatedTag = Data().checkTag("service",this.srv.id, this.srv.tag)

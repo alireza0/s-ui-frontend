@@ -131,7 +131,7 @@ export default {
       this.$emit('close')
     },
     async saveChanges() {
-      if (!this.visible) return
+      if (!this.$props.visible) return
       if (this.bulkData.name.findIndex(n => typeof(n) == 'object') == -1) {
         push.error(i18n.global.t('error.dplData'))
         return

@@ -170,7 +170,7 @@ export default {
       this.$emit('close')
     },
     async saveChanges() {
-      if (!this.visible) return
+      if (!this.$props.visible) return
       // check duplicate tag
       const isDuplicatedTag = Data().checkTag("outbound",this.outbound.id, this.outbound.tag)
       if (isDuplicatedTag) return
