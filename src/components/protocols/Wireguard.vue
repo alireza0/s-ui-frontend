@@ -12,7 +12,7 @@
       </v-col>
       <v-col cols="12" sm="8">
         <v-text-field
-          v-model="options.public_key"
+          v-model="public_key"
           readonly
           :label="$t('tls.pubKey')"
           append-icon="mdi-refresh"
@@ -106,9 +106,9 @@
     <template v-for="(p, index) in data.peers">
       <v-card style="margin-top: 1rem;">
         <v-card-subtitle>
-          {{ $t('types.wg.peer') + ' ' + (index+1) }} <v-icon icon="mdi-delete" @click="data.peers.splice(index,1)" v-if="data.peers.length > 1" />
+          {{ $t('types.wg.peer') + ' ' + (index+1) }} <v-icon icon="mdi-delete" @click="delPeer(index)" />
         </v-card-subtitle>
-        <Peer :data="p" />
+        <Peer :data="p" :ext="data.ext" @refreshPeerKey="$emit('refreshPeerKey', index)" />
       </v-card>
     </template>
   </v-card>
@@ -118,8 +118,8 @@
 import Peer from '@/components/WgPeer.vue'
 
 export default {
-  props: ['data', 'options'],
-  emits: ['newWgKey', 'getWgPubKey'],
+  props: ['data'],
+  emits: ['newWgKey', 'getWgPubKey', 'addPeer', 'delPeer', 'refreshPeerKey'],
   data() {
     return {
       menu: false,
@@ -127,10 +127,13 @@ export default {
   },
   methods: {
     addPeer() {
-      this.$props.data.peers.push({
-        public_key: '',
-        allowed_ips: ['0.0.0.0/0', '::/0']
-      })
+      this.$emit('addPeer')
+    },
+    delPeer(id: number) {
+      this.$emit('delPeer', id)
+    },
+    refreshPeerKey(id: number) {
+      this.$emit('refreshPeerKey', id)
     },
     newKey() {
       this.$emit('newWgKey')
@@ -177,6 +180,10 @@ export default {
     udp_timeout: {
       get() { return this.$props.data.udp_timeout ? parseInt(this.$props.data.udp_timeout.replace('m','')) : 5 },
       set(v:number) { this.$props.data.udp_timeout = v > 0 ? v + 'm' : '5m' }
+    },
+    public_key: {
+      get() { return this.$props.data.ext?.public_key?? '' },
+      set(v:string) { this.$props.data.ext.public_key = v }
     }
   },
   components: { Peer }

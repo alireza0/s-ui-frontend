@@ -34,11 +34,10 @@ export interface WireGuard extends EndpointBasics, Dial {
   peers: WgPeer[]
   udp_timeout?: string
   workers?: number
-}
-
-export interface Warp extends WireGuard {
   ext: any
 }
+
+export interface Warp extends WireGuard {}
 
 export interface Tailscale extends EndpointBasics, Dial {
   state_directory?: string
@@ -67,7 +66,7 @@ export type Endpoint = InterfaceMap[keyof InterfaceMap]
 
 // Create defaultValues object dynamically
 const defaultValues: Record<EpType, Endpoint> = {
-  wireguard: { type: EpTypes.Wireguard, address: ['10.0.0.2/32','fe80::2/128'], private_key: '', listen_port: 0, peers: [{ address: '', port: 0, public_key: ''}] },
+  wireguard: { type: EpTypes.Wireguard, address: ['10.0.0.2/32','fe80::2/128'], private_key: '', listen_port: 0 },
   warp: { type: EpTypes.Warp, address: [], private_key: '', listen_port: 0, mtu: 1420, peers: [{ address: '', port: 0, public_key: ''}] },
   tailscale: { type: EpTypes.Tailscale, domain_resolver: 'local' },
 }

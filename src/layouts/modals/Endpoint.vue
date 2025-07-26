@@ -21,7 +21,13 @@
             <v-text-field v-model="endpoint.tag" :label="$t('objects.tag')" hide-details></v-text-field>
           </v-col>
         </v-row>
-        <Wireguard v-if="endpoint.type == epTypes.Wireguard" :data="endpoint" :options="options" @getWgPubKey="getWgPubKey" @newWgKey="newWgKey" />
+        <Wireguard v-if="endpoint.type == epTypes.Wireguard"
+          :data="endpoint"
+          @getWgPubKey="getWgPubKey"
+          @newWgKey="newWgKey"
+          @addPeer="addWgPeer"
+          @delPeer="delWgPeer"
+          @refreshPeerKey="refreshWgPeerKey" />
         <Warp v-if="endpoint.type == epTypes.Warp" :data="endpoint" />
         <TailscaleVue v-if="endpoint.type == epTypes.Tailscale" :data="endpoint" />
         <Dial :dial="endpoint" :outTags="tags" />
@@ -69,7 +75,6 @@ export default {
       tab: "t1",
       loading: false,
       epTypes: EpTypes,
-      options: <any>{},
     }
   },
   methods: {
@@ -77,7 +82,6 @@ export default {
       if (id > 0) {
         const newData = JSON.parse(this.$props.data)
         this.endpoint = createEndpoint(newData.type, newData)
-        this.options = {}
         this.title = "edit"
       }
       else {
@@ -103,12 +107,12 @@ export default {
             listen_port: this.endpoint.listen_port ?? RandomUtil.randomIntRange(10000, 60000),
             address: ['10.0.0.'+ randomIPoctet.toString() +'/32','fe80::'+ randomIPoctet.toString(16) +'/128'],
             private_key: wgKeys.private_key,
-            peers: [{
-              public_key: '',
-              allowed_ips: ['0.0.0.0/0', '::/0']
-            }]
+            peers: [],
+            ext: {
+              public_key: wgKeys.public_key,
+              keys: []
+            }
           }
-          this.options.public_key = wgKeys.public_key
           break
         case EpTypes.Warp:
           prevConfig = {
@@ -160,18 +164,56 @@ export default {
       return result
     },
     async newWgKey(){
+      this.loading = true
       const newKeys = await this.genWgKey()
       this.endpoint.private_key = newKeys.private_key
-      this.options.public_key = newKeys.public_key
+      if (!this.endpoint.ext) this.endpoint.ext = {keys: []}
+      this.endpoint.ext.public_key = newKeys.public_key
+      this.loading = false
     },
     async getWgPubKey(private_key: string) {
+      if (!this.endpoint.ext) this.endpoint.ext = {keys: []}
       this.loading = true
       const msg = await HttpUtils.get('api/keypairs', { k: "wireguard", o: private_key })
       if (msg.success) {
-        this.options.public_key = msg.obj        
+        this.endpoint.ext.public_key = msg.obj[0]
       }
       this.loading = false
-    }
+    },
+    async addWgPeer(){
+      if (this.endpoint.type != EpTypes.Wireguard) return
+      this.loading = true
+      const newKeys = await this.genWgKey()
+      if (!this.endpoint.ext) this.endpoint.ext = {keys: []}
+      this.endpoint.ext.keys.push(newKeys)
+      this.endpoint.peers.push({
+        public_key: newKeys.public_key,
+        allowed_ips: [this.findFreeIP()]
+      })
+      this.loading = false
+    },
+    findFreeIP(): string{
+      const peerAllowedIPs = this.endpoint.peers.map((peer: any) => peer.allowed_ips).flat()
+      for (let i = 2; i < 255; i++) {
+        const newIP = '10.0.1.'+ i.toString() +'/32'
+        if (!peerAllowedIPs.includes(newIP)) return newIP
+      }
+      return '0.0.0.0/0'
+    },
+    delWgPeer(index: number){
+      if (this.endpoint.type != EpTypes.Wireguard) return
+      this.endpoint.ext.keys = this.endpoint.ext.keys.filter((key: any) => key.public_key != this.endpoint.peers[index].public_key)
+      this.endpoint.peers.splice(index, 1)
+    },
+    async refreshWgPeerKey(index: number) {
+      this.loading = true
+      const newKeys = await this.genWgKey()
+      if (!this.endpoint.ext) this.endpoint.ext = {keys: []}
+      const indexKeys = this.endpoint.ext.keys.findIndex((key: any) => key.public_key == this.endpoint.peers[index].public_key)
+      this.endpoint.ext.keys[indexKeys == -1 ? this.endpoint.ext.keys.length : indexKeys] = newKeys
+      this.endpoint.peers[index].public_key = newKeys.public_key
+      this.loading = false
+    },
   },
   watch: {
     visible(v) {

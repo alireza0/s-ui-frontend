@@ -14,6 +14,12 @@
     :tag="stats.tag"
     @close="closeStats"
   />
+  <QrCode
+    v-model="qrcode.visible"
+    :visible="qrcode.visible"
+    :data="qrcode.data"
+    @close="closeQrCode"
+  />
   <v-row>
     <v-col cols="12" justify="center" align="center">
       <v-btn color="primary" @click="showModal(0)">{{ $t('actions.add') }}</v-btn>
@@ -80,6 +86,13 @@
               </v-card-actions>
             </v-card>
           </v-overlay>
+          <v-icon
+          class="me-2"
+          v-if="item.type == 'wireguard' && item.peers?.length>0"
+          @click="showQrCode(item.id)"
+        >
+          mdi-qrcode
+        </v-icon>
           <v-btn icon="mdi-chart-line" @click="showStats(item.tag)">
             <v-icon />
             <v-tooltip activator="parent" location="top" :text="$t('stats.graphTitle')"></v-tooltip>
@@ -94,6 +107,7 @@
 import Data from '@/store/modules/data'
 import EndpointVue from '@/layouts/modals/Endpoint.vue'
 import Stats from '@/layouts/modals/Stats.vue'
+import QrCode from '@/layouts/modals/WgQrCode.vue'
 import { Endpoint } from '@/types/endpoints'
 import { computed, ref } from 'vue'
 
@@ -145,5 +159,18 @@ const showStats = (tag: string) => {
 }
 const closeStats = () => {
   stats.value.visible = false
+}
+
+const qrcode = ref({
+  visible: false,
+  data: <any>{},
+})
+
+const showQrCode = (id: number) => {
+  qrcode.value.data = endpoints.value.findLast(o => o.id == id)
+  qrcode.value.visible = true
+}
+const closeQrCode = () => {
+  qrcode.value.visible = false
 }
 </script>
