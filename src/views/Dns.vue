@@ -218,14 +218,19 @@ import { Config } from '@/types/config'
 import { actionDnsRuleKeys, dnsRule } from '@/types/dns'
 import { FindDiff } from '@/plugins/utils'
 
-const oldConfig = ref({})
+const oldConfig = ref(<any>{})
 const loading = ref(false)
 
 const appConfig = computed((): Config => {
   return <Config> Data().config
 })
 
-onMounted(async () => {
+onMounted(() => {
+  // fix old configs
+  if (!appConfig.value.dns) appConfig.value.dns = { servers: [], rules: [] }
+  if (!appConfig.value.dns.servers) appConfig.value.dns.servers = []
+  if (!appConfig.value.dns.rules) appConfig.value.dns.rules = []
+
   oldConfig.value = JSON.parse(JSON.stringify(Data().config))
 })
 
@@ -246,7 +251,7 @@ const clients = computed((): string[] => {
 })
 
 const stateChange = computed(() => {
-  return FindDiff.deepCompare(appConfig.value,oldConfig.value)
+  return FindDiff.deepCompare(appConfig.value.dns,oldConfig.value.dns)
 })
 
 const saveConfig = async () => {
@@ -267,7 +272,7 @@ const dns = computed((): any => {
 })
 
 const dnsServerTags = computed((): string[] => {
-  return dns.value?.servers?.filter((s:any) => s.tag && s.tag != "")?.map((s:any) => s.tag)
+  return dns.value?.servers?.filter((s:any) => s.tag && s.tag != "")?.map((s:any) => s.tag) ?? []
 })
 
 const finalDns = computed({
@@ -277,7 +282,6 @@ const finalDns = computed({
 
 
 const dnsRules = computed((): dnsRule[] => {
-  if (!dns.value?.rules) dns.value.rules = []
   return <dnsRule[]>dns.value.rules
 })
 
@@ -304,7 +308,7 @@ const closeDnsModal = () => {
   dnsModal.value.visible = false
 }
 
-const saveDnsModal = (data:dnsRule) => {
+const saveDnsModal = (data:any) => {
   // New or Edit
   if (dnsModal.value.index == -1) {
     dns.value.servers.push(data)
