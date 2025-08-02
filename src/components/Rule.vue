@@ -29,6 +29,16 @@
           v-model.number="rule.ip_version">
         </v-select>
       </v-col>
+      <v-col cols="12" sm="6" md="4" v-if="optionNetwork">
+        <v-select
+          hide-details
+          multiple
+          chips
+          :label="$t('network')"
+          :items="['tcp','udp']"
+          v-model="rule.network">
+        </v-select>
+      </v-col>
       <v-col cols="12" sm="6" v-if="optionProtocol">
         <v-combobox
           v-model="rule.protocol"
@@ -179,6 +189,9 @@
               <v-switch v-model="optionIPver" color="primary" :label="$t('rule.ipVer')" hide-details></v-switch>
             </v-list-item>
             <v-list-item>
+              <v-switch v-model="optionNetwork" color="primary" :label="$t('network')" hide-details></v-switch>
+            </v-list-item>
+            <v-list-item>
               <v-switch v-model="optionProtocol" color="primary" :label="$t('protocol')" hide-details></v-switch>
             </v-list-item>
             <v-list-item>
@@ -309,6 +322,10 @@ export default {
           delete this.$props.rule.rule_set_ip_cidr_match_source
         }
       }
+    },
+    optionNetwork: {
+      get() { return this.$props.rule.network != undefined },
+      set(v:boolean) { this.$props.rule.network = v ? [] : undefined }
     },
     domain: {
       get() { return this.$props.rule.domain?.join(',') },
