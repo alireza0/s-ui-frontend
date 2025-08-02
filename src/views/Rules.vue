@@ -38,17 +38,17 @@
               hide-details
               :label="$t('basic.routing.defaultOut')"
               clearable
-              @click:clear="delete appConfig.route.final"
+              @click:clear="delete route.final"
               :items="outboundTags"
-              v-model="appConfig.route.final">
+              v-model="route.final">
             </v-select>
           </v-col>
           <v-col cols="12" sm="6" md="3" lg="2">
             <v-text-field
-              v-model="appConfig.route.default_interface"
+              v-model="route.default_interface"
               hide-details
               clearable
-              @click:clear="delete appConfig.route.default_interface"
+              @click:clear="delete route.default_interface"
               :label="$t('basic.routing.defaultIf')"
             ></v-text-field>
           </v-col>
@@ -63,7 +63,7 @@
           </v-col>
           <v-col cols="12" sm="6" md="3" lg="2">
             <v-switch
-              v-model="appConfig.route.auto_detect_interface"
+              v-model="route.auto_detect_interface"
               color="primary"
               :label="$t('basic.routing.autoBind')"
               hide-details>
@@ -215,8 +215,8 @@ onMounted(async () => {
 })
 
 const routeMark = computed({
-  get() { return appConfig.value.route.default_mark?? 0 },
-  set(v:number) { v>0 ? appConfig.value.route.default_mark = v : delete appConfig.value.route.default_mark }
+  get() { return route.value.default_mark?? 0 },
+  set(v:number) { v>0 ? route.value.default_mark = v : delete appConfig.value.route.default_mark }
 })
 
 const stateChange = computed(() => {
@@ -237,7 +237,7 @@ const clients = computed((): string[] => {
 })
 
 const route = computed((): any => {
-  return appConfig.value.route
+  return appConfig.value.route?? {}
 })
 
 const rules = computed((): any[] => {
