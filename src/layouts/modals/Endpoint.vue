@@ -138,7 +138,7 @@ export default {
 
       // save data
       this.loading = true
-      const success = await Data().save("endpoints", this.endpoint.id == 0 ? "new" : "edit", this.endpoint)
+      const success = await Data().save("endpoints", this.$props.id == 0 ? "new" : "edit", this.endpoint)
       if (success) this.closeModal()
       this.loading = false
     },

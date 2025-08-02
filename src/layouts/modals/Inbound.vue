@@ -235,7 +235,7 @@ export default {
             clientIds = this.initUsers.values
         }
       }
-      const success = await Data().save("inbounds", this.inbound.id == 0 ? "new" : "edit", this.inbound, clientIds)
+      const success = await Data().save("inbounds", this.$props.id == 0 ? "new" : "edit", this.inbound, clientIds)
       if (success) this.closeModal()
       this.loading = false
     },

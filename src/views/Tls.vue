@@ -128,7 +128,7 @@ const closeModal = () => {
   modal.value.visible = false
 }
 const saveModal = async (data:tls) => {
-  const success = await Data().save("tls", data.id == 0 ? "new" : "edit", data)
+  const success = await Data().save("tls", data.id > 0 ? "edit" : "new", data)
   if (success) modal.value.visible = false
 }
 

@@ -177,7 +177,7 @@ export default {
 
       // save data
       this.loading = true
-      const success = await Data().save("outbounds", this.outbound.id == 0 ? "new" : "edit", this.outbound)
+      const success = await Data().save("outbounds", this.$props.id == 0 ? "new" : "edit", this.outbound)
       if (success) this.closeModal()
       this.loading = false
     },
