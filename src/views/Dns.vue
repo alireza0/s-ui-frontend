@@ -48,35 +48,35 @@
             hide-details
             :label="$t('dns.domainStrategy')"
             clearable
-            @click:clear="delete appConfig.dns.strategy"
+            @click:clear="delete dns.strategy"
             :items="['prefer_ipv4','prefer_ipv6','ipv4_only','ipv6_only']"
-            v-model="appConfig.dns.strategy">
+            v-model="dns.strategy">
           </v-select>
         </v-col>
         <v-col cols="12" sm="6" md="3" lg="2">
           <v-text-field
-            v-model="appConfig.dns.client_subnet" hide-details
-            clearable @click:clear="delete appConfig.dns.client_subnet"
+            v-model="dns.client_subnet" hide-details
+            clearable @click:clear="delete dns.client_subnet"
             :label="$t('dns.rule.action.clientSubnet')"></v-text-field>
         </v-col>
         <v-col cols="auto">
           <v-text-field
-            v-model.number="appConfig.dns.cache_capacity"
+            v-model.number="dns.cache_capacity"
             type="number" min="1024" hide-details
-            clearable @click:clear="delete appConfig.dns.cache_capacity"
+            clearable @click:clear="delete dns.cache_capacity"
             :label="$t('dns.cacheCapacity')"></v-text-field>
         </v-col>
         <v-col cols="auto">
-          <v-checkbox v-model="appConfig.dns.disable_cache" hide-details :label="$t('dns.disableCache')" />
+          <v-checkbox v-model="dns.disable_cache" hide-details :label="$t('dns.disableCache')" />
         </v-col>
         <v-col cols="auto">
-          <v-checkbox v-model="appConfig.dns.disable_expire" hide-details :label="$t('dns.disableExpire')" />
+          <v-checkbox v-model="dns.disable_expire" hide-details :label="$t('dns.disableExpire')" />
         </v-col>
         <v-col cols="auto">
-          <v-checkbox v-model="appConfig.dns.independent_cache" hide-details :label="$t('dns.independentCache')" />
+          <v-checkbox v-model="dns.independent_cache" hide-details :label="$t('dns.independentCache')" />
         </v-col>
         <v-col cols="auto">
-          <v-checkbox v-model="appConfig.dns.reverse_mapping" hide-details :label="$t('dns.reverseMapping')" />
+          <v-checkbox v-model="dns.reverse_mapping" hide-details :label="$t('dns.reverseMapping')" />
         </v-col>
       </v-row>
     </v-col>
@@ -276,8 +276,8 @@ const dnsServerTags = computed((): string[] => {
 })
 
 const finalDns = computed({
-  get() { return appConfig.value.dns.final?? '' },
-  set(v:string) { appConfig.value.dns.final = v.length>0 ? v : undefined }
+  get() { return dns.value?.final?? '' },
+  set(v:string) { dns.value.final = v.length>0 ? v : undefined }
 })
 
 
