@@ -216,17 +216,15 @@ export default {
             "server": "8.8.8.8",
             "server_port": 53,
             "detour": "proxy",
-            "address_resolver": "local-dns",
+            "domain_resolver": "local-dns",
           },
           { 
             "tag": "direct-dns",
             "type": "local",
-            "detour": "direct"
           },
           {
             "tag": "local-dns",
             "type": "local",
-            "detour": "direct"
           }
         ],
         "rules": [
@@ -253,7 +251,7 @@ export default {
             "server": "proxy-dns"
           },
         ],
-        "final": "proxy-dns",
+        "final": "local-dns",
         "strategy": "prefer_ipv4"
       },
       geositeList: [
