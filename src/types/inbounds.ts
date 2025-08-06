@@ -214,7 +214,17 @@ const defaultValues: Record<InType, Inbound> = {
   tuic: <TUIC>{ type: InTypes.TUIC, congestion_control: "cubic", tls_id: 0 },
   hysteria2: <Hysteria2>{ type: InTypes.Hysteria2, tls_id: 0 },
   vless: <VLESS>{ type: InTypes.VLESS, tls_id: 0, multiplex: {}, transport: {} },
-  anytls: <AnyTls>{ type: InTypes.AnyTls, tls_id: 0 },
+  anytls: <AnyTls>{ type: InTypes.AnyTls, tls_id: 0, padding_scheme: [
+    "stop=8",
+    "0=30-30",
+    "1=100-400",
+    "2=400-500,c,500-1000,c,500-1000,c,500-1000,c,500-1000",
+    "3=9-9,500-1000",
+    "4=500-1000",
+    "5=500-1000",
+    "6=500-1000",
+    "7=500-1000"
+  ]},
   tun: <Tun>{ type: InTypes.Tun, mtu: 9000, stack: 'system', udp_timeout: '5m', auto_route: false },
   redirect: <Redirect>{ type: InTypes.Redirect },
   tproxy: <TProxy>{ type: InTypes.TProxy },
