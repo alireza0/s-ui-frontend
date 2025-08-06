@@ -65,6 +65,8 @@
           hide-details
           :label="$t('basic.routing.defaultDns')"
           :items="dnsTags"
+          clearable
+          @click:clear="delete subJsonExt.default_domain_resolver"
           v-model="subJsonExt.default_domain_resolver">
         </v-select>
       </v-col>
