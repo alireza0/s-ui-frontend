@@ -101,8 +101,8 @@ const outbounds = computed((): Outbound[] => {
   return <Outbound[]> Data().outbounds
 })
 
-const outboundTags = computed((): any[] => {
-  return outbounds.value?.map((o:Outbound) => o.tag)
+const outboundTags = computed((): string[] => {
+  return [...Data().outbounds?.map((o:Outbound) => o.tag), ...Data().endpoints?.map((e:any) => e.tag)]
 })
 
 const onlines = computed(() => {
