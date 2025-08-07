@@ -70,7 +70,7 @@
             ></v-text-field>
           </v-col>
         </v-row>
-        <Dial :dial="appConfig.ntp" :outTags="outboundTags" v-if="appConfig.ntp?.enabled" />
+        <Dial :dial="appConfig.ntp" v-if="appConfig.ntp?.enabled" />
       </v-expansion-panel-text>
     </v-expansion-panel>
     <v-expansion-panel title="Experimental">

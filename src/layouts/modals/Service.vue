@@ -22,7 +22,7 @@
         </v-row>
 
         <Listen :data="srv" :inTags="inTags" />
-        <Derp v-if="srv.type == srvTypes.DERP" :data="srv" :inTags="inTags" :outTags="outTags" :tsTags="tsTags" />
+        <Derp v-if="srv.type == srvTypes.DERP" :data="srv" :inTags="inTags" :tsTags="tsTags" />
         <SSMapi v-if="srv.type == srvTypes.SSMAPI" :data="srv" :ssTags="ssTags" />
         <InTLS v-if="HasTls.includes(srv.type)"  :inbound="srv" :tlsConfigs="tlsConfigs" :tls_id="srv.tls_id" />
       </v-card-text>
@@ -57,7 +57,7 @@ import InTLS from '@/components/tls/InTLS.vue'
 import SSMapi from '@/components/services/SSMAPI.vue'
 import Data from '@/store/modules/data'
 export default {
-  props: ['visible', 'data', 'id', 'inTags', 'outTags', 'tsTags', 'ssTags', 'tlsConfigs'],
+  props: ['visible', 'data', 'id', 'inTags', 'tsTags', 'ssTags', 'tlsConfigs'],
   emits: ['close'],
   data() {
     return {

@@ -39,7 +39,7 @@
         </v-text-field>
       </v-col>
     </v-row>
-    <Dial :dial="Inbound.handshake" :outTags="outTags" />
+    <Dial :dial="Inbound.handshake" />
     <v-row v-if="Inbound.handshake_for_server_name != undefined">
       <v-col cols="12" sm="6" md="4">
         <v-text-field
@@ -86,7 +86,7 @@
           </v-text-field>
         </v-col>
       </v-row>
-      <Dial :dial="value" :outTags="outTags" />
+      <Dial :dial="value" />
     </v-card>
   </v-card>
 </template>
@@ -96,7 +96,7 @@ import { ShadowTLS } from '@/types/inbounds'
 import Dial from '../Dial.vue'
 
 export default {
-  props: ['data', 'outTags'],
+  props: ['data'],
   data() {
     return {
       handshake_server: ''

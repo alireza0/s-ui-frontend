@@ -50,7 +50,7 @@
             hide-details
             v-model="clientUrl.url">
             </v-text-field>
-            <Dial :dial="clientUrl" :outTags="outTags" />     
+            <Dial :dial="clientUrl" />     
           </v-col>
         </v-row>
       </v-card>
@@ -94,7 +94,7 @@
                 </v-text-field>
               </v-col>
             </v-row>
-            <Dial :dial="mesh" :outTags="outTags" />     
+            <Dial :dial="mesh" />     
             <OutTLS :outbound="mesh" />
           </v-col>
         </v-row>
@@ -175,7 +175,7 @@ import Dial from '@/components/Dial.vue'
 import OutTLS from '../tls/OutTLS.vue'
 import Listen from '../Listen.vue'
 export default {
-  props: ['data', 'tsTags', 'inTags', 'outTags'],
+  props: ['data', 'tsTags', 'inTags'],
   data() {
     return {
       menu: false,

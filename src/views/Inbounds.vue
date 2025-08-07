@@ -4,7 +4,6 @@
     :visible="modal.visible"
     :id="modal.id"
     :inTags="inTags"
-    :outTags="outTags"
     :tlsConfigs="tlsConfigs"
     @close="closeModal"
   />
@@ -125,10 +124,6 @@ const tlsConfigs = computed((): any[] => {
 
 const inTags = computed((): string[] => {
   return inbounds.value?.map(i => i.tag)
-})
-
-const outTags = computed((): string[] => {
-  return appConfig.value.outbounds?.map(i => i.tag)
 })
 
 const onlines = computed(() => {

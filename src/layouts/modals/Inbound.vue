@@ -45,7 +45,7 @@
               <Hysteria v-if="inbound.type == inTypes.Hysteria" direction="in" :data="inbound" />
               <Hysteria2 v-if="inbound.type == inTypes.Hysteria2" direction="in" :data="inbound" />
               <Naive v-if="inbound.type == inTypes.Naive" :inbound="inbound" />
-              <ShadowTls v-if="inbound.type == inTypes.ShadowTLS" direction="in" :data="inbound" :outTags="outTags" />
+              <ShadowTls v-if="inbound.type == inTypes.ShadowTLS" direction="in" :data="inbound" />
               <Tuic v-if="inbound.type == inTypes.TUIC" direction="in" :data="inbound" />
               <Tun v-if="inbound.type == inTypes.Tun" :data="inbound" />
               <AnyTls v-if="inbound.type == inTypes.AnyTls" :data="inbound" direction="in" />
@@ -117,7 +117,7 @@ import AddrVue from '@/components/Addr.vue'
 import OutJsonVue from '@/components/OutJson.vue'
 import Data from '@/store/modules/data'
 export default {
-  props: ['visible', 'id', 'inTags', 'outTags', 'tlsConfigs'],
+  props: ['visible', 'id', 'inTags', 'tlsConfigs'],
   emits: ['close'],
   data() {
     return {

@@ -4,7 +4,6 @@
     :visible="dnsModal.visible"
     :index="dnsModal.index"
     :data="dnsModal.data"
-    :outTags="outboundTags"
     :tsTags="tsTags"
     :rslvdTags="rslvdTags"
     @close="closeDnsModal"
@@ -232,10 +231,6 @@ onMounted(() => {
   if (!appConfig.value.dns.rules) appConfig.value.dns.rules = []
 
   oldConfig.value = JSON.parse(JSON.stringify(Data().config))
-})
-
-const outboundTags = computed((): string[] => {
-  return [...Data().outbounds?.map((o:any) => o.tag), ...Data().endpoints?.map((e:any) => e.tag)]
 })
 
 const tsTags = computed((): string[] => {

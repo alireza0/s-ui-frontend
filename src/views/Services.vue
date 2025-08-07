@@ -5,7 +5,6 @@
     :id="modal.id"
     :data="modal.data"
     :inTags="inTags"
-    :outTags="outTags"
     :tsTags="tsTags"
     :ssTags="ssTags"
     :tlsConfigs="tlsConfigs"
@@ -98,10 +97,6 @@ const ssTags = computed((): any[] => {
 
 const inTags = computed((): any[] => {
   return Data().inbounds?.map((o:any) => o.tag).filter(t => t != null)
-})
-
-const outTags = computed((): any[] => {
-  return Data().outbounds?.map((o:any) => o.tag).filter(t => t != null)
 })
 
 const tlsConfigs = computed((): any[] => {

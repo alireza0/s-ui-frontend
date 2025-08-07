@@ -30,7 +30,7 @@
           @refreshPeerKey="refreshWgPeerKey" />
         <Warp v-if="endpoint.type == epTypes.Warp" :data="endpoint" />
         <TailscaleVue v-if="endpoint.type == epTypes.Tailscale" :data="endpoint" />
-        <Dial :dial="endpoint" :outTags="tags" />
+        <Dial :dial="endpoint" />
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>

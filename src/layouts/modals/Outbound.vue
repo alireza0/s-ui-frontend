@@ -67,7 +67,7 @@
               <Transport v-if="Object.hasOwn(outbound,'transport')" :data="outbound" />
               <OutTLS v-if="Object.hasOwn(outbound,'tls')" :outbound="outbound" />
               <Multiplex v-if="Object.hasOwn(outbound,'multiplex')" direction="out" :data="outbound" />
-              <Dial v-if="!NoDial.includes(outbound.type)" :dial="outbound" :outTags="tags" />
+              <Dial v-if="!NoDial.includes(outbound.type)" :dial="outbound" />
             </v-window-item>
             <v-window-item value="t2">
               <v-row>

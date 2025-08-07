@@ -124,13 +124,14 @@
 import Data from '@/store/modules/data'
 
 export default {
-  props: ['dial', 'outTags'],
+  props: ['dial'],
   data() {
     return {
       menu: false
     }
   },
   computed: {
+    outTags() { return [...Data().outbounds?.map((o:any) => o.tag), ...Data().endpoints?.map((e:any) => e.tag)] },
     connectTimeout: {
       get() { return this.$props.dial.connect_timeout ? parseInt(this.$props.dial.connect_timeout.replace('s','')) : 5 },
       set(newValue:number) { this.$props.dial.connect_timeout = newValue > 0 ? newValue + 's' : '5s' }
