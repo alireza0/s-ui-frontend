@@ -41,7 +41,7 @@
     </v-row>
     <v-row v-if="optionAdvRoutes">
       <v-col cols="12" sm="8">
-        <v-text-field v-model="data.advertise_routes" :label="$t('types.ts.advRoutes') + ' ' + $t('commaSeparated')"></v-text-field>
+        <v-text-field v-model="advertise_routes" :label="$t('types.ts.advRoutes') + ' ' + $t('commaSeparated')"></v-text-field>
       </v-col>
       <v-col cols="12" sm="6" md="4">
         <v-switch color="primary" v-model="data.advertise_exit_node" :label="$t('types.ts.advExitNode')"></v-switch>
@@ -123,7 +123,7 @@ export default {
       get() { return this.$props.data?.advertise_routes !== undefined },
       set(v: boolean) { 
         if (v) {
-          this.$props.data.advertise_routes = ""
+          this.$props.data.advertise_routes = []
         } else {
           delete this.$props.data.advertise_routes
           delete this.$props.data.advertise_exit_node
@@ -137,6 +137,10 @@ export default {
     udpTimeout: {
       get() { return this.$props.data?.udp_timeout? this.$props.data.udp_timeout.replace('s','') : '' },
       set(v: number) { this.$props.data.udp_timeout = v>1 ? v + 's' : '30s' }
+    },
+    advertise_routes: {
+      get() { return this.$props.data?.advertise_routes?.join(',') ?? "" },
+      set(v: string) { this.$props.data.advertise_routes = v.length > 0 ? v.split(',') : [] }
     },
   },
 }
