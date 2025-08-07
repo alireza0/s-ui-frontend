@@ -96,7 +96,7 @@ const ssTags = computed((): any[] => {
 })
 
 const inTags = computed((): any[] => {
-  return Data().inbounds?.map((o:any) => o.tag).filter(t => t != null)
+  return [...Data().inbounds?.map((o:any) => o.tag).filter(t => t != null), ...Data().endpoints?.filter((e:any) => e.listen_port > 0).map((e:any) => e.tag)]
 })
 
 const tlsConfigs = computed((): any[] => {

@@ -261,7 +261,7 @@ const saveConfig = async () => {
 }
 
 const inboundTags = computed((): string[] => {
-  return Data().inbounds?.map((i:any) => i.tag)
+  return [...Data().inbounds?.map((i:any) => i.tag), ...Data().endpoints?.filter((e:any) => e.listen_port > 0).map((e:any) => e.tag)]
 })
 
 const clientNames = computed((): string[] => {
