@@ -351,7 +351,7 @@ export default {
       set(v:boolean) {
         if (v) {
           this.subJsonExt.dns = this.defaultDns
-          if (this.rules == undefined) this.subJsonExt.rules = []
+          if (this.rules == undefined) this.subJsonExt.rules = [{ action: 'sniff' }]
           this.subJsonExt.rules.unshift({ protocol: "dns", action: "hijack-dns" })
         } else {
           delete this.subJsonExt.dns
