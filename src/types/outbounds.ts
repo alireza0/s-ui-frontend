@@ -183,9 +183,9 @@ export interface Tor extends OutboundBasics, Dial {
   executable_path?: string
   extra_args?: string[]
   data_directory: string
-  // torrc?: {
-  //   ClientOnly: 0 | 1
-  // }
+  torrc?: {
+    ClientOnly: string
+  }
 }
 
 export interface SSH extends OutboundBasics, Dial  {
@@ -241,7 +241,7 @@ const defaultValues: Record<OutType, Outbound> = {
   tuic: { type: OutTypes.TUIC, congestion_control: 'cubic', tls: { enabled: true } },
   hysteria2: { type: OutTypes.Hysteria2, tls: { enabled: true } },
   anytls: { type: OutTypes.AnyTls, tls: { enabled: true } },
-  tor: { type: OutTypes.Tor, executable_path: './tor', data_directory: '$HOME/.cache/tor', torrc: { ClientOnly: 1 } },
+  tor: { type: OutTypes.Tor, executable_path: './tor', data_directory: '$HOME/.cache/tor', torrc: { ClientOnly: '1' } },
   ssh: { type: OutTypes.SSH },
   selector: { type: OutTypes.Selector },
   urltest: { type: OutTypes.URLTest },
