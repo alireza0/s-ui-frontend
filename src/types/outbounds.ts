@@ -184,7 +184,7 @@ export interface Tor extends OutboundBasics, Dial {
   extra_args?: string[]
   data_directory: string
   torrc?: {
-    ClientOnly: string
+    [options: string]: string
   }
 }
 
