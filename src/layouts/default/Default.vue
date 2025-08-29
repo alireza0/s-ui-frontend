@@ -32,4 +32,7 @@ const isMobile = computed( ():boolean =>{
   border-bottom: 1px solid gray;
   min-height: 20px;
 }
+.v-switch.v-input {
+  padding-inline-start: .6rem;
+}
 </style>
