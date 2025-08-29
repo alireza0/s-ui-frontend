@@ -45,9 +45,17 @@
         <v-text-field
         :label="$t('types.shdwTls.addHS')"
         hide-details
-        append-icon="mdi-plus"
-        @click:append="addHandshakeServer()"
         v-model="handshake_server">
+        <template v-slot:append>
+          <v-chip 
+            color="primary"
+            density="compact"
+            variant="elevated"
+            :disabled="handshake_server == ''"
+            @click="addHandshakeServer()">
+            <v-icon icon="mdi-plus" />
+          </v-chip>
+        </template>
         </v-text-field>
       </v-col>
     </v-row>
@@ -59,12 +67,9 @@
       color="background">
       <v-card-title>
         <v-row>
-          <v-col>{{ key }}</v-col>
-          <v-spacer></v-spacer>
-          <v-col>
-            <v-btn @click="Inbound.handshake_for_server_name ? delete Inbound.handshake_for_server_name[key] : null"
-                  icon="mdi-delete"
-            ></v-btn>
+          <v-col>{{ key }}
+            <v-icon icon="mdi-delete" color="error" size="small"
+            @click="Inbound.handshake_for_server_name ? delete Inbound.handshake_for_server_name[key] : null" />
           </v-col>
         </v-row>
       </v-card-title>

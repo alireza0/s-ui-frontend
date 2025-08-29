@@ -35,7 +35,7 @@
         <v-row>
           <v-col>{{ $t('types.derp.verifyClientUrl') }}</v-col>
           <v-col cols="auto" align-self="center" justify-self="center">
-            <v-icon @click="data.verify_client_url.push({url: ''})" icon="mdi-plus" />
+            <v-chip color="primary" density="compact" variant="elevated" @click="data.verify_client_url.push({url: ''})"><v-icon icon="mdi-plus" /></v-chip>
           </v-col>
         </v-row>
       </v-card-title>
@@ -60,7 +60,7 @@
         <v-row>
           <v-col>{{ $t('types.derp.meshWith') }}</v-col>
           <v-col cols="auto" align-self="center" justify-self="center">
-            <v-icon @click="data.mesh_with.push({tls: {}})" icon="mdi-plus" />
+            <v-chip color="primary" density="compact" variant="elevated" @click="data.mesh_with.push({tls: {}})"><v-icon icon="mdi-plus" /></v-chip>
           </v-col>
         </v-row>
       </v-card-title>

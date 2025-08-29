@@ -101,12 +101,13 @@
   </v-card>
   <v-card v-if="data.peers != undefined">
     <v-card-subtitle>
-      {{ $t('types.wg.peers') }} <v-icon @click="addPeer" icon="mdi-plus" />
+      {{ $t('types.wg.peers') }}
+      <v-chip color="primary" density="compact" variant="elevated" @click="addPeer"><v-icon icon="mdi-plus" /></v-chip>
     </v-card-subtitle>
     <template v-for="(p, index) in data.peers">
       <v-card style="margin-top: 1rem;">
         <v-card-subtitle>
-          {{ $t('types.wg.peer') + ' ' + (index+1) }} <v-icon icon="mdi-delete" @click="delPeer(index)" />
+          {{ $t('types.wg.peer') + ' ' + (index+1) }} <v-icon color="error" icon="mdi-delete" @click="delPeer(index)" />
         </v-card-subtitle>
         <Peer :data="p" :ext="data.ext" @refreshPeerKey="$emit('refreshPeerKey', index)" />
       </v-card>

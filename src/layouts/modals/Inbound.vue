@@ -58,12 +58,12 @@
             <v-window-item value="c">
               <OutJsonVue :inData="inbound" :type="inbound.type" />
               <Multiplex v-if="Object.hasOwn(inbound,'multiplex')" direction="out" :data="inbound.out_json" />
-              <v-card>
+              <v-card style="margin-top: 1rem;">
                 <v-card-subtitle>{{ $t('in.multiDomain') }}
-                  <v-icon @click="add_addr" icon="mdi-plus"></v-icon>
+                  <v-chip color="primary" density="compact" variant="elevated" @click="add_addr"><v-icon icon="mdi-plus" /></v-chip>
                 </v-card-subtitle>
                 <template v-for="addr,index in inbound.addrs">
-                  {{ $t('in.addr') }} #{{ (index+1) }} <v-icon icon="mdi-delete" @click="inbound.addrs?.splice(index,1)" />
+                  {{ $t('in.addr') }} #{{ (index+1) }} <v-icon icon="mdi-delete" color="error" @click="inbound.addrs?.splice(index,1)" />
                   <v-divider></v-divider>
                   <AddrVue :addr="addr" :hasTls="HasTls.includes(inbound.type)" />
                 </template>

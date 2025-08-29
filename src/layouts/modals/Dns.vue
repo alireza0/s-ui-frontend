@@ -43,7 +43,9 @@
             </v-col>
           </v-row>
           <v-card>
-            <v-card-subtitle>Predefined <v-icon @click="addHostsPredefined" icon="mdi-plus"></v-icon></v-card-subtitle>
+            <v-card-subtitle>Predefined
+              <v-chip color="primary" density="compact" variant="elevated" @click="addHostsPredefined"><v-icon icon="mdi-plus" /></v-chip>
+            </v-card-subtitle>
             <v-row v-for="(pd, index) in hostsPredefined">
               <v-col cols="12" sm="6" md="4">
                 <v-text-field v-model="pd.name" :label="$t('setting.domain')" @input="update_pds_key(index,$event.target.value)" hide-details></v-text-field>
@@ -53,9 +55,10 @@
                   v-model="pd.value"
                   :label="$t('types.tun.addr') + $t('commaSeparated')"
                   @input="update_pds_value(index,$event.target.value)"
-                  append-icon="mdi-delete"
-                  @click:append="delHostsPredefined(index)"
                   hide-details>
+                  <template v-slot:append>
+                    <v-icon @click="delHostsPredefined(index)" color="error" icon="mdi-delete" />
+                  </template>
                 </v-text-field>
               </v-col>
             </v-row>

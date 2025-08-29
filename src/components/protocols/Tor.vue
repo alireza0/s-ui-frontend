@@ -13,7 +13,9 @@
         <v-text-field v-model="extra_args" :label="$t('types.tor.extArgs') + ' ' + $t('commaSeparated')" hide-details></v-text-field>
       </v-col>
     </v-row>
-    <div class="v-card-subtitle" style="margin: 10px;">Torrc <v-icon icon="mdi-plus" @click="add_torrc_option" /></div>
+    <div class="v-card-subtitle" style="margin: 10px;">Torrc
+      <v-chip color="primary" density="compact" variant="elevated" @click="add_torrc_option"><v-icon icon="mdi-plus" /></v-chip>
+    </div>
     <v-row v-for="(torrc, index) in torrc_options">
       <v-col cols="auto" align-self="center" justify-self="center">
         <v-icon @click="del_torrc_option(index)" color="error" icon="mdi-delete" />
