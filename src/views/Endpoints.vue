@@ -93,7 +93,7 @@
         >
           mdi-qrcode
         </v-icon>
-          <v-btn icon="mdi-chart-line" @click="showStats(item.tag)">
+          <v-btn icon="mdi-chart-line" @click="showStats(item.tag)" v-if="Data().enableTraffic">
             <v-icon />
             <v-tooltip activator="parent" location="top" :text="$t('stats.graphTitle')"></v-tooltip>
           </v-btn>
