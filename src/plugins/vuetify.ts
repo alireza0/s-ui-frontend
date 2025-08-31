@@ -17,7 +17,19 @@ import { createVuetify } from 'vuetify'
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
   defaults: {
-    VRow: { dense: true } // Apply dense to v-row as default
+    VRow: { dense: true }, // Apply dense to v-row as default
+    VTextField: {
+      variant: 'solo-filled',
+    },
+    VSelect: {
+      variant: 'solo-filled',
+    },
+    VCombobox: {
+      variant: 'solo-filled',
+    },
+    VTextarea: {
+      variant: 'solo-filled',
+    },
   },
   theme: {
     defaultTheme: localStorage.getItem('theme') ?? 'light',
