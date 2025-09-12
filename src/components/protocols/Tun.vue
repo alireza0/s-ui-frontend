@@ -35,13 +35,11 @@
       <v-col cols="12" sm="6" md="4">
         <v-switch v-model="data.endpoint_independent_nat" color="primary" label="Independent NAT" hide-details></v-switch>
       </v-col>
-      <!-- Add an `auto_route` switch to control whether routes are automatically added -->
       <v-col cols="12" sm="6" md="4">
-        <v-switch v-model="data.auto_route" color="primary" label="Auto Route" hide-details></v-switch>
+        <v-switch v-model="autoRoute" color="primary" label="Auto Route" hide-details></v-switch>
       </v-col>
-      <!-- Add an `auto_redirect` switch, only available when `auto_route` is enabled -->
-      <v-col cols="12" sm="6" md="4">
-        <v-switch v-model="data.auto_redirect" :disabled="!data.auto_route" color="primary" label="Auto Redirect" hide-details></v-switch>
+      <v-col cols="12" sm="6" md="4" v-if="autoRoute">
+        <v-switch v-model="data.auto_redirect" color="primary" label="Auto Redirect" hide-details></v-switch>
       </v-col>
     </v-row>
   </v-card>
@@ -64,35 +62,16 @@ export default {
     udpTimeout: {
       get() { return this.$props.data.udp_timeout ? parseInt(this.$props.data.udp_timeout.replace('m','')) : 5 },
       set(v:number) { this.$props.data.udp_timeout = v > 0 ? v + 'm' : '5m' }
-    }
-  },
-  // Watch for changes in data and set default values for these fields to prevent user input errors
-  watch: {
-    data: {
-      handler(newData) {
-        if (newData) {
-          if (typeof newData.auto_route === 'undefined') {
-            newData.auto_route = false;
-          }
-          if (typeof newData.auto_redirect === 'undefined') {
-            newData.auto_redirect = false;
-          }
-          if (!newData.address || newData.address.length === 0) {
-            newData.address = ['172.18.0.1/30'];
-          }
-          if (!newData.interface_name) {
-            newData.interface_name = 'tun0';
-          }
-        }
-      },
-      immediate: true,
-      deep: true
     },
-    // Listen for changes to auto_route; automatically disable auto_redirect when auto_route is turned off
-    'data.auto_route': {
-      handler(newVal) {
-        if (!newVal && this.data.auto_redirect) {
-          this.data.auto_redirect = false;
+    autoRoute: {
+      get() { return this.$props.data.auto_route ?? false },
+      set(v:boolean) { 
+        if (v) {
+          this.$props.data.auto_route = true
+          this.$props.data.auto_redirect = false
+        } else {
+          delete this.$props.data.auto_route
+          delete this.$props.data.auto_redirect
         }
       }
     }
