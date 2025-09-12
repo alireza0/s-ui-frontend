@@ -73,19 +73,19 @@ export default {
         if (newData) {
           // 如果auto_route字段不存在，初始化为false
           if (typeof newData.auto_route === 'undefined') {
-            this.$set(newData, 'auto_route', false);
+            newData.auto_route = false;
           }
           // 如果auto_redirect字段不存在，初始化为false
           if (typeof newData.auto_redirect === 'undefined') {
-            this.$set(newData, 'auto_redirect', false);
+            newData.auto_redirect = false;
           }
           // 为address设置默认值
           if (!newData.address || newData.address.length === 0) {
-            this.$set(newData, 'address', ['172.18.0.1/30']);
+            newData.address = ['172.18.0.1/30'];
           }
           // 为interface_name设置默认值
           if (!newData.interface_name) {
-            this.$set(newData, 'interface_name', 'tun0');
+            newData.interface_name = 'tun0';
           }
         }
       },
@@ -96,7 +96,7 @@ export default {
     'data.auto_route': {
       handler(newVal) {
         if (!newVal && this.data.auto_redirect) {
-          this.$set(this.data, 'auto_redirect', false);
+          this.data.auto_redirect = false;
         }
       }
     }
