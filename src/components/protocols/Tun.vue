@@ -35,11 +35,11 @@
       <v-col cols="12" sm="6" md="4">
         <v-switch v-model="data.endpoint_independent_nat" color="primary" label="Independent NAT" hide-details></v-switch>
       </v-col>
-      <!-- 添加auto_route开关，用于控制是否自动添加路由 -->
+      <!-- Add an `auto_route` switch to control whether routes are automatically added -->
       <v-col cols="12" sm="6" md="4">
         <v-switch v-model="data.auto_route" color="primary" label="Auto Route" hide-details></v-switch>
       </v-col>
-      <!-- 添加auto_redirect开关，仅在auto_route启用时可用 -->
+      <!-- Add an `auto_redirect` switch, only available when `auto_route` is enabled -->
       <v-col cols="12" sm="6" md="4">
         <v-switch v-model="data.auto_redirect" :disabled="!data.auto_route" color="primary" label="Auto Redirect" hide-details></v-switch>
       </v-col>
@@ -66,24 +66,20 @@ export default {
       set(v:number) { this.$props.data.udp_timeout = v > 0 ? v + 'm' : '5m' }
     }
   },
-  // 监听data变化，确保字段有默认值
+  // Watch for changes in data and set default values for these fields to prevent user input errors
   watch: {
     data: {
       handler(newData) {
         if (newData) {
-          // 如果auto_route字段不存在，初始化为false
           if (typeof newData.auto_route === 'undefined') {
             newData.auto_route = false;
           }
-          // 如果auto_redirect字段不存在，初始化为false
           if (typeof newData.auto_redirect === 'undefined') {
             newData.auto_redirect = false;
           }
-          // 为address设置默认值
           if (!newData.address || newData.address.length === 0) {
             newData.address = ['172.18.0.1/30'];
           }
-          // 为interface_name设置默认值
           if (!newData.interface_name) {
             newData.interface_name = 'tun0';
           }
@@ -92,7 +88,7 @@ export default {
       immediate: true,
       deep: true
     },
-    // 监听auto_route变化，当关闭时自动关闭auto_redirect
+    // Listen for changes to auto_route; automatically disable auto_redirect when auto_route is turned off
     'data.auto_route': {
       handler(newVal) {
         if (!newVal && this.data.auto_redirect) {
