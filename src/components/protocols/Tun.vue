@@ -2,12 +2,12 @@
   <v-card subtitle="Tun">
     <v-row>
       <v-col cols="12" sm="8">
-        <v-text-field v-model="addrs" :label="$t('types.tun.addr') + ' ' + $t('commaSeparated')" hide-details></v-text-field>
+        <v-text-field v-model="addrs" :label="$t('types.tun.addr') + ' ' + $t('commaSeparated')" placeholder="172.18.0.1/30" hide-details></v-text-field>
       </v-col>
     </v-row>
     <v-row>
       <v-col cols="12" sm="6" md="4">
-        <v-text-field v-model="data.interface_name" :label="$t('types.tun.ifName')" hide-details clearable @click:clear="delete data.interface_name"></v-text-field>
+        <v-text-field v-model="data.interface_name" :label="$t('types.tun.ifName')" placeholder="tun0" hide-details clearable @click:clear="delete data.interface_name"></v-text-field>
       </v-col>
       <v-col cols="12" sm="6" md="4">
         <v-text-field type="number" v-model.number="data.mtu" label="MTU" hide-details></v-text-field>
@@ -35,6 +35,12 @@
       <v-col cols="12" sm="6" md="4">
         <v-switch v-model="data.endpoint_independent_nat" color="primary" label="Independent NAT" hide-details></v-switch>
       </v-col>
+      <v-col cols="12" sm="6" md="4">
+        <v-switch v-model="autoRoute" color="primary" label="Auto Route" hide-details></v-switch>
+      </v-col>
+      <v-col cols="12" sm="6" md="4" v-if="autoRoute">
+        <v-switch v-model="data.auto_redirect" color="primary" label="Auto Redirect" hide-details></v-switch>
+      </v-col>
     </v-row>
   </v-card>
 </template>
@@ -56,7 +62,19 @@ export default {
     udpTimeout: {
       get() { return this.$props.data.udp_timeout ? parseInt(this.$props.data.udp_timeout.replace('m','')) : 5 },
       set(v:number) { this.$props.data.udp_timeout = v > 0 ? v + 'm' : '5m' }
+    },
+    autoRoute: {
+      get() { return this.$props.data.auto_route ?? false },
+      set(v:boolean) { 
+        if (v) {
+          this.$props.data.auto_route = true
+          this.$props.data.auto_redirect = false
+        } else {
+          delete this.$props.data.auto_route
+          delete this.$props.data.auto_redirect
+        }
+      }
     }
-  },
+  }
 }
 </script>
