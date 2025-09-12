@@ -152,10 +152,10 @@ export interface Tun extends InboundBasics {
   udp_timeout?: string
   stack?: string
   auto_route?: boolean
-  // strict_route?: boolean
+  strict_route?: boolean
   // iproute2_table_index?: number
   // iproute2_rule_index?: number
-  // auto_redirect?: boolean
+  auto_redirect?: boolean
   // auto_redirect_input_mark?: string
   // auto_redirect_output_mark?: string
   // route_address?: string[]

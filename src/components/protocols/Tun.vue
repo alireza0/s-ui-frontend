@@ -35,11 +35,16 @@
       <v-col cols="12" sm="6" md="4">
         <v-switch v-model="data.endpoint_independent_nat" color="primary" label="Independent NAT" hide-details></v-switch>
       </v-col>
+    </v-row>
+    <v-row>
       <v-col cols="12" sm="6" md="4">
         <v-switch v-model="autoRoute" color="primary" label="Auto Route" hide-details></v-switch>
       </v-col>
       <v-col cols="12" sm="6" md="4" v-if="autoRoute">
         <v-switch v-model="data.auto_redirect" color="primary" label="Auto Redirect" hide-details></v-switch>
+      </v-col>
+      <v-col cols="12" sm="6" md="4" v-if="autoRoute">
+        <v-switch v-model="data.strict_route" color="primary" label="Strict Route" hide-details></v-switch>
       </v-col>
     </v-row>
   </v-card>
@@ -65,14 +70,10 @@ export default {
     },
     autoRoute: {
       get() { return this.$props.data.auto_route ?? false },
-      set(v:boolean) { 
-        if (v) {
-          this.$props.data.auto_route = true
-          this.$props.data.auto_redirect = false
-        } else {
-          delete this.$props.data.auto_route
-          delete this.$props.data.auto_redirect
-        }
+      set(v:boolean) {
+        this.$props.data.auto_route = v
+        this.$props.data.auto_redirect = v ? false : undefined
+        this.$props.data.strict_route = v ? false : undefined
       }
     }
   }
