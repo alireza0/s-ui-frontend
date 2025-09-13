@@ -249,15 +249,15 @@
                     <v-list-item>
                       <v-switch v-model="optionCS" color="primary" :label="$t('tls.cs')" hide-details></v-switch>
                     </v-list-item>
+                    <v-list-item>
+                      <v-switch v-model="optionFP" color="primary" label="UTLS" hide-details></v-switch>
+                    </v-list-item>
                   </template>
                   <template v-else>
                     <v-list-item>
                       <v-switch v-model="optionTime" color="primary" label="Max Time Difference" hide-details></v-switch>
                     </v-list-item>
                   </template>
-                  <v-list-item>
-                    <v-switch v-model="optionFP" color="primary" label="UTLS" hide-details></v-switch>
-                  </v-list-item>
                 </v-list>
               </v-card>
             </v-menu>
@@ -369,8 +369,9 @@ export default {
         this.tls.server = <iTls>{
           enabled: true,
           reality: { enabled: true, handshake: { server_port: 443 }, short_id: RandomUtil.randomShortId() },
-          server_name: "" }
-        this.tls.client = <oTls>{ reality: { public_key: "" } }
+          server_name: ""
+        }
+        this.tls.client = <oTls>{ reality: { public_key: "" }, utls: defaultOutTls.utls }
       } else {
         this.tls.server = <iTls>{ enabled: true }
         this.tls.client = <oTls>{}
