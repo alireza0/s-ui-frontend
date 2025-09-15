@@ -241,7 +241,7 @@ export default {
       switch (newRule.action){
         case 'route':
           newRule.server = this.ruleData.server
-          newRule.strategy = this.ruleData.network_strategy?.length > 0 ? this.ruleData.network_strategy : undefined
+          newRule.strategy = this.ruleData.strategy?.length > 0 ? this.ruleData.strategy : undefined
           newRule.disable_cache = this.ruleData.disable_cache? true : undefined
           newRule.rewrite_ttl = this.ruleData.rewrite_ttl > 0 ? this.ruleData.rewrite_ttl : undefined
           newRule.client_subnet = this.ruleData.client_subnet?.length > 0 ? this.ruleData.client_subnet : undefined
