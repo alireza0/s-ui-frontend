@@ -202,6 +202,7 @@ export default {
         { title: 'DTLS', value: 'dtls' },
         { title: 'SSH', value: 'ssh' },
         { title: 'RDP', value: 'rdp' },
+        { title: 'NTP', value: 'ntp' },
       ],
       strategies: [
         { title: 'Prefer IPv4', value: 'prefer_ipv4' },
