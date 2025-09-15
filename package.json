@@ -11,7 +11,7 @@
   "dependencies": {
     "@achrinza/node-ipc": "github:achrinza/node-ipc",
     "@mdi/font": "7.4.47",
-    "axios": "^1.11.0",
+    "axios": "^1.12.2",
     "chart.js": "^4.5.0",
     "clipboard": "^2.0.11",
     "core-js": "^3.43.0",
