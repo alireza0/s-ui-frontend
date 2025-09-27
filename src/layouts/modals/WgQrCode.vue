@@ -11,7 +11,7 @@
       <v-divider></v-divider>
       <v-row v-for="l, i in wgLinks">
         <v-col style="text-align: center;" v-if="l.length>0">
-          <v-chip>{{ $t('types.wg.peer') + ' ' + (i+1) }}</v-chip><br />
+          <v-chip>{{ $t('types.wg.peer') + ' ' + (i+1) }}</v-chip> <v-icon icon="mdi-download" @click="download(l,i)" /><br />
           <QrcodeVue :value="l" :size="size" @click="copyToClipboard(l)" :margin="1" style="border-radius: .5rem; cursor: copy;" />
         </v-col>
       </v-row>
@@ -96,6 +96,18 @@ export default {
       // Perform click on hidden button to trigger copy
       hiddenButton.click()
       document.body.removeChild(hiddenButton)
+    },
+    download(text: string, i: number) {
+      let filename = this.wgData.tag + '_peer_' + (i+1) + '.conf';
+      let element = document.createElement('a');
+      element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(text));
+      element.setAttribute('download', filename);
+
+      element.style.display = 'none';
+      document.body.appendChild(element);
+
+      element.click();
+      document.body.removeChild(element);     
     }
   },
   computed: {
