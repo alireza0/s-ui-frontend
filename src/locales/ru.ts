@@ -34,6 +34,11 @@ export default {
     core: "Ошибка Sing-Box",
     invalidData: "Неверные данные",
   },
+  theme: {
+    light: "Светлый", 
+    dark: "Темный",
+    system: "Система",
+  },
   pages: {
     login: "Вход",
     home: "Главная",

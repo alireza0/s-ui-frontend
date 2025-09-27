@@ -19,7 +19,24 @@
                 v-model="$i18n.locale"
                 @update:modelValue="changeLocale">
                 <template v-slot:append>
-                  <v-icon icon="mdi-theme-light-dark" @click="toggleTheme()"></v-icon>
+                  <v-menu>
+                    <template v-slot:activator="{ props }">
+                      <v-btn icon v-bind="props">
+                        <v-icon>mdi-theme-light-dark</v-icon>
+                      </v-btn>
+                    </template>
+                    <v-list>
+                      <v-list-item
+                        v-for="th in themes"
+                        :key="th.value"
+                        @click="changeTheme(th.value)"
+                        :prepend-icon="th.icon"
+                        :active="isActiveTheme(th.value)"
+                      >
+                        <v-list-item-title>{{ $t(`theme.${th.value}`) }}</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
                 </template>
               </v-select>
             </v-card-text>
@@ -39,7 +56,12 @@ import HttpUtil from '@/plugins/httputil'
 
 const theme = useTheme()
 const locale = useLocale()
-const darkMode = ref(localStorage.getItem('theme') == "dark")
+
+const themes = [
+  { value: 'light', icon: 'mdi-white-balance-sunny' },
+  { value: 'dark', icon: 'mdi-moon-waning-crescent' },
+  { value: 'system', icon: 'mdi-laptop' },
+]
 
 const username = ref('')
 const usernameRules = [
@@ -77,10 +99,13 @@ const changeLocale = (l: any) => {
   locale.current.value = l ?? 'en'
   localStorage.setItem('locale', locale.current.value)
 }
-const toggleTheme = () => {
-  darkMode.value = !darkMode.value
-  theme.change(darkMode.value ? "dark" : "light")
-  localStorage.setItem('theme', theme.global.name.value)
+const changeTheme = (th: string) => {
+  theme.change(th)
+  localStorage.setItem('theme', th)
+}
+const isActiveTheme = (th: string) => {
+  const current = localStorage.getItem('theme') ?? 'system'
+  return current == th
 }
 </script>
   

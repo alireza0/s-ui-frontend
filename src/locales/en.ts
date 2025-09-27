@@ -34,6 +34,11 @@ export default {
     core: "Sing-Box Error",
     invalidData: "Invalid Data",
   },
+  theme: {
+    light: "Light",
+    dark: "Dark",
+    system: "System",
+  },
   pages: {
     login: "Login",
     home: "Home",

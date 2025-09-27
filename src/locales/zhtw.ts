@@ -34,6 +34,11 @@ export default {
     core: "Sing-Box 錯誤",
     invalidData: "無效數據",
   },
+  theme: {
+    light: "明亮",
+    dark: "暗黑",
+    system: "系統",
+  },
   pages: {
     login: "登錄",
     home: "主頁",

@@ -3,12 +3,28 @@
     <v-icon v-if="isMobile" icon="mdi-menu" @click="$emit('toggleDrawer')" />
     <span v-else style="width: 24px"></span>
     <v-app-bar-title :text="$t(<string>route.name)" class="align-center text-center " />
-    <v-icon icon="mdi-theme-light-dark" @click="toggleTheme()" style="margin: 0 10px;"></v-icon>
+    <v-menu>
+      <template v-slot:activator="{ props }">
+        <v-btn icon v-bind="props">
+          <v-icon>mdi-theme-light-dark</v-icon>
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-item
+          v-for="th in themes"
+          :key="th.value"
+          @click="changeTheme(th.value)"
+          :prepend-icon="th.icon"
+          :active="isActiveTheme(th.value)"
+        >
+          <v-list-item-title>{{ $t(`theme.${th.value}`) }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
   </v-app-bar>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue"
 import { useTheme } from 'vuetify'
 import { useRoute } from 'vue-router'
 
@@ -16,11 +32,18 @@ defineProps(['isMobile'])
 
 const route = useRoute()
 const theme = useTheme()
-const darkMode = ref(localStorage.getItem('theme') == "dark")
+const themes = [
+  { value: 'light', icon: 'mdi-white-balance-sunny' },
+  { value: 'dark', icon: 'mdi-moon-waning-crescent' },
+  { value: 'system', icon: 'mdi-laptop' },
+]
 
-const toggleTheme = () => {
-  darkMode.value = !darkMode.value
-  theme.change(darkMode.value ? "dark" : "light")
-  localStorage.setItem('theme', theme.global.name.value)
+const changeTheme = (th: string) => {
+  theme.change(th)
+  localStorage.setItem('theme', th)
+}
+const isActiveTheme = (th: string) => {
+  const current = localStorage.getItem('theme') ?? 'system'
+  return current == th
 }
 </script>

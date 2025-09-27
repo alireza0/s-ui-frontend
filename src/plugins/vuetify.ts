@@ -6,7 +6,7 @@
 
 // Styles
 import '@mdi/font/css/materialdesignicons.css'
-import 'vuetify/styles'
+import 'vuetify/styles/main.css'
 
 import colors from 'vuetify/util/colors'
 import { fa, en, vi, zhHans, zhHant, ru } from 'vuetify/locale'
@@ -32,7 +32,7 @@ export default createVuetify({
     },
   },
   theme: {
-    defaultTheme: localStorage.getItem('theme') ?? 'light',
+    defaultTheme: localStorage.getItem('theme') ?? 'system',
     themes: {
       light: {
         colors: {

@@ -34,6 +34,11 @@ export default {
     core: "خطا در سینگ‌باکس",
     invalidData: "داده نامعتبر",
   },
+  theme: {
+    light: "روشن",
+    dark: "تیره",
+    system: "سیستم",
+  },
   pages: {
     login: "ورود",
     home: "خانه",

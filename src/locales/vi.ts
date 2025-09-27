@@ -34,6 +34,11 @@ export default {
     core: "Lỗi Sing-Box",
     invalidData: "Dữ liệu khỏ hợp lệ",
   },
+  theme: {
+    light: "Nhật",
+    dark: "Xanh",
+    system: "Phòng bán",
+  },
   pages: {
     login: "Đăng nhập",
     home: "Trang chủ",

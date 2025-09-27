@@ -34,6 +34,11 @@ export default {
     core: "Sing-Box 错误",
     invalidData: "无效数据",
   },
+  theme: {
+    light: "浅色",
+    dark: "深色",
+    system: "跟随系统",
+  },
   pages: {
     login: "登录",
     home: "主页",
