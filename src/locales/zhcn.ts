@@ -29,6 +29,9 @@ export default {
   count: "计数",
   template: "模板",
   editor: "编辑器",
+  scanOnly: "仅扫描",
+  clickToCopy: "点击二维码复制",
+  noLinks: "暂无链接",
   error: {
     dplData: "重复数据",
     core: "Sing-Box 错误",
@@ -81,7 +84,7 @@ export default {
       uptime: "运行时间",
       threads: "线程",
       memory: "内存",
-      running: "运行状态"
+      running: "运行状态",
     },
     backup: {
       title: "备份与恢复",
@@ -302,7 +305,7 @@ export default {
     anytls: {
       idleInterval: "空闲会话检查间隔",
       idleTimeout: "空闲会话超时",
-      minIdle: "最小空闲会话数"
+      minIdle: "最小空闲会话数",
     },
   },
   in: {
@@ -432,13 +435,13 @@ export default {
           servFail: "服务器故障",
           nxDomain: "未找到",
           refused: "被拒绝",
-          notImp: "未实现"
+          notImp: "未实现",
         },
         answer: "回答",
         ns: "名称服务器",
-        extra: "附加"
-      }
-    }
+        extra: "附加",
+      },
+    },
   },
   basic: {
     log: {
@@ -467,7 +470,7 @@ export default {
       allowPrivate: "允许私有网络",
     },
   },
-  tls : {
+  tls: {
     enable: "启用 TLS",
     usePath: "使用外部路径",
     useText: "使用文件内容",
@@ -500,7 +503,7 @@ export default {
       customCa: "自定义 CA 提供商",
       extAcc: "外部账户",
       dns01: "DNS01 挑战",
-      dns01Provider: "DNS01 挑战提供商"
+      dns01Provider: "DNS01 挑战提供商",
     },
   },
   stats: {
@@ -533,4 +536,4 @@ export default {
     s: "秒",
     ms: "毫秒",
   },
-}
+};
