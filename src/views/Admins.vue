@@ -6,6 +6,13 @@
     @close="closeEditModal"
     @save="saveEditModal"
   />
+  <AdminEnable2FAModal 
+    v-model="enable2FAModal.visible"
+    :visible="enable2FAModal.visible"
+    :user="enable2FAModal.user"
+    @close="closeEnable2FAModal"
+    @save="saveEnable2FAModal"
+  />
   <ChangeModal 
     v-model="changesModal.visible"
     :visible="changesModal.visible"
@@ -18,6 +25,25 @@
     :visible="tokenModal.visible"
     @close="closeTokenModal"
   />
+  <v-dialog v-model="open2FAdisable" width="auto">
+    <v-card
+      max-width="400"
+      prepend-icon="mdi-alert"
+	  :title="$t('warning')"
+	  :text="$t('admin.confirm2FAdisable')">
+      <template v-slot:actions>
+        <v-btn
+		  color="primary"
+          variant="outlined"
+          @click="open2FAdisable = false"
+        >{{ $t('close') }}</v-btn>
+		<v-btn
+		  variant="tonal"
+          @click="saveDisable2FA()"
+        >{{ $t('disable') }}</v-btn>
+      </template>
+    </v-card>
+  </v-dialog>
   <v-row>
     <v-col cols="12" justify="center" align="center">
       <v-btn color="primary" @click="showChangesModal('')" style="margin: 0 5px;">{{ $t('admin.changes') }}</v-btn>
@@ -49,12 +75,22 @@
               {{ item.ip }}
             </v-col>
           </v-row>
+		  <v-row>
+            <v-col>2FA</v-col>
+            <v-col>
+              {{ item.totp ? $t('admin.enabled') : $t('admin.disabled') }}
+            </v-col>
+          </v-row>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions style="padding: 0;">
           <v-btn icon="mdi-account-edit" @click="showEditModal(item)">
             <v-icon />
             <v-tooltip activator="parent" location="top" :text="$t('actions.edit')"></v-tooltip>
+          </v-btn>
+		  <v-btn icon="mdi-shield-lock-outline" @click="show2FAModal(item)">
+            <v-icon />
+            <v-tooltip activator="parent" location="top" :text="$t('actions.edit2fa')"></v-tooltip>
           </v-btn>
           <v-btn icon="mdi-list-box-outline" @click="showChangesModal(item.username)">
             <v-icon />
@@ -68,6 +104,7 @@
 
 <script lang="ts" setup>
 import AdminModal from '@/layouts/modals/Admin.vue'
+import AdminEnable2FAModal from '@/layouts/modals/AdminEnable2FA.vue'
 import ChangeModal  from '@/layouts/modals/Changes.vue'
 import TokenModal from '@/layouts/modals/Token.vue'
 import { i18n } from '@/locales'
@@ -77,6 +114,7 @@ import { Ref, ref, inject, onMounted } from 'vue'
 const loading:Ref = inject('loading')?? ref(false)
 
 const users = ref(<any[]>[])
+const open2FAdisable = ref(false)
 
 onMounted(async () => {loadData()})
 
@@ -95,6 +133,7 @@ const loadData = async () => {
         loginDate: loginDateTime[0],
         loginTime: loginDateTime[1],
         ip: lastLogin[2]?? "-",
+		totp: u.totp
       })
     })
   }
@@ -126,6 +165,53 @@ const saveEditModal = async (data:any) => {
     setTimeout(() => {
       loading.value=false
       editModal.value.visible = false
+    }, 500)
+  } else {
+    loading.value=false
+  }
+}
+
+const show2FAModal = (user: any) => {
+	if (user.totp) {
+		open2FAdisable.value = true
+	} else {
+		showEnable2FAModal(user)
+	}
+}
+
+const enable2FAModal = ref({
+  visible: false,
+  user: {},
+})
+
+const showEnable2FAModal = (user: any) => {
+  enable2FAModal.value.user = user
+  enable2FAModal.value.visible = true
+}
+const closeEnable2FAModal = () => {
+  enable2FAModal.value.visible = false
+  enable2FAModal.value.user = {}
+}
+const saveEnable2FAModal = async (data: any) => {
+  loading.value=true
+  const response = await HttpUtils.post('api/enable2fa',data)
+  if(response.success){
+    setTimeout(() => {
+      loading.value=false
+      closeEnable2FAModal()
+    }, 500)
+  } else {
+    loading.value=false
+  }
+}
+
+const saveDisable2FA = async () => {
+  loading.value=true
+  const response = await HttpUtils.post('api/disable2fa', null)
+  if(response.success){
+    setTimeout(() => {
+      loading.value=false
+	  open2FAdisable.value = false
     }, 500)
   } else {
     loading.value=false
