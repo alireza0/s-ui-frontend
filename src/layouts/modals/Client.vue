@@ -39,14 +39,37 @@
                   <v-text-field v-model="client.desc" :label="$t('client.desc')" hide-details></v-text-field>
                 </v-col>
               </v-row>
+
+              <!-- ✅ UPDATED: add maxOnline field next to volume/expiry -->
               <v-row>
                 <v-col cols="12" sm="6" md="4">
-                  <v-text-field v-model.number="Volume" type="number" min="0" :label="$t('stats.volume')" suffix="GiB" hide-details></v-text-field>
+                  <v-text-field
+                    v-model.number="Volume"
+                    type="number"
+                    min="0"
+                    :label="$t('stats.volume')"
+                    suffix="GiB"
+                    hide-details
+                  ></v-text-field>
                 </v-col>
+
                 <v-col cols="12" sm="6" md="4">
                   <DatePick :expiry="expDate" @submit="setDate" />
                 </v-col>
+
+                <v-col cols="12" sm="6" md="4">
+                  <v-text-field
+                    v-model.number="MaxOnline"
+                    type="number"
+                    min="0"
+                    :label="$t('client.maxOnline')"
+                    :hint="$t('client.maxOnlineHint')"
+                    persistent-hint
+                    hide-details
+                  ></v-text-field>
+                </v-col>
               </v-row>
+
               <v-row v-if="id > 0">
                 <v-col cols="12" sm="6" md="4" class="d-flex flex-column">
                   <div class="d-flex justify-space-between align-center">
@@ -70,10 +93,11 @@
                 </v-col>
                 <v-col cols="12" sm="6" md="4">
                   <v-icon icon="mdi-upload" color="orange" /><span class="text-orange">{{ up }}</span>
-                  / 
+                  /
                   <v-icon icon="mdi-download" color="success" /><span class="text-success">{{ down }}</span>
                 </v-col>
               </v-row>
+
               <v-row>
                 <v-col>
                   <v-select
@@ -91,13 +115,14 @@
                 </v-col>
               </v-row>
             </v-window-item>
+
             <v-window-item value="t2">
               <v-row>
                 <v-col cols="12" sm="6" md="4">
                   <v-btn variant="tonal" @click="shuffle()">{{ $t('reset') + ' - ' + $t('all') }}<v-icon icon="mdi-refresh" /></v-btn>
                 </v-col>
               </v-row>
-              <v-row v-for="key in Object.keys(clientConfig)">
+              <v-row v-for="key in Object.keys(clientConfig)" :key="key">
                 <v-col cols="12" md="3" align="end" align-self="center">
                     {{ key }}
                     <v-icon @click="shuffle(key)" icon="mdi-refresh" v-tooltip:top="$t('reset')" />
@@ -130,8 +155,9 @@
                 </v-col>
               </v-row>
             </v-window-item>
+
             <v-window-item value="t3">
-              <v-row v-for="(lnk, index) in links">
+              <v-row v-for="(lnk, index) in links" :key="index">
                 <v-col cols="auto">{{ index + 1 }}</v-col>
                 <v-col style="direction: ltr; overflow-y: hidden;">{{ lnk.uri }}</v-col>
               </v-row>
@@ -140,7 +166,7 @@
                   <v-btn color="primary" @click="extLinks.push({ type: 'external', uri: ''})">{{ $t('actions.add') }} {{ $t('client.external') }}</v-btn>
                 </v-col>
               </v-row>
-              <v-row v-for="(lnk, index) in extLinks">
+              <v-row v-for="(lnk, index) in extLinks" :key="'ext-'+index">
                 <v-col>
                   <v-text-field
                   dir="ltr"
@@ -156,7 +182,7 @@
                   <v-btn color="primary" @click="subLinks.push({ type: 'sub', uri: ''})">{{ $t('actions.add') }} {{ $t('client.sub') }}</v-btn>
                 </v-col>
               </v-row>
-              <v-row v-for="(lnk, index) in subLinks">
+              <v-row v-for="(lnk, index) in subLinks" :key="'sub-'+index">
                 <v-col>
                   <v-text-field
                   dir="ltr"
@@ -229,9 +255,9 @@ export default {
         this.title = "add"
         this.clientConfig = randomConfigs('client')
       }
-      this.links = this.client.links?.filter(l => l.type == 'local')?? []
-      this.extLinks = this.client.links?.filter(l => l.type == 'external')?? []
-      this.subLinks = this.client.links?.filter(l => l.type == 'sub')?? []
+      this.links = this.client.links?.filter(l => l.type == 'local') ?? []
+      this.extLinks = this.client.links?.filter(l => l.type == 'external') ?? []
+      this.subLinks = this.client.links?.filter(l => l.type == 'sub') ?? []
       this.tab = "t1"
       this.loading = false
     },
@@ -249,8 +275,9 @@ export default {
       this.loading = true
       this.client.config = updateConfigs(this.clientConfig, this.client.name)
       this.client.links = [
-                        ...this.extLinks.filter(l => l.uri != ''),
-                        ...this.subLinks.filter(l => l.uri != '')]
+        ...this.extLinks.filter(l => l.uri != ''),
+        ...this.subLinks.filter(l => l.uri != '')
+      ]
       const success = await Data().save("clients", this.$props.id == 0 ? "new" : "edit", this.client)
       if (success) this.closeModal()
       this.loading = false
@@ -271,13 +298,23 @@ export default {
       set(v:number[]) { this.client.inbounds = v.length == 0 ?  [] : v.sort() }
     },
     expDate: {
-      get() { return this.client.expiry},
+      get() { return this.client.expiry },
       set(v:any) { this.client.expiry = v }
     },
     Volume: {
       get() { return this.client.volume == 0 ? 0 : (this.client.volume / (1024 ** 3)) },
       set(v:number) { this.client.volume = v > 0 ? v*(1024 ** 3) : 0 }
     },
+
+    // ✅ NEW: maxOnline field binding (0 = unlimited)
+    MaxOnline: {
+      get() { return (this.client as any).maxOnline ?? 0 },
+      set(v:number) {
+        const n = Number.isFinite(v) ? Math.floor(v) : 0
+        ;(this.client as any).maxOnline = n > 0 ? n : 0
+      }
+    },
+
     up() :string { return HumanReadable.sizeFormat(this.client.up) },
     down() :string { return HumanReadable.sizeFormat(this.client.down) },
     total() :string { return HumanReadable.sizeFormat(this.client.down + this.client.up) },
@@ -293,5 +330,4 @@ export default {
   },
   components: { DatePick },
 }
-
 </script>
