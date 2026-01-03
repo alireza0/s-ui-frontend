@@ -16,7 +16,7 @@
           </v-col>
         </v-row>
         <v-card style="background-color: inherit; margin-bottom: 5px;" v-for="(r, index) in ruleData.rules" v-if="ruleData.type == 'logical'">
-          <v-card-subtitle>{{ $t('objects.rule') + ' ' + (index+1) }}
+          <v-card-subtitle>{{ $t('objects.rule') + ' ' + (Number(index)+1) }}
             <v-icon @click="ruleData.rules.splice(index,1)" icon="mdi-delete" v-if="ruleData.rules.length>1" />
           </v-card-subtitle>
           <v-card-text style="padding: 0;">

@@ -107,7 +107,7 @@
     <template v-for="(p, index) in data.peers">
       <v-card style="margin-top: 1rem;">
         <v-card-subtitle>
-          {{ $t('types.wg.peer') + ' ' + (index+1) }} <v-icon color="error" icon="mdi-delete" @click="delPeer(index)" />
+          {{ $t('types.wg.peer') + ' ' + (Number(index)+1) }} <v-icon color="error" icon="mdi-delete" @click="delPeer(Number(index))" />
         </v-card-subtitle>
         <Peer :data="p" :ext="data.ext" @refreshPeerKey="$emit('refreshPeerKey', index)" />
       </v-card>
