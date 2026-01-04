@@ -86,9 +86,10 @@ export default {
     backup: {
       title: "پشتیبان‌گیری و بازیابی",
       backup: "دریافت پشتیبان",
-      restore: "بازیابی",
+      restore: "بازیابی پشتیبان",
       exclStats: "بدون گراف‌ها",
       exclChanges: "بدون تغییرات",
+      sbConfig: "دریافت پیکربندی سینگ‌باکس",
     },
   },
   objects: {

@@ -86,9 +86,10 @@ export default {
     backup: {
       title: "备份与恢复",
       backup: "下载备份",
-      restore: "恢复",
+      restore: "恢复备份",
       exclStats: "排除图表数据",
       exclChanges: "排除变更数据",
+      sbConfig: "下载 Sing-Box 配置",
     },
   },
   objects: {

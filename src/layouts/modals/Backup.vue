@@ -19,15 +19,20 @@
           <v-col cols="auto">
             <v-checkbox v-model="exclude" :label="$t('main.backup.exclChanges')" value="changes" hide-details></v-checkbox>
           </v-col>
-          <v-spacer></v-spacer>
+        </v-row>
+        <v-row>
           <v-col cols="auto" align-self="center">
             <v-btn color="primary" @click="backup()" hide-details>{{ $t('main.backup.backup') }}</v-btn>
           </v-col>
-        </v-row>
-        <v-row>
           <v-spacer></v-spacer>
           <v-col cols="auto" align-self="center">
             <v-btn color="primary" @click="restore()" hide-details>{{ $t('main.backup.restore') }}</v-btn>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-divider></v-divider>
+          <v-col cols="auto" align-self="center">
+            <v-btn color="primary" @click="config()" hide-details>{{ $t('main.backup.sbConfig') }}</v-btn>
           </v-col>
         </v-row>
       </v-card-text>
@@ -48,6 +53,9 @@ export default {
     backup() {
       const excludeOption = this.exclude.length>0 ? '?exclude=' +this.exclude.join(',') : ''
       window.location.href = 'api/getdb' + excludeOption
+    },
+    config() {
+      window.location.href = 'api/singbox-config'
     },
     restore() {
       const fileInput = document.createElement('input')

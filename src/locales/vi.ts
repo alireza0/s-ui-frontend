@@ -86,9 +86,10 @@ export default {
     backup: {
       title: "Sao lưu và khôi phục",
       backup: "Tải xuống bản sao lưu",
-      restore: "Khôi phục",
+      restore: "Khôi phục bản sao lưu",
       exclStats: "Loại trừ các biểu đồ",
       exclChanges: "Loại trừ các thay đổi",
+      sbConfig: "Tải xuống cấu hình Sing-Box",
     }
   },
   objects: {

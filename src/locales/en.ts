@@ -86,9 +86,10 @@ export default {
     backup: {
       title: "Backup & Restore",
       backup: "Download Backup",
-      restore: "Restore",
+      restore: "Restore Backup",
       exclStats: "Exclude graphs",
       exclChanges: "Exclude changes",
+      sbConfig: "Download Sing-Box Config",
     }
   },
   objects: {
