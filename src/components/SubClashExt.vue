@@ -121,20 +121,11 @@ export default {
           "MATCH,Proxy"
         ]
       },
-      geoList: [
-        { title: "Site-Private", value: "geoip-private" },
-        { title: "IP-Private", value: "geosite-private" },
-        { title: "Site-Ads", value: "geosite-ads" },
-        { title: "🇮🇷 Site-Iran", value: "geosite-ir" },
-        { title: "🇮🇷 IP-Iran", value: "geoip-ir" },
-        { title: "🇨🇳 Site-China", value: "geosite-cn" },
-        { title: "🇨🇳 IP-China", value: "geoip-cn" },
-        { title: "🇻🇳 Site-Vietnam", value: "geosite-vn" },
-        { title: "🇻🇳 IP-Vietnam", value: "geoip-vn" },
-      ],
       rulesIP: [
         { title: 'Private-Direct', value: 'GEOIP,Private,DIRECT' },
         { title: 'Private-Block', value: 'GEOIP,Private,REJECT' },
+        { title: 'LAN-Direct', value: 'GEOIP,LAN,DIRECT' },
+        { title: 'LAN-Block', value: 'GEOIP,LAN,REJECT' },
         { title: 'Ads-Direct', value: 'GEOIP,Ads,DIRECT' },
         { title: 'Ads-Block', value: 'GEOIP,Ads,REJECT' },
         { title: '🇨🇳 China-Direct', value: 'GEOIP,CN,DIRECT' },
@@ -143,6 +134,8 @@ export default {
         { title: '🇮🇷 Iran-Block', value: 'GEOIP,CATEGORY-IR,REJECT' },
         { title: '🇻🇳 Vietnam-Direct', value: 'GEOIP,CATEGORY-VN,DIRECT' },
         { title: '🇻🇳 Vietnam-Block', value: 'GEOIP,CATEGORY-VN,REJECT' },
+        { title: '🇯🇵 Japan-Direct', value: 'GEOIP,JP,DIRECT' },
+        { title: '🇯🇵 Japan-Block', value: 'GEOIP,JP,REJECT' },
       ],
     }
   },
