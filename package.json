@@ -28,7 +28,7 @@
     "yaml": "^2.8.2"
   },
   "devDependencies": {
-    "@babel/types": "^7.28.5",
+    "@babel/types": "^7.28.6",
     "@types/node": "^25.0.3",
     "@vitejs/plugin-vue": "^6.0.3",
     "eslint-plugin-vue": "^10.6.2",
