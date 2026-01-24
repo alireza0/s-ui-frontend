@@ -212,6 +212,8 @@ export default {
     resetPeriodDays: "Reset Period (Days)",
     useCreationDay: "Use Creation Day",
     lastResetAt: "Last Reset",
+    resetToday: "Today",
+    nextReset: "Next Reset",
     trafficHistory: "Traffic History",
     periodUsage: "Period Usage",
   },
@@ -541,6 +543,7 @@ export default {
   date: {
     expiry: "Expiry",
     expired: "Expired",
+    days: "days",
     d: "d",
     h: "h",
     m: "m",

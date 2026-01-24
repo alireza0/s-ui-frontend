@@ -212,6 +212,8 @@ export default {
     resetPeriodDays: "重置周期（天）",
     useCreationDay: "使用创建日期",
     lastResetAt: "上次重置",
+    resetToday: "今天",
+    nextReset: "下次重置",
     trafficHistory: "流量历史",
     periodUsage: "周期使用量",
   },
@@ -541,6 +543,7 @@ export default {
   date: {
     expiry: "到期",
     expired: "已到期",
+    days: "天",
     d: "天",
     h: "时",
     m: "分",
