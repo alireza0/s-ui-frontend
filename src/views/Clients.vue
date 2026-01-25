@@ -28,6 +28,13 @@
     :tag="stats.tag"
     @close="closeStats"
   />
+  <TrafficHistory
+    v-model="trafficHistory.visible"
+    :visible="trafficHistory.visible"
+    :clientId="trafficHistory.clientId"
+    :clientName="trafficHistory.clientName"
+    @close="closeTrafficHistory"
+  />
   <v-row justify="center" align="center">
     <v-col cols="auto">
       <v-btn color="primary" @click="showModal(0)">{{ $t('actions.add') }}</v-btn>
@@ -218,6 +225,14 @@
         >
           mdi-qrcode
         </v-icon>
+        <v-icon 
+          class="me-2" 
+          icon="mdi-history" 
+          @click="showTrafficHistory(item.id, item.name)"
+          v-if="item.resetMode > 0"
+        >
+          <v-tooltip activator="parent" location="top" :text="$t('client.trafficHistory')"></v-tooltip>
+        </v-icon>
         <v-icon icon="mdi-chart-line" @click="showStats(item.name)" v-if="Data().enableTraffic">
           <v-tooltip activator="parent" location="top" :text="$t('stats.graphTitle')"></v-tooltip>
         </v-icon>
@@ -241,6 +256,7 @@ import ClientModal from '@/layouts/modals/Client.vue'
 import ClientBulk from '@/layouts/modals/ClientBulk.vue'
 import QrCode from '@/layouts/modals/QrCode.vue'
 import Stats from '@/layouts/modals/Stats.vue'
+import TrafficHistory from '@/layouts/modals/TrafficHistory.vue'
 import { Client, ResetMode } from '@/types/clients'
 import { computed, ref } from 'vue'
 import { HumanReadable } from '@/plugins/utils'
@@ -426,6 +442,21 @@ const showStats = (tag: string) => {
 }
 const closeStats = () => {
   stats.value.visible = false
+}
+
+const trafficHistory = ref({
+  visible: false,
+  clientId: 0,
+  clientName: "",
+})
+
+const showTrafficHistory = (clientId: number, clientName: string) => {
+  trafficHistory.value.clientId = clientId
+  trafficHistory.value.clientName = clientName
+  trafficHistory.value.visible = true
+}
+const closeTrafficHistory = () => {
+  trafficHistory.value.visible = false
 }
 
 const doFilter = () => {

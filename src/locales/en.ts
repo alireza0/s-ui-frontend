@@ -215,6 +215,9 @@ export default {
     resetToday: "Today",
     nextReset: "Next Reset",
     trafficHistory: "Traffic History",
+    noTrafficHistory: "No traffic reset history found",
+    resetTime: "Reset Time",
+    periodStart: "Period Start",
     periodUsage: "Period Usage",
   },
   bulk: {

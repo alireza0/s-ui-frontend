@@ -215,6 +215,9 @@ export default {
     resetToday: "今天",
     nextReset: "下次重置",
     trafficHistory: "流量历史",
+    noTrafficHistory: "暂无流量重置记录",
+    resetTime: "重置时间",
+    periodStart: "周期开始",
     periodUsage: "周期使用量",
   },
   bulk: {
