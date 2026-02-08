@@ -12,7 +12,7 @@
         <v-col cols="auto">
           <v-dialog v-model="menu" :close-on-content-click="false" transition="scale-transition" max-width="800">
             <template v-slot:activator="{ props }">
-              <v-btn v-bind="props" hide-details variant="tonal">{{ $t('main.tiles') }} <v-icon icon="mdi-star-plus" /></v-btn>
+              <v-btn v-bind="props" hide-details variant="tonal" elevation="3">{{ $t('main.tiles') }} <v-icon icon="mdi-star-plus" /></v-btn>
             </template>
             <v-card rounded="xl">
               <v-card-title>
@@ -46,13 +46,19 @@
               </v-row>
             </v-card>
           </v-dialog>
-          <v-btn variant="tonal" hide-details style="margin-inline-start: 10px;" @click="backupModal.visible = true">{{ $t('main.backup.title') }} <v-icon icon="mdi-backup-restore" /></v-btn>
-          <v-btn variant="tonal" hide-details style="margin-inline-start: 10px;" @click="logModal.visible = true">{{ $t('basic.log.title') }} <v-icon icon="mdi-list-box-outline" /></v-btn>
+          <v-btn variant="tonal" hide-details 
+            style="margin-inline-start: 10px;" elevation="3"
+            @click="backupModal.visible = true">{{ $t('main.backup.title') }}<v-icon icon="mdi-backup-restore" />
+          </v-btn>
+          <v-btn variant="tonal" hide-details
+            style="margin-inline-start: 10px;" elevation="3"
+            @click="logModal.visible = true">{{ $t('basic.log.title') }} <v-icon icon="mdi-list-box-outline" />
+          </v-btn>
         </v-col>
       </v-row>
       <v-row>
         <v-col cols="12" sm="6" md="3" v-for="i in reloadItems" :key="i">
-          <v-card class="rounded-lg" variant="outlined" height="210px"
+          <v-card class="rounded-lg" variant="outlined" height="210px" elevation="5"
                   :title="menuItems.flatMap(cat => cat.value).find(m => m.value == i)?.title">
             <v-card-text style="padding: 0 16px;" align="center" justify="center">
               <Gauge :tilesData="tilesData" :type="i" v-if="i.charAt(0) == 'g'" />
