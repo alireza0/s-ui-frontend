@@ -79,6 +79,7 @@ export default {
       cpu: "پردازنده",
       core: "هسته",
       uptime: "مدت‌",
+      startupTime: "زمان راه‌اندازی",
       threads: "نخ‌ها",
       memory: "حافظه",
       running: "اجرا"
@@ -90,6 +91,10 @@ export default {
       exclStats: "بدون گراف‌ها",
       exclChanges: "بدون تغییرات",
       sbConfig: "دریافت پیکربندی سینگ‌باکس",
+    },
+    stats: {
+      title: "آمار و تعداد",
+      totalUsage: "مجموع مصرف",
     },
   },
   objects: {

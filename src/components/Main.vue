@@ -1,6 +1,7 @@
 <template>
   <LogVue v-model="logModal.visible" :control="logModal" :visible="logModal.visible" />
   <Backup v-model="backupModal.visible" :control="backupModal" :visible="backupModal.visible" />
+  <UsageStats v-model:visible="usageStatsModal.visible" />
   <v-container class="fill-height" :loading="loading">
     <v-responsive :class="reloadItems.length>0 ? 'fill-height text-center' : 'align-center'" >
       <v-row class="d-flex align-center justify-center">
@@ -54,12 +55,32 @@
             style="margin-inline-start: 10px;" elevation="3"
             @click="logModal.visible = true">{{ $t('basic.log.title') }} <v-icon icon="mdi-list-box-outline" />
           </v-btn>
+          <v-btn variant="tonal" hide-details
+            style="margin-inline-start: 10px;" elevation="3"
+            @click="usageStatsModal.visible = true">{{ $t('main.stats.title') }} <v-icon icon="mdi-chart-box-outline" />
+          </v-btn>
         </v-col>
       </v-row>
       <v-row>
         <v-col cols="12" sm="6" md="3" v-for="i in reloadItems" :key="i">
-          <v-card class="rounded-lg" variant="outlined" height="210px" elevation="5"
-                  :title="menuItems.flatMap(cat => cat.value).find(m => m.value == i)?.title">
+          <v-card class="rounded-lg" variant="outlined" height="210px" elevation="5">
+            <v-card-title>
+              {{ menuItems.flatMap(cat => cat.value).find(m => m.value == i)?.title }}
+              <template v-if="i == 'i-sys'">
+                <v-icon icon="mdi-update" color="primary"
+                  @click="reloadSys()" size="small" v-tooltip:top="$t('actions.update')"
+                  style="margin-inline-start: 10px;">
+                </v-icon>
+              </template>
+              <template v-if="i == 'h-net'">
+                <v-icon icon="mdi-information" color="primary" size="small"
+                  v-tooltip:top="'↓' + 
+                  HumanReadable.sizeFormat(tilesData.net?.recv) + ' - ' + 
+                  HumanReadable.sizeFormat(tilesData.net?.sent) + '↑'"
+                  style="margin-inline-start: 10px;">
+                </v-icon>
+              </template>
+            </v-card-title>
             <v-card-text style="padding: 0 16px;" align="center" justify="center">
               <Gauge :tilesData="tilesData" :type="i" v-if="i.charAt(0) == 'g'" />
               <History :tilesData="tilesData" :type="i" v-if="i.charAt(0) == 'h'" />
@@ -98,7 +119,10 @@
                     </v-chip>
                   </v-col>
                   <v-col cols="3">{{ $t('main.info.uptime') }}</v-col>
-                  <v-col cols="9">{{ HumanReadable.formatSecond(tilesData.uptime) }}</v-col>
+                  <v-col cols="9" v-tooltip:top="$t('main.info.startupTime')
+                    + ': ' + new Date((tilesData.sys?.bootTime || 0) * 1000).toLocaleString(locale)">
+                    {{ HumanReadable.formatSecond((Date.now()/1000) - tilesData.sys?.bootTime) }}
+                  </v-col>
                 </v-row>
               </template>
               <template v-if="i == 'i-sbd'">
@@ -132,15 +156,24 @@
                   <v-col cols="8">
                     <template v-if="tilesData.sbd?.running">
                       <v-chip density="compact" color="primary" variant="flat" v-if="Data().onlines.user">
-                        <v-tooltip activator="parent" location="top" :text="$t('pages.clients')" />
+                        <v-tooltip activator="parent" location="top" overflow="auto">
+                          <span v-text="$t('pages.clients')" style="font-weight: bold;"></span><br/>
+                          <span v-for="user in Data().onlines.user">{{ user }}<br /></span>
+                        </v-tooltip>
                         {{ Data().onlines.user?.length }}
                       </v-chip>
                       <v-chip density="compact" color="success" variant="flat" v-if="Data().onlines.inbound">
-                        <v-tooltip activator="parent" location="top" :text="$t('pages.inbounds')" />
+                        <v-tooltip activator="parent" location="top" :text="$t('pages.inbounds')">
+                          <span v-text="$t('pages.inbounds')" style="font-weight: bold;"></span><br/>
+                          <span v-for="i in Data().onlines.inbound">{{ i }}<br /></span>
+                        </v-tooltip>
                         {{ Data().onlines.inbound?.length }}
                       </v-chip>
                       <v-chip density="compact" color="info" variant="flat" v-if="Data().onlines.outbound">
-                        <v-tooltip activator="parent" location="top" :text="$t('pages.outbounds')" />
+                        <v-tooltip activator="parent" location="top" :text="$t('pages.outbounds')">
+                          <span v-text="$t('pages.outbounds')" style="font-weight: bold;"></span><br/>
+                          <span v-for="o in Data().onlines.outbound">{{ o }}<br /></span>
+                        </v-tooltip>
                         {{ Data().onlines.outbound?.length }}
                       </v-chip>
                     </template>
@@ -162,9 +195,10 @@ import Data from '@/store/modules/data'
 import Gauge from '@/components/tiles/Gauge.vue'
 import History from '@/components/tiles/History.vue'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { i18n } from '@/locales'
+import { i18n, locale } from '@/locales'
 import LogVue from '@/layouts/modals/Logs.vue'
 import Backup from '@/layouts/modals/Backup.vue'
+import UsageStats from '@/layouts/modals/UsageStats.vue'
 
 const loading = ref(false)
 const menu = ref(false)
@@ -205,9 +239,17 @@ const reloadItems = computed({
 
 const reloadData = async () => {
   const request = [...new Set(reloadItems.value.map(r => r.split('-')[1]))]
+  if (tilesData.value?.sys?.appVersion) request.filter(r => r != 'sys')
   const data = await HttpUtils.get('api/status',{ r: request.join(',')})
   if (data.success) {
     tilesData.value = data.obj
+  }
+}
+
+const reloadSys = async () => {
+  const data = await HttpUtils.get('api/status',{ r: 'sys'})
+  if (data.success) {
+    tilesData.value.sys = data.obj.sys
   }
 }
 
@@ -240,6 +282,8 @@ onBeforeUnmount(() => {
 const logModal = ref({ visible: false })
 
 const backupModal = ref({ visible: false })
+
+const usageStatsModal = ref({ visible: false })
 
 const restartSingbox = async () => {
   loading.value = true

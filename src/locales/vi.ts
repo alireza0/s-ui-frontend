@@ -79,6 +79,7 @@ export default {
       cpu: "CPU",
       core: "Nhân",
       uptime: "Thời gian hoạt động",
+      startupTime: "Thời gian khởi động",
       threads: "Luồng",
       memory: "Bộ nhớ",
       running: "Đang chạy"
@@ -90,7 +91,11 @@ export default {
       exclStats: "Loại trừ các biểu đồ",
       exclChanges: "Loại trừ các thay đổi",
       sbConfig: "Tải xuống cấu hình Sing-Box",
-    }
+    },
+    stats: {
+      title: "Sử dụng và số lượng",
+      totalUsage: "Tổng sử dụng",
+    },
   },
   objects: {
     inbound: "Đầu Vào",

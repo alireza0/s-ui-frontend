@@ -79,6 +79,7 @@ export default {
       cpu: "CPU",
       core: "Core",
       uptime: "Uptime",
+      startupTime: "Startup time",
       threads: "Threads",
       memory: "Memory",
       running: "Running"
@@ -90,7 +91,11 @@ export default {
       exclStats: "Exclude graphs",
       exclChanges: "Exclude changes",
       sbConfig: "Download Sing-Box Config",
-    }
+    },
+    stats: {
+      title: "Usage & Counts",
+      totalUsage: "Total Usage",
+    },
   },
   objects: {
     inbound: "Inbound",

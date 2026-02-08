@@ -79,6 +79,7 @@ export default {
       cpu: "CPU",
       core: "核心",
       uptime: "運行時間",
+      startupTime: "啟動時間",
       threads: "線程",
       memory: "內存",
       running: "運行狀態"
@@ -90,6 +91,10 @@ export default {
       exclStats: "排除圖表記錄",
       exclChanges: "排除更改記錄",
       sbConfig: "下載 Sing-Box 配置",
+    },
+    stats: {
+      title: "使用量與統計",
+      totalUsage: "總用量",
     },
   },
   objects: {

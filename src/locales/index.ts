@@ -20,6 +20,18 @@ export const i18n = createI18n({
   },
 })
 
+export const locale = (() => {
+  const l = i18n.global.locale.value
+  switch (l) {
+    case "zhHans":
+      return "zh-cn"
+    case "zhHant":
+      return "zh-tw"
+    default:
+      return l
+  }
+})()
+
 export const languages = [
   { title: 'English', value: 'en' },
   { title: 'فارسی', value: 'fa' },

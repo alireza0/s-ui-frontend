@@ -79,6 +79,7 @@ export default {
       cpu: "ЦП",
       core: "Ядро",
       uptime: "Время работы",
+      startupTime: "Время запуска",
       threads: "Потоки",
       memory: "Память",
       running: "Работает"
@@ -90,7 +91,11 @@ export default {
       exclStats: "Исключить графики",
       exclChanges: "Исключить изменения",
       sbConfig: "Скачать конфигурацию Sing-Box",
-    }
+    },
+    stats: {
+      title: "Использование и количество",
+      totalUsage: "Общее использование",
+    },
   },
   objects: {
     inbound: "Входящий",
