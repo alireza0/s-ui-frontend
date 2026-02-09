@@ -139,12 +139,12 @@
           </span>
         </template>
         <template v-slot:item.volume="{ item }">
-          <div class="text-start" v-tooltip:top="$t('stats.usage') + ': ' + HumanReadable.sizeFormat(item.up + item.down)">
+          <div class="text-start" v-tooltip:top="'↓' + HumanReadable.sizeFormat(item.down) + ' - ' + HumanReadable.sizeFormat(item.up) + '↑'">
             <v-chip
               size="small"
               :color="(item.volume>0 && item.volume<=(item.up + item.down))? 'error': ''"
               label
-            >{{ item.volume == 0 ? $t('unlimited') : HumanReadable.sizeFormat(item.volume) }}</v-chip>
+            >{{ item.volume == 0 ? $t('unlimited') : HumanReadable.sizeFormat(item.up + item.down) + ' / ' + HumanReadable.sizeFormat(item.volume) }}</v-chip>
           </div>
           <v-progress-linear
             :model-value="percent(item)"
@@ -156,6 +156,7 @@
         </template>
         <template v-slot:item.expiry="{ item }">
           <div class="text-start">
+            <v-tooltip v-if="item.expiry>0" activator="parent" location="top" :text="new Date(item.expiry * 1000).toLocaleString(locale)" />
             <v-chip
               size="small"
               :color="(item.expiry>0 && item.expiry<=Date.now()/1000)? 'error': ''"
@@ -233,7 +234,7 @@ import Stats from '@/layouts/modals/Stats.vue'
 import { Client } from '@/types/clients'
 import { computed, ref } from 'vue'
 import { HumanReadable } from '@/plugins/utils'
-import { i18n } from '@/locales'
+import { i18n, locale } from '@/locales'
 import { useDisplay } from 'vuetify'
 
 const { smAndDown } = useDisplay()
