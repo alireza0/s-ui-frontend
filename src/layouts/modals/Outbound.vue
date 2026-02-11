@@ -172,7 +172,7 @@ export default {
     async saveChanges() {
       if (!this.$props.visible) return
       // check duplicate tag
-      const isDuplicatedTag = Data().checkTag("outbound",this.outbound.id, this.outbound.tag)
+      const isDuplicatedTag = Data().checkTag("outbound",this.$props.id, this.outbound.tag)
       if (isDuplicatedTag) return
 
       // save data
@@ -188,6 +188,7 @@ export default {
         this.loading = false
         if (msg.success) {
           this.outbound = msg.obj
+          if (this.$props.id > 0) this.outbound.id = this.$props.id
           this.tab = "t1"
           this.link = ""
         }
