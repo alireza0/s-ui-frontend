@@ -127,6 +127,8 @@ export default {
     edit: "Edit",
     del: "Delete",
     clone: "Clone",
+    test: "Test",
+    testAll: "Test all",
     save: "Save",
     update: "Update",
     submit: "Submit",

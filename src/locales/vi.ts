@@ -127,6 +127,8 @@ export default {
     edit: "Chỉnh sửa",
     del: "Xóa",
     clone: "Nhân bản",
+    test: "Kiểm tra",
+    testAll: "Kiểm tra tất cả",
     save: "Lưu",
     update: "Cập nhật",
     submit: "Gửi",

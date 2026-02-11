@@ -127,6 +127,8 @@ export default {
     edit: "編輯",
     del: "刪除",
     clone: "克隆",
+    test: "測試",
+    testAll: "測試全部",
     save: "保存",
     update: "更新",
     submit: "提交",

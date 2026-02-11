@@ -14,9 +14,21 @@
     :tag="stats.tag"
     @close="closeStats"
   />
-  <v-row>
-    <v-col cols="12" justify="center" align="center">
+  <v-row justify="center" align="center">
+    <v-col cols="auto">
       <v-btn color="primary" @click="showModal(0)">{{ $t('actions.add') }}</v-btn>
+    </v-col>
+    <v-col cols="auto">
+      <v-btn
+        color="secondary"
+        variant="outlined"
+        :loading="testingAll"
+        append-icon="mdi-speedometer"
+        :disabled="testingAll || outbounds.length === 0"
+        @click="checkAllOutbounds"
+      >
+        {{ $t('actions.testAll') || 'Test all' }}
+      </v-btn>
     </v-col>
   </v-row>
   <v-row>
@@ -53,6 +65,24 @@
                 <v-chip density="comfortable" size="small" color="success" variant="flat">{{ $t('online') }}</v-chip>
               </template>
               <template v-else>-</template>
+              <template v-if="checkResults[item.tag]?.loading == false">
+                <template v-if="checkResults[item.tag]">
+                  <v-chip
+                    v-if="checkResults[item.tag].success"
+                    density="compact"
+                    size="small"
+                    color="success"
+                    variant="flat"
+                  >
+                    {{ checkResults[item.tag].data?.Delay + $t('date.ms') }}
+                  </v-chip>
+                  <v-tooltip v-else location="top" :text="checkResults[item.tag].errorMessage || $t('failed')">
+                    <template v-slot:activator="{ props }">
+                      <v-icon v-bind="props" size="small" color="error" icon="mdi-close-circle" />
+                    </template>
+                  </v-tooltip>
+                </template>
+              </template>
             </v-col>
           </v-row>
         </v-card-text>
@@ -80,6 +110,14 @@
               </v-card-actions>
             </v-card>
           </v-overlay>
+          <v-btn
+            icon="mdi-speedometer"
+            :loading="checkResults[item.tag]?.loading"
+            @click="checkOutbound(item.tag)"
+          >
+            <v-icon />
+            <v-tooltip activator="parent" location="top" :text="$t('actions.test')"></v-tooltip>
+          </v-btn>
           <v-btn icon="mdi-chart-line" @click="showStats(item.tag)" v-if="Data().enableTraffic">
             <v-icon />
             <v-tooltip activator="parent" location="top" :text="$t('stats.graphTitle')"></v-tooltip>
@@ -92,10 +130,44 @@
 
 <script lang="ts" setup>
 import Data from '@/store/modules/data'
+import HttpUtils from '@/plugins/httputil'
 import OutboundVue from '@/layouts/modals/Outbound.vue'
 import Stats from '@/layouts/modals/Stats.vue'
 import { Outbound } from '@/types/outbounds'
 import { computed, ref } from 'vue'
+
+interface CheckResult {
+  loading?: boolean
+  success: boolean
+  data?: { OK?: boolean; Delay?: number; Error?: string } | null
+  errorMessage?: string
+}
+
+const checkResults = ref<Record<string, CheckResult>>({})
+
+const checkOutbound = async (tag: string) => {
+  checkResults.value = { ...checkResults.value, [tag]: { loading: true, success: false } }
+  const msg = await HttpUtils.get('api/checkOutbound', { tag })
+  const success = msg.success && msg.obj?.OK
+  const errorMessage = success ? undefined : (msg.obj?.Error ?? msg.msg ?? '')
+  checkResults.value = {
+    ...checkResults.value,
+    [tag]: { loading: false, success, data: msg.obj ?? null, errorMessage }
+  }
+}
+
+const testingAll = ref(false)
+
+const checkAllOutbounds = async () => {
+  const list = outbounds.value
+  if (list.length === 0) return
+  testingAll.value = true
+  try {
+    await Promise.all(list.map((o) => checkOutbound(o.tag)))
+  } finally {
+    testingAll.value = false
+  }
+}
 
 const outbounds = computed((): Outbound[] => {
   return <Outbound[]> Data().outbounds

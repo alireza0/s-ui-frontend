@@ -127,6 +127,8 @@ export default {
     edit: "ویرایش",
     del: "حذف",
     clone: "شبیه‌سازی",
+    test: "تست",
+    testAll: "تست همه",
     save: "ذخیره",
     update: "بروزرسانی",
     submit: "ارسال",
