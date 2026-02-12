@@ -7,6 +7,12 @@
     :tags="outboundTags"
     @close="closeModal"
   />
+  <OutboundBulk
+    v-model="bulkModal.visible"
+    :visible="bulkModal.visible"
+    :outboundTags="outboundTags"
+    @close="closeBulkModal"
+  />
   <Stats
     v-model="stats.visible"
     :visible="stats.visible"
@@ -17,6 +23,9 @@
   <v-row justify="center" align="center">
     <v-col cols="auto">
       <v-btn color="primary" @click="showModal(0)">{{ $t('actions.add') }}</v-btn>
+    </v-col>
+    <v-col cols="auto">
+      <v-btn color="primary" @click="showBulkModal">{{ $t('actions.addbulk') }}</v-btn>
     </v-col>
     <v-col cols="auto">
       <v-btn
@@ -132,6 +141,7 @@
 import Data from '@/store/modules/data'
 import HttpUtils from '@/plugins/httputil'
 import OutboundVue from '@/layouts/modals/Outbound.vue'
+import OutboundBulk from '@/layouts/modals/OutboundBulk.vue'
 import Stats from '@/layouts/modals/Stats.vue'
 import { Outbound } from '@/types/outbounds'
 import { computed, ref } from 'vue'
@@ -197,6 +207,16 @@ const showModal = (id: number) => {
 
 const closeModal = () => {
   modal.value.visible = false
+}
+
+const bulkModal = ref({ visible: false })
+
+const showBulkModal = () => {
+  bulkModal.value.visible = true
+}
+
+const closeBulkModal = () => {
+  bulkModal.value.visible = false
 }
 
 const stats = ref({

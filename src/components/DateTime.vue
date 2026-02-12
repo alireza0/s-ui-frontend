@@ -99,7 +99,7 @@ export default {
       }
     }
   }
-};
+}
 </script>
 
 <style>
