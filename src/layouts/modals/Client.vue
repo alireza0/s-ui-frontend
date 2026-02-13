@@ -74,6 +74,48 @@
                   <v-icon icon="mdi-download" color="success" /><span class="text-success">{{ down }}</span>
                 </v-col>
               </v-row>
+              <!-- Traffic Reset Settings -->
+              <v-divider class="my-3"></v-divider>
+              <v-row>
+                <v-col cols="12">
+                  <span class="text-subtitle-2">{{ $t('client.trafficReset') }}</span>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12" sm="6" md="4">
+                  <v-select
+                    v-model="client.resetMode"
+                    :items="resetModeItems"
+                    :label="$t('client.resetMode')"
+                    hide-details
+                  ></v-select>
+                </v-col>
+                <v-col cols="12" sm="6" md="4" v-if="client.resetMode === 1">
+                  <v-select
+                    v-model="client.resetDayOfMonth"
+                    :items="resetDayItems"
+                    :label="$t('client.resetDayOfMonth')"
+                    hide-details
+                  ></v-select>
+                </v-col>
+                <v-col cols="12" sm="6" md="4" v-if="client.resetMode === 2">
+                  <v-text-field
+                    v-model.number="client.resetPeriodDays"
+                    type="number"
+                    min="1"
+                    max="365"
+                    :label="$t('client.resetPeriodDays')"
+                    hide-details
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row v-if="id > 0 && (client.lastResetAt ?? 0) > 0">
+                <v-col cols="12" sm="6" md="4">
+                  <span class="text-caption text-grey">{{ $t('client.lastResetAt') }}: {{ formatDate(client.lastResetAt ?? 0) }}</span>
+                </v-col>
+              </v-row>
+              <v-divider class="my-3"></v-divider>
+              <!-- End Traffic Reset Settings -->
               <v-row>
                 <v-col>
                   <v-select
@@ -194,7 +236,7 @@
 </template>
 
 <script lang="ts">
-import { createClient, randomConfigs, updateConfigs, Link, shuffleConfigs } from '@/types/clients'
+import { createClient, randomConfigs, updateConfigs, Link, shuffleConfigs, ResetMode } from '@/types/clients'
 import DatePick from '@/components/DateTime.vue'
 import { HumanReadable } from '@/plugins/utils'
 import Data from '@/store/modules/data'
@@ -263,6 +305,11 @@ export default {
     },
     shuffle(k?:string) {
       shuffleConfigs(this.clientConfig, k)
+    },
+    formatDate(timestamp: number): string {
+      if (!timestamp) return '-'
+      const date = new Date(timestamp * 1000)
+      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
     }
   },
   computed: {
@@ -283,6 +330,20 @@ export default {
     total() :string { return HumanReadable.sizeFormat(this.client.down + this.client.up) },
     percent() :number { return this.client.volume>0 ? Math.round((this.client.up + this.client.down) *100 / this.client.volume) : 0 },
     percentColor() :string { return (this.client.up+this.client.down) >= this.client.volume ? 'error' : this.percent>90 ? 'warning' : 'success' },
+    resetModeItems(): { title: string, value: number }[] {
+      return [
+        { title: this.$t('client.resetModes.disabled'), value: ResetMode.Disabled },
+        { title: this.$t('client.resetModes.monthly'), value: ResetMode.Monthly },
+        { title: this.$t('client.resetModes.periodic'), value: ResetMode.Periodic },
+      ]
+    },
+    resetDayItems(): { title: string, value: number }[] {
+      const items = [{ title: this.$t('client.useCreationDay'), value: 0 }]
+      for (let i = 1; i <= 31; i++) {
+        items.push({ title: String(i), value: i })
+      }
+      return items
+    },
   },
   watch: {
     visible(newValue) {
