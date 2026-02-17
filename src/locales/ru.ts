@@ -281,7 +281,7 @@ export default {
       testUrl: "Тестовый URL",
       interval: "Интервал",
       tolerance: "Толерантность",
-      urlTestOptions: "Параметры теста URL"
+      urlTestOptions: "Параметры URLTest"
     },
     ts: {
       options: "Параметры Tailscale",
@@ -364,6 +364,7 @@ export default {
   out: {
     addr: "Адрес сервера",
     port: "Порт сервера",
+    addUrlTest: "Добавить URLTest",
   },
   rule: {
     add: "Добавить правило",

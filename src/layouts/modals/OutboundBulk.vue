@@ -14,6 +14,9 @@
               placeholder="http[s]://<domain>[:]<port>/<path>"
               hide-details />
           </v-col>
+          <v-col cols="12">
+            <v-checkbox v-model="addUrlTest" :label="$t('out.addUrlTest')" />
+          </v-col>
           <v-col cols="12" align="center">
             <v-btn hide-details variant="tonal" :loading="loading" @click="linkCheck">{{ $t('submit') }}</v-btn>
           </v-col>
@@ -22,6 +25,7 @@
           v-if="outbounds.length>0"
           :items="outbounds"
           :loading="loading"
+          :items-per-page="0"
           hide-default-footer
           density="compact"
           :headers="[
@@ -63,6 +67,7 @@
 
 <script lang="ts">
 import HttpUtils from '@/plugins/httputil'
+import RandomUtil from '@/plugins/randomUtil';
 import Data from '@/store/modules/data'
 import { createOutbound, Outbound } from '@/types/outbounds'
 
@@ -75,6 +80,7 @@ export default {
       link: "",
       outbounds: <Outbound[]>[],
       outChecks: <number[]>[],
+      addUrlTest: false,
     }
   },
   methods: {
@@ -82,6 +88,7 @@ export default {
       this.outbounds = []
       this.outChecks = []
       this.link = ""
+      this.addUrlTest = false
       this.loading = false
     },
     closeModal() {
@@ -99,6 +106,15 @@ export default {
             this.outbounds.push(createOutbound(o.type, o))
             this.outChecks.push(0)
           })
+          if (this.addUrlTest) {
+            const urlTestTsg = "urltest-" + RandomUtil.randomSeq(3)
+            this.outbounds.push(createOutbound("urltest", {
+              tag: urlTestTsg,
+              outbounds: this.outbounds.map((o:Outbound) => o.tag),
+              interrupt_exist_connections: false,
+              interval: "30s"
+            }))
+          }
         }
       }
       this.loading = false

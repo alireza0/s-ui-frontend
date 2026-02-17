@@ -281,7 +281,7 @@ export default {
       testUrl: "測試 URL",
       interval: "間隔",
       tolerance: "容忍度",
-      urlTestOptions: "URL 測試選項"
+      urlTestOptions: "URLTest 選項"
     },
     ts: {
       options: "Tailscale 選項",
@@ -364,6 +364,7 @@ export default {
   out: {
     addr: "伺服器地址",
     port: "伺服器端口",
+    addUrlTest: "新增 URLTest",
   },
   rule: {
     add: "添加規則",

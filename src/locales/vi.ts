@@ -281,7 +281,7 @@ export default {
       testUrl: "URL Kiểm tra",
       interval: "Khoảng thời gian",
       tolerance: "Sự dung hòa",
-      urlTestOptions: "Tùy chọn Kiểm tra URL",
+      urlTestOptions: "Tùy chọn URLTest",
     },
     ts: {
       options: "Tùy chọn Tailscale",
@@ -364,6 +364,7 @@ export default {
   out: {
     addr: "Địa chỉ Máy chủ",
     port: "Cổng Máy chủ",
+    addUrlTest: "Thêm URLTest",
   },
   rule: {
     add: "Thêm Quy tắc",

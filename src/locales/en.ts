@@ -364,6 +364,7 @@ export default {
   out: {
     addr: "Server Address",
     port: "Server Port",
+    addUrlTest: "Add URLTest",
   },
   rule: {
     add: "Add Rule",
