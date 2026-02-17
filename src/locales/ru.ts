@@ -365,6 +365,7 @@ export default {
     addr: "Адрес сервера",
     port: "Порт сервера",
     addUrlTest: "Добавить URLTest",
+    delay: "Задержка",
   },
   rule: {
     add: "Добавить правило",

@@ -365,6 +365,7 @@ export default {
     addr: "伺服器地址",
     port: "伺服器端口",
     addUrlTest: "新增 URLTest",
+    delay: "延遲",
   },
   rule: {
     add: "添加規則",

@@ -74,6 +74,23 @@
                 <v-chip density="comfortable" size="small" color="success" variant="flat">{{ $t('online') }}</v-chip>
               </template>
               <template v-else>-</template>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>{{ $t('out.delay') }}</v-col>
+            <v-col>
+              <v-progress-circular
+                v-if="checkResults[item.tag]?.loading"
+                indeterminate
+                size="20"
+              />
+              <v-icon
+                icon="mdi-speedometer"
+                v-else
+                @click="checkOutbound(item.tag)"
+              >
+                <v-tooltip activator="parent" location="top" :text="$t('actions.test')"></v-tooltip>
+              </v-icon>
               <template v-if="checkResults[item.tag]?.loading == false">
                 <template v-if="checkResults[item.tag]">
                   <v-chip
@@ -119,14 +136,6 @@
               </v-card-actions>
             </v-card>
           </v-overlay>
-          <v-btn
-            icon="mdi-speedometer"
-            :loading="checkResults[item.tag]?.loading"
-            @click="checkOutbound(item.tag)"
-          >
-            <v-icon />
-            <v-tooltip activator="parent" location="top" :text="$t('actions.test')"></v-tooltip>
-          </v-btn>
           <v-btn icon="mdi-chart-line" @click="showStats(item.tag)" v-if="Data().enableTraffic">
             <v-icon />
             <v-tooltip activator="parent" location="top" :text="$t('stats.graphTitle')"></v-tooltip>

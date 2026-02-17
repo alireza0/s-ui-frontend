@@ -365,6 +365,7 @@ export default {
     addr: "Địa chỉ Máy chủ",
     port: "Cổng Máy chủ",
     addUrlTest: "Thêm URLTest",
+    delay: "Độ trễ",
   },
   rule: {
     add: "Thêm Quy tắc",

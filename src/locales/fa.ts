@@ -364,7 +364,8 @@ export default {
   out: {
     addr: "آدرس سرور",
     port: "پورت سرور",
-    addUrlTest: "افزودن URLTest"
+    addUrlTest: "افزودن URLTest",
+    delay: "تأخیر"
   },
   rule: {
     add: "ایجاد قانون",
