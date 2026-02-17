@@ -92,6 +92,10 @@
               </v-card-actions>
             </v-card>
           </v-overlay>
+          <v-btn icon="mdi-content-duplicate" :loading="cloneLoading" @click="clone(item.id)">
+            <v-icon />
+            <v-tooltip activator="parent" location="top" :text="$t('actions.clone')"></v-tooltip>
+          </v-btn>
           <v-btn icon="mdi-chart-line" @click="showStats(item.tag)" v-if="Data().enableTraffic">
             <v-icon />
             <v-tooltip activator="parent" location="top" :text="$t('stats.graphTitle')"></v-tooltip>
@@ -108,7 +112,8 @@ import InboundVue from '@/layouts/modals/Inbound.vue'
 import Stats from '@/layouts/modals/Stats.vue'
 import { Config } from '@/types/config'
 import { computed, ref } from 'vue'
-import { Inbound } from '@/types/inbounds'
+import { createInbound, Inbound } from '@/types/inbounds'
+import RandomUtil from '@/plugins/randomUtil'
 
 const appConfig = computed((): Config => {
   return <Config> Data().config
@@ -151,6 +156,22 @@ const delInbound = async (id: number) => {
 
   const success = await Data().save("inbounds", "del", tag)
   if (success) delOverlay.value[index] = false
+}
+
+let cloneLoading = ref(false)
+
+const clone = async (id: number) => {
+  cloneLoading.value = true
+  const inboundArray = await Data().loadInbounds([id])
+  const inbound = inboundArray[0]
+  let newTag = inbound.type + "-" + RandomUtil.randomSeq(3)
+  const newInbound = createInbound(inbound.type, { ...inbound,
+    id: 0,
+    tag: newTag,
+    listen_port: RandomUtil.randomIntRange(10000, 60000),
+  })
+  await Data().save("inbounds", "new", newInbound)
+  cloneLoading.value = false
 }
 
 const stats = ref({
