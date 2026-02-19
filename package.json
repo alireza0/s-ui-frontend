@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@babel/types": "^7.29.0",
-    "@types/node": "^25.2.3",
+    "@types/node": "^25.3.0",
     "@vitejs/plugin-vue": "^6.0.4",
     "eslint-plugin-vue": "^10.7.0",
     "material-design-icons-iconfont": "^6.7.0",
