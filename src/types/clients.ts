@@ -6,19 +6,34 @@ export interface Link {
   uri: string
 }
 
+// Reset mode constants
+export const ResetMode = {
+  Disabled: 0,
+  Monthly: 1,
+  Periodic: 2,  // Every N days
+} as const
+
+export type ResetModeType = typeof ResetMode[keyof typeof ResetMode]
+
 export interface Client {
   id?: number
-	enable: boolean
-	name: string
-	config?: Config
-	inbounds: number[]
+  enable: boolean
+  name: string
+  config?: Config
+  inbounds: number[]
   links?: Link[]
-	volume: number
-	expiry: number
+  volume: number
+  expiry: number
   up: number
   down: number
   desc: string
   group: string
+  // Traffic reset fields
+  createdAt?: number
+  resetMode: ResetModeType
+  resetDayOfMonth: number  // 1-31, 0 = use creation day
+  resetPeriodDays: number  // For periodic reset mode
+  lastResetAt?: number
 }
 
 const defaultClient: Client = {
@@ -33,6 +48,10 @@ const defaultClient: Client = {
   down: 0,
   desc: "",
   group: "",
+  // Traffic reset defaults
+  resetMode: ResetMode.Disabled,
+  resetDayOfMonth: 0,
+  resetPeriodDays: 30,
 }
 
 type Config = {
@@ -168,6 +187,6 @@ export function createClient<T extends Client>(json?: Partial<T>): Client {
 
   // Add missing config
   defaultObject.config = { ...randomConfigs(defaultObject.name), ...defaultObject.config }
-  
+
   return defaultObject
 }

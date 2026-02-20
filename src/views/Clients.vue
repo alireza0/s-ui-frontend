@@ -28,6 +28,13 @@
     :tag="stats.tag"
     @close="closeStats"
   />
+  <TrafficHistory
+    v-model="trafficHistory.visible"
+    :visible="trafficHistory.visible"
+    :clientId="trafficHistory.clientId"
+    :clientName="trafficHistory.clientName"
+    @close="closeTrafficHistory"
+  />
   <v-row justify="center" align="center">
     <v-col cols="auto">
       <v-btn color="primary" @click="showModal(0)">{{ $t('actions.add') }}</v-btn>
@@ -164,6 +171,17 @@
             >{{ HumanReadable.remainedDays(item.expiry) }}</v-chip>
           </div>
         </template>
+        <template v-slot:item.resetMode="{ item }">
+          <div class="text-start">
+            <v-chip
+              size="small"
+              :color="item.resetMode === ResetMode.Disabled ? 'grey' : 'info'"
+              :variant="item.resetMode === ResetMode.Disabled ? 'outlined' : 'flat'"
+              label
+              v-tooltip:top="getResetModeTooltip(item)"
+            >{{ getResetModeText(item) }}</v-chip>
+          </div>
+        </template>
         <template v-slot:item.online="{ item }">
           <div class="text-start">
             <template v-if="isOnline(item.name).value">
@@ -208,6 +226,14 @@
         >
           mdi-qrcode
         </v-icon>
+        <v-icon 
+          class="me-2" 
+          icon="mdi-history" 
+          @click="showTrafficHistory(item.id, item.name)"
+          v-if="item.resetMode > 0"
+        >
+          <v-tooltip activator="parent" location="top" :text="$t('client.trafficHistory')"></v-tooltip>
+        </v-icon>
         <v-icon icon="mdi-chart-line" @click="showStats(item.name)" v-if="Data().enableTraffic">
           <v-tooltip activator="parent" location="top" :text="$t('stats.graphTitle')"></v-tooltip>
         </v-icon>
@@ -231,7 +257,8 @@ import ClientModal from '@/layouts/modals/Client.vue'
 import ClientBulk from '@/layouts/modals/ClientBulk.vue'
 import QrCode from '@/layouts/modals/QrCode.vue'
 import Stats from '@/layouts/modals/Stats.vue'
-import { Client } from '@/types/clients'
+import TrafficHistory from '@/layouts/modals/TrafficHistory.vue'
+import { Client, ResetMode } from '@/types/clients'
 import { computed, ref } from 'vue'
 import { HumanReadable } from '@/plugins/utils'
 import { i18n, locale } from '@/locales'
@@ -287,6 +314,7 @@ const headers = [
   { title: i18n.global.t('actions.action'), key: 'actions', sortable: false },
   { title: i18n.global.t('stats.volume'), key: 'volume' },
   { title: i18n.global.t('date.expiry'), key: 'expiry' },
+  { title: i18n.global.t('client.nextReset'), key: 'resetMode' },
   { title: i18n.global.t('online'), key: 'online' },
   { key: 'data-table-group', width: 0 },
 ]
@@ -319,6 +347,77 @@ const delClient = async (id: number) => {
   if (success) delOverlay.value[index] = false
 }
 
+const getDaysUntilReset = (item: Client): number => {
+  const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  
+  if (item.resetMode === ResetMode.Monthly) {
+    // Calculate days until next monthly reset
+    let resetDay = item.resetDayOfMonth
+    if (resetDay <= 0 && item.createdAt) {
+      // Use creation day
+      resetDay = new Date(item.createdAt * 1000).getDate()
+    }
+    if (resetDay <= 0) resetDay = 1
+    
+    // Get next reset date
+    let nextReset = new Date(now.getFullYear(), now.getMonth(), resetDay)
+    
+    // Handle months with fewer days
+    const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
+    if (resetDay > daysInMonth) {
+      nextReset = new Date(now.getFullYear(), now.getMonth(), daysInMonth)
+    }
+    
+    // If reset day already passed this month, move to next month
+    if (nextReset <= today) {
+      nextReset = new Date(now.getFullYear(), now.getMonth() + 1, resetDay)
+      const nextDaysInMonth = new Date(now.getFullYear(), now.getMonth() + 2, 0).getDate()
+      if (resetDay > nextDaysInMonth) {
+        nextReset = new Date(now.getFullYear(), now.getMonth() + 1, nextDaysInMonth)
+      }
+    }
+    
+    return Math.ceil((nextReset.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+  }
+  
+  if (item.resetMode === ResetMode.Periodic) {
+    // Calculate days until next periodic reset
+    const referenceTime = (item.lastResetAt || item.createdAt || 0) * 1000
+    if (referenceTime === 0) return item.resetPeriodDays
+    
+    const nextReset = new Date(referenceTime + item.resetPeriodDays * 24 * 60 * 60 * 1000)
+    const daysLeft = Math.ceil((nextReset.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+    return Math.max(0, daysLeft)
+  }
+  
+  return -1
+}
+
+const getResetModeText = (item: Client): string => {
+  if (item.resetMode === ResetMode.Disabled) {
+    return '-'
+  }
+  const days = getDaysUntilReset(item)
+  if (days === 0) {
+    return i18n.global.t('client.resetToday')
+  }
+  return `${days} ${i18n.global.t('date.days')}`
+}
+
+const getResetModeTooltip = (item: Client): string => {
+  if (item.resetMode === ResetMode.Disabled) {
+    return i18n.global.t('client.resetModes.disabled')
+  }
+  if (item.resetMode === ResetMode.Monthly) {
+    const day = item.resetDayOfMonth > 0 
+      ? item.resetDayOfMonth 
+      : i18n.global.t('client.useCreationDay')
+    return `${i18n.global.t('client.resetModes.monthly')} - ${i18n.global.t('client.resetDayOfMonth')}: ${day}`
+  }
+  return `${i18n.global.t('client.resetModes.periodic')}: ${item.resetPeriodDays} ${i18n.global.t('date.days')}`
+}
+
 const qrcode = ref({
   visible: false,
   id: 0,
@@ -344,6 +443,21 @@ const showStats = (tag: string) => {
 }
 const closeStats = () => {
   stats.value.visible = false
+}
+
+const trafficHistory = ref({
+  visible: false,
+  clientId: 0,
+  clientName: "",
+})
+
+const showTrafficHistory = (clientId: number, clientName: string) => {
+  trafficHistory.value.clientId = clientId
+  trafficHistory.value.clientName = clientName
+  trafficHistory.value.visible = true
+}
+const closeTrafficHistory = () => {
+  trafficHistory.value.visible = false
 }
 
 const doFilter = () => {

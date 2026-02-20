@@ -208,6 +208,24 @@ export default {
     links: "链接",
     external: "外部链接",
     sub: "外部订阅",
+    trafficReset: "流量重置",
+    resetMode: "重置模式",
+    resetModes: {
+      disabled: "禁用",
+      monthly: "每月",
+      periodic: "每N天",
+    },
+    resetDayOfMonth: "重置日期",
+    resetPeriodDays: "重置周期（天）",
+    useCreationDay: "使用创建日期",
+    lastResetAt: "上次重置",
+    resetToday: "今天",
+    nextReset: "下次重置",
+    trafficHistory: "流量历史",
+    noTrafficHistory: "暂无流量重置记录",
+    resetTime: "重置时间",
+    periodStart: "周期开始",
+    periodUsage: "周期使用量",
   },
   bulk: {
     order: "排序",
@@ -477,7 +495,7 @@ export default {
       allowPrivate: "允许私有网络",
     },
   },
-  tls : {
+  tls: {
     enable: "启用 TLS",
     usePath: "使用外部路径",
     useText: "使用文件内容",
@@ -537,6 +555,7 @@ export default {
   date: {
     expiry: "到期",
     expired: "已到期",
+    days: "天",
     d: "天",
     h: "时",
     m: "分",
