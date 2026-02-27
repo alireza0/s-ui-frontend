@@ -374,7 +374,6 @@ export default {
       get() :any { return this.dns?.servers?.findLast((d:any) => d.tag == "proxy-dns")?? {} },
       set(v:any) { 
         let sIndex = this.dns.servers.findIndex((d:any) => d.tag == "proxy-dns")
-        console.log(sIndex)
         if (sIndex === -1 || sIndex == undefined) {
           this.dns.servers.push({ ...this.defaultDns.servers[0], ...v })
         } else {

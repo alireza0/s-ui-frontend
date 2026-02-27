@@ -196,7 +196,7 @@
 
 <script lang="ts" setup>
 import Data from '@/store/modules/data'
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onBeforeMount } from 'vue'
 import RuleVue from '@/layouts/modals/Rule.vue'
 import RulesetVue from '@/layouts/modals/Ruleset.vue'
 import { Config } from '@/types/config'
@@ -210,8 +210,13 @@ const appConfig = computed((): Config => {
   return <Config> Data().config
 })
 
-onMounted(async () => {
+onBeforeMount(async () => {
+  loading.value = true
+  while (Data().lastLoad == 0) {
+    await new Promise(resolve => setTimeout(resolve, 100))
+  }
   oldConfig.value = JSON.parse(JSON.stringify(Data().config))
+  loading.value = false
 })
 
 const routeMark = computed({

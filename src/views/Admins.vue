@@ -78,7 +78,11 @@ const loading:Ref = inject('loading')?? ref(false)
 
 const users = ref(<any[]>[])
 
-onMounted(async () => {loadData()})
+onMounted(async () => {
+  loading.value = true
+  await loadData()
+  loading.value = false
+})
 
 const loadData = async () => {
   loading.value = true

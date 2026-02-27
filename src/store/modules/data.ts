@@ -101,7 +101,6 @@ const Data = defineStore('Data', {
       const newNames = new Set(names)
       const oldNames = new Set(this.clients.map((c: any) => c.name))
       const allNames = new Set([...oldNames, ...newNames])
-      console.log(oldNames, newNames, allNames)
       if (newNames.size != names.length || oldNames.size + newNames.size != allNames.size) {
         push.error({
           message: i18n.global.t('error.dplData') + ": " + i18n.global.t('client.name')

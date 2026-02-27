@@ -210,7 +210,7 @@
 
 <script lang="ts" setup>
 import Data from '@/store/modules/data'
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onBeforeMount } from 'vue'
 import DnsVue from '@/layouts/modals/Dns.vue'
 import DnsRuleVue from '@/layouts/modals/DnsRule.vue'
 import { Config } from '@/types/config'
@@ -224,13 +224,18 @@ const appConfig = computed((): Config => {
   return <Config> Data().config
 })
 
-onMounted(() => {
+onBeforeMount( async () => {
   // fix old configs
   if (!appConfig.value.dns) appConfig.value.dns = { servers: [], rules: [] }
   if (!appConfig.value.dns.servers) appConfig.value.dns.servers = []
   if (!appConfig.value.dns.rules) appConfig.value.dns.rules = []
 
+  loading.value = true
+  while (Data().lastLoad == 0) {
+    await new Promise(resolve => setTimeout(resolve, 100))
+  }
   oldConfig.value = JSON.parse(JSON.stringify(Data().config))
+  loading.value = false
 })
 
 const tsTags = computed((): string[] => {

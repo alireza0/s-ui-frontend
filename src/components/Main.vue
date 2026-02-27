@@ -268,11 +268,13 @@ const stopTimer = () => {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
+  loading.value = true
   if (Data().reloadItems.length != 0) {
-    reloadData()
+    await reloadData()
     startTimer()
   }
+  loading.value = false
 })
 
 onBeforeUnmount(() => {

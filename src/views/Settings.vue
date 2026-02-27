@@ -194,7 +194,11 @@ const settings = ref({
   subClashExt: "",
 })
 
-onMounted(async () => {loadData()})
+onMounted(async () => {
+  loading.value = true
+  await loadData()
+  loading.value = false
+})
 
 const changeLocale = (l: any) => {
   locale.current.value = l ?? 'en'
