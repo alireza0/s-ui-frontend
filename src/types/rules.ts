@@ -1,6 +1,6 @@
 interface generalRule {
   invert: boolean
-  action: 'route' | 'route-options' | 'reject' | 'hijack-dns' | 'sniff' | 'resolve'
+  action: 'route' | 'route-options' | 'reject' | 'hijack-dns' | 'sniff' | 'resolve' | 'bypass'
   outbound?: string
   override_address?: string
   override_port?: number
@@ -64,6 +64,10 @@ export interface rule extends generalRule {
   clash_mode?: string
   rule_set?: string[]
   rule_set_ip_cidr_match_source?: boolean
+  preferred_by?: string[]
+  interface_address?: string[]
+  network_interface_address?: string[]
+  default_interface_address?: string[]
 }
 
 export interface ruleset {

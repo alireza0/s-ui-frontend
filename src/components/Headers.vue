@@ -1,33 +1,35 @@
 <template>
   <v-card>
-    <v-card-subtitle>
-      {{ $t('objects.headers') }}
-      <v-chip color="primary" density="compact" variant="elevated" @click="add_header">
-      <v-icon icon="mdi-plus" />
-      </v-chip>
-    </v-card-subtitle>
-    <v-row v-for="(header, index) in hdrs">
-      <v-col cols="12" sm="6" md="4">
-        <v-text-field
-          :label="$t('objects.key')"
-          hide-details
-          @input="update_key(index,$event.target.value)"
-          v-model="header.name">
-        </v-text-field>
-      </v-col>
-      <v-col cols="12" sm="6" md="4">
-        <v-text-field
-          :label="$t('objects.value')"
-          hide-details
-          @input="update_value(index,$event.target.value)"
-          v-model="header.value">
-          <template v-slot:append>
-            <v-icon @click="del_header(index)" color="error" icon="mdi-delete" />
-          </template>
-        </v-text-field>
-      </v-col>
-    </v-row>
-  </v-card>
+    <v-card-text>
+      <v-card-subtitle>
+        {{ $t('objects.headers') }}
+        <v-chip color="primary" density="compact" variant="elevated" @click="add_header">
+        <v-icon icon="mdi-plus" />
+        </v-chip>
+      </v-card-subtitle>
+      <v-row v-for="(header, index) in hdrs">
+        <v-col cols="12" sm="6" md="4">
+          <v-text-field
+            :label="$t('objects.key')"
+            hide-details
+            @input="update_key(index,$event.target.value)"
+            v-model="header.name">
+          </v-text-field>
+        </v-col>
+        <v-col cols="12" sm="6" md="4">
+          <v-text-field
+            :label="$t('objects.value')"
+            hide-details
+            @input="update_value(index,$event.target.value)"
+            v-model="header.value">
+            <template v-slot:append>
+              <v-icon @click="del_header(index)" color="error" icon="mdi-delete" />
+            </template>
+          </v-text-field>
+        </v-col>
+      </v-row>
+      </v-card-text>
+    </v-card>
 </template>
 
 <script lang="ts">

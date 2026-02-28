@@ -64,6 +64,11 @@
             </v-row>
           </v-card>
         </template>
+        <v-row v-if="dnsServer.type == 'local'">
+          <v-col cols="12" sm="6" md="4">
+            <v-switch v-model="dnsServer.prefer_go" color="primary" :label="$t('dns.local.preferGo')" hide-details></v-switch>
+          </v-col>
+        </v-row>
         <v-row v-if="dnsServer.type == 'dhcp'">
           <v-col cols="12" sm="6" md="4">
             <v-text-field v-model="dnsServer.interface" :label="$t('types.tun.ifName')" hide-details />

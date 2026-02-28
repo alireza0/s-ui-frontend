@@ -46,6 +46,18 @@
       <v-col cols="12" sm="6" md="4" v-if="autoRoute">
         <v-switch v-model="data.strict_route" color="primary" label="Strict Route" hide-details></v-switch>
       </v-col>
+      <v-col cols="12" sm="6" md="4" v-if="autoRoute && data.auto_redirect">
+        <v-switch v-model="data.exclude_mptcp" color="primary" :label="$t('types.tun.excludeMptcp')" hide-details></v-switch>
+      </v-col>
+      <v-col cols="12" sm="6" md="4" v-if="autoRoute && data.auto_redirect">
+        <v-text-field
+          type="number"
+          v-model.number="fallbackRuleIndex"
+          :label="$t('types.tun.fallbackRuleIndex')"
+          min="0"
+          hide-details>
+        </v-text-field>
+      </v-col>
     </v-row>
   </v-card>
 </template>
@@ -74,6 +86,13 @@ export default {
         this.$props.data.auto_route = v
         this.$props.data.auto_redirect = v ? false : undefined
         this.$props.data.strict_route = v ? false : undefined
+      }
+    },
+    fallbackRuleIndex: {
+      get() { return this.$props.data.auto_redirect_iproute2_fallback_rule_index ?? 32768 },
+      set(v: number) {
+        const val = typeof v === 'number' && !isNaN(v) && v >= 0 ? v : undefined
+        this.$props.data.auto_redirect_iproute2_fallback_rule_index = val
       }
     }
   }

@@ -54,6 +54,7 @@
               <Vmess v-if="outbound.type == outTypes.VMess" :data="outbound" />
               <Trojan v-if="outbound.type == outTypes.Trojan" :data="outbound" />
               <Hysteria v-if="outbound.type == outTypes.Hysteria" direction="out" :data="outbound" />
+              <Naive v-if="outbound.type == outTypes.Naive" direction="out" :data="outbound" />
               <ShadowTls v-if="outbound.type == outTypes.ShadowTLS" :data="outbound" />
               <Vless v-if="outbound.type == outTypes.VLESS" :data="outbound" />
               <Tuic v-if="outbound.type == outTypes.TUIC" direction="out" :data="outbound" />
@@ -119,6 +120,7 @@ import Vmess from '@/components/protocols/Vmess.vue'
 import Trojan from '@/components/protocols/Trojan.vue'
 import Wireguard from '@/components/protocols/Wireguard.vue'
 import Hysteria from '@/components/protocols/Hysteria.vue'
+import Naive from '@/components/protocols/Naive.vue'
 import ShadowTls from '@/components/protocols/OutShadowTls.vue'
 import Vless from '@/components/protocols/Vless.vue'
 import Tuic from '@/components/protocols/Tuic.vue'
@@ -204,7 +206,7 @@ export default {
   },
   components: { Dial, Multiplex, Transport, OutTLS,
     Direct, Socks, Http, Shadowsocks, Vmess, Trojan,
-    Wireguard, Hysteria, ShadowTls, Vless, Tuic,
+    Wireguard, Hysteria, Naive, ShadowTls, Vless, Tuic,
     Hysteria2, AnyTls, Tor, Ssh, Selector, UrlTest }
 }
 </script>

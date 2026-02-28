@@ -24,6 +24,7 @@
               :rule="r"
               :clients="clients"
               :inTags="inTags"
+              :outTags="outTags"
               :rsTags="rsTags" />
           </v-card-text>
         </v-card>
@@ -32,6 +33,7 @@
           :rule="ruleData.rules[0]"
           :clients="clients"
           :inTags="inTags"
+          :outTags="outTags"
           :rsTags="rsTags" />
         <v-row>
           <v-col cols="12" sm="6" md="4">
@@ -187,6 +189,7 @@ export default {
       actions: [
         { title: 'Route', value: 'route'},
         { title: 'Route Options', value: 'route-options'},
+        { title: 'Bypass', value: 'bypass'},
         { title: 'Reject', value: 'reject'},
         { title: 'Hijack DNS', value: 'hijack-dns'},
         { title: 'Sniff', value: 'sniff'},

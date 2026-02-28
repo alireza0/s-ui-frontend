@@ -50,6 +50,11 @@ export interface Tailscale extends EndpointBasics, Dial {
   exit_node_allow_lan_access?: boolean
   advertise_routes?: string[]
   advertise_exit_node?: boolean
+  relay_server_port?: number
+  relay_server_static_endpoints?: string[]
+  system_interface?: boolean
+  system_interface_name?: string
+  system_interface_mtu?: number
   udp_timeout?: string
 }
 

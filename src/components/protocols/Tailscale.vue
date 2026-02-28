@@ -39,6 +39,25 @@
         <v-switch color="primary" v-model="data.exit_node_allow_lan_access" :label="$t('types.ts.allowLanAccess')"></v-switch>
       </v-col>
     </v-row>
+    <v-row v-if="optionRelay">
+      <v-col cols="12" sm="6" md="4">
+        <v-text-field v-model.number="data.relay_server_port" type="number" min="0" :label="$t('types.ts.relayServerPort')" hide-details></v-text-field>
+      </v-col>
+      <v-col cols="12" sm="8">
+        <v-text-field v-model="relay_endpoints" :label="$t('types.ts.relayEndpoints') + ' ' + $t('commaSeparated')" hide-details></v-text-field>
+      </v-col>
+    </v-row>
+    <v-row v-if="optionSysIf">
+      <v-col cols="12" sm="6" md="4">
+        <v-switch color="primary" v-model="data.system_interface" :label="$t('types.ts.systemInterface')"></v-switch>
+      </v-col>
+      <v-col cols="12" sm="6" md="4" v-if="data.system_interface">
+        <v-text-field v-model="data.system_interface_name" :label="$t('types.ts.sysIfName')" hide-details></v-text-field>
+      </v-col>
+      <v-col cols="12" sm="6" md="4" v-if="data.system_interface">
+        <v-text-field v-model.number="data.system_interface_mtu" type="number" min="0" :label="$t('types.ts.sysIfMtu')" hide-details></v-text-field>
+      </v-col>
+    </v-row>
     <v-row v-if="optionAdvRoutes">
       <v-col cols="12" sm="8">
         <v-text-field v-model="advertise_routes" :label="$t('types.ts.advRoutes') + ' ' + $t('commaSeparated')"></v-text-field>
@@ -69,6 +88,12 @@
             </v-list-item>
             <v-list-item>
               <v-switch v-model="optionExitNode" color="primary" :label="$t('types.ts.exitNode')" hide-details></v-switch>
+            </v-list-item>
+            <v-list-item>
+              <v-switch v-model="optionRelay" color="primary" :label="$t('types.ts.relayServer')" hide-details></v-switch>
+            </v-list-item>
+            <v-list-item>
+              <v-switch v-model="optionSysIf" color="primary" :label="$t('types.ts.systemInterface')" hide-details></v-switch>
             </v-list-item>
             <v-list-item>
               <v-switch v-model="optionAdvRoutes" color="primary" :label="$t('types.ts.advRoutes')" hide-details></v-switch>
@@ -130,6 +155,30 @@ export default {
         }
       }
     },
+    optionRelay: {
+      get() { return this.$props.data?.relay_server_port !== undefined || (this.$props.data?.relay_server_static_endpoints?.length ?? 0) > 0 },
+      set(v: boolean) {
+        if (v) {
+          this.$props.data.relay_server_port = 0
+          this.$props.data.relay_server_static_endpoints = []
+        } else {
+          delete this.$props.data.relay_server_port
+          delete this.$props.data.relay_server_static_endpoints
+        }
+      }
+    },
+    optionSysIf: {
+      get() { return this.$props.data?.system_interface !== undefined },
+      set(v: boolean) {
+        if (v) {
+          this.$props.data.system_interface = false
+        } else {
+          delete this.$props.data.system_interface
+          delete this.$props.data.system_interface_name
+          delete this.$props.data.system_interface_mtu
+        }
+      }
+    },
     optionUdpTimeout: {
       get() { return this.$props.data?.udp_timeout !== undefined },
       set(v: boolean) { this.$props.data.udp_timeout = v ? '30s' : undefined }
@@ -141,6 +190,10 @@ export default {
     advertise_routes: {
       get() { return this.$props.data?.advertise_routes?.join(',') ?? "" },
       set(v: string) { this.$props.data.advertise_routes = v.length > 0 ? v.split(',') : [] }
+    },
+    relay_endpoints: {
+      get() { return this.$props.data?.relay_server_static_endpoints?.join(',') ?? "" },
+      set(v: string) { this.$props.data.relay_server_static_endpoints = v.length > 0 ? v.split(',') : [] }
     },
   },
 }

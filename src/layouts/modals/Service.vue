@@ -24,6 +24,8 @@
         <Listen :data="srv" :inTags="inTags" />
         <Derp v-if="srv.type == srvTypes.DERP" :data="srv" :inTags="inTags" :tsTags="tsTags" />
         <SSMapi v-if="srv.type == srvTypes.SSMAPI" :data="srv" :ssTags="ssTags" />
+        <Ocm v-if="srv.type == srvTypes.OCM" :data="srv" />
+        <Ccm v-if="srv.type == srvTypes.CCM" :data="srv" />
         <InTLS v-if="HasTls.includes(srv.type)"  :inbound="srv" :tlsConfigs="tlsConfigs" :tls_id="srv.tls_id" />
       </v-card-text>
       <v-card-actions>
@@ -53,6 +55,8 @@ import { SrvTypes, createSrv } from '@/types/services'
 import RandomUtil from '@/plugins/randomUtil'
 import Listen from '@/components/Listen.vue'
 import Derp from '@/components/services/Derp.vue'
+import Ocm from '@/components/services/Ocm.vue'
+import Ccm from '@/components/services/Ccm.vue'
 import InTLS from '@/components/tls/InTLS.vue'
 import SSMapi from '@/components/services/SSMAPI.vue'
 import Data from '@/store/modules/data'
@@ -66,7 +70,7 @@ export default {
       tab: "t1",
       loading: false,
       srvTypes: SrvTypes,
-      HasTls: [SrvTypes.DERP, SrvTypes.SSMAPI],
+      HasTls: [SrvTypes.DERP, SrvTypes.SSMAPI, SrvTypes.OCM, SrvTypes.CCM],
     }
   },
   methods: {
@@ -78,7 +82,7 @@ export default {
       }
       else {
         const port = RandomUtil.randomIntRange(10000, 60000)
-        this.srv = createSrv("derp",{
+        this.srv = createSrv("derp", {
           tag: "derp-" + RandomUtil.randomSeq(3),
           listen: '::',
           listen_port: port,
@@ -119,6 +123,6 @@ export default {
       }
     },
   },
-  components: { Listen, InTLS, Derp, SSMapi },
+  components: { Listen, InTLS, Derp, Ocm, Ccm, SSMapi },
 }
 </script>

@@ -153,6 +153,14 @@
               v-model="tls.ech.config_path">
             </v-text-field>
           </v-col>
+          <v-col cols="12" sm="6">
+            <v-text-field
+              :label="$t('tls.queryServerName')"
+              hide-details
+              v-model="tls.ech.query_server_name"
+              placeholder="ech.example.com">
+            </v-text-field>
+          </v-col>
         </v-row>
         <v-row v-else>
           <v-col cols="12" sm="6">
@@ -161,6 +169,14 @@
               hide-details
               v-model="echConfigText">
             </v-textarea>
+          </v-col>
+          <v-col cols="12" sm="6">
+            <v-text-field
+              :label="$t('tls.queryServerName')"
+              hide-details
+              v-model="tls.ech.query_server_name"
+              placeholder="ech.example.com">
+            </v-text-field>
           </v-col>
         </v-row>
       </template>
@@ -294,7 +310,7 @@ export default {
       set(newValue: boolean) { this.$props.outbound.tls.insecure = newValue ? true : undefined }
     },
     tlsOptional(): boolean {
-      return !['hysteria','hysteria2','tuic','shadowtls', 'anytls'].includes(this.$props.outbound.type)
+      return !['hysteria','hysteria2','tuic','shadowtls', 'anytls', 'naive'].includes(this.$props.outbound.type)
     },
     echConfigText: {
       get(): string { return this.tls.ech?.config ? this.tls.ech.config.join('\n') : '' },

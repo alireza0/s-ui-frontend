@@ -56,6 +56,16 @@
         </v-col>
       </v-row>
       <v-row>
+        <v-col cols="12" sm="6" v-if="oTls.ech">
+          <v-text-field
+            :label="$t('tls.queryServerName')"
+            hide-details
+            v-model="oTls.ech.query_server_name"
+            placeholder="ech.example.com">
+          </v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
         <v-col cols="12">
           <v-textarea
             :label="$t('tls.cert')"

@@ -29,6 +29,9 @@
         hide-details
         v-model="dial.inet6_bind_address"></v-text-field>
       </v-col>
+      <v-col cols="12" sm="6" md="4" v-if="optionBindNoPort">
+        <v-switch v-model="dial.bind_address_no_port" color="primary" :label="$t('dial.bindNoPort')" hide-details></v-switch>
+      </v-col>
     </v-row>
     <v-row>
       <v-col cols="12" sm="6" md="4" v-if="optionRM">
@@ -49,6 +52,17 @@
       </v-col>
       <v-col cols="12" sm="6" md="4">
         <v-switch v-model="dial.tcp_multi_path" color="primary" label="TCP Multi Path" hide-details></v-switch>
+      </v-col>
+    </v-row>
+    <v-row v-if="optionTcpKeepAlive">
+      <v-col cols="12" sm="6" md="4">
+        <v-switch v-model="dial.disable_tcp_keep_alive" color="primary" :label="$t('dial.disableTcpKeepAlive')" hide-details></v-switch>
+      </v-col>
+      <v-col cols="12" sm="6" md="4">
+        <v-text-field v-model="dial.tcp_keep_alive" :label="$t('dial.tcpKeepAlive')" hide-details></v-text-field>
+      </v-col>
+      <v-col cols="12" sm="6" md="4">
+        <v-text-field v-model="dial.tcp_keep_alive_interval" :label="$t('dial.tcpKeepAliveInterval')" hide-details></v-text-field>
       </v-col>
     </v-row>
     <v-row>
@@ -96,6 +110,9 @@
               <v-switch v-model="optionIPV6" color="primary" :label="$t('dial.bindIp6')" hide-details></v-switch>
             </v-list-item>
             <v-list-item v-if="mode != 'client'">
+              <v-switch v-model="optionBindNoPort" color="primary" :label="$t('dial.bindNoPort')" hide-details></v-switch>
+            </v-list-item>
+            <v-list-item v-if="mode != 'client'">
               <v-switch v-model="optionRM" color="primary" label="Routing Mark" hide-details></v-switch>
             </v-list-item>
             <v-list-item v-if="mode != 'client'">
@@ -109,6 +126,9 @@
             </v-list-item>
             <v-list-item>
               <v-switch v-model="optionCT" color="primary" :label="$t('dial.connTimeout')" hide-details></v-switch>
+            </v-list-item>
+            <v-list-item>
+              <v-switch v-model="optionTcpKeepAlive" color="primary" :label="$t('dial.tcpKeepAlive')" hide-details></v-switch>
             </v-list-item>
             <v-list-item v-if="mode != 'client'">
               <v-switch v-model="optionDR" color="primary" :label="$t('dial.domainResolver')" hide-details></v-switch>
@@ -155,6 +175,27 @@ export default {
     optionIPV6: {
       get(): boolean { return this.$props.dial.inet6_bind_address != undefined },
       set(v:boolean) { v ? this.$props.dial.inet6_bind_address = '' : delete this.$props.dial.inet6_bind_address }
+    },
+    optionBindNoPort: {
+      get(): boolean { return this.$props.dial.bind_address_no_port != undefined },
+      set(v:boolean) { v ? this.$props.dial.bind_address_no_port = true : delete this.$props.dial.bind_address_no_port }
+    },
+    optionTcpKeepAlive: {
+      get(): boolean {
+        return this.$props.dial.disable_tcp_keep_alive != undefined ||
+               this.$props.dial.tcp_keep_alive != undefined ||
+               this.$props.dial.tcp_keep_alive_interval != undefined
+      },
+      set(v:boolean) {
+        if (v) {
+          this.$props.dial.tcp_keep_alive = '5m'
+          this.$props.dial.tcp_keep_alive_interval = '75s'
+        } else {
+          delete this.$props.dial.disable_tcp_keep_alive
+          delete this.$props.dial.tcp_keep_alive
+          delete this.$props.dial.tcp_keep_alive_interval
+        }
+      }
     },
     optionRM: {
       get(): boolean { return this.$props.dial.routing_mark != undefined },

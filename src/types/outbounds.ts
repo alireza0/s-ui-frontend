@@ -10,6 +10,7 @@ export const OutTypes = {
   Shadowsocks: 'shadowsocks',
   VMess: 'vmess',
   Trojan: 'trojan',
+  Naive: 'naive',
   Hysteria: 'hysteria',
   VLESS: 'vless',
   ShadowTLS: 'shadowtls',
@@ -102,6 +103,19 @@ export interface Trojan extends OutboundBasics, Dial {
   tls?: oTls
   multiplex?: oMultiplex
   transport?: Transport
+}
+
+export interface Naive extends OutboundBasics, Dial {
+  server: string
+  server_port: number
+  username?: string
+  password?: string
+  insecure_concurrency?: number
+  extra_headers?: { [key: string]: string }
+  udp_over_tcp?: false | { enabled?: boolean; version?: number }
+  quic?: boolean
+  quic_congestion_control?: "" | "bbr" | "bbr2" | "cubic" | "reno"
+  tls: oTls
 }
 
 export interface Hysteria extends OutboundBasics, Dial {
@@ -235,6 +249,7 @@ const defaultValues: Record<OutType, Outbound> = {
   shadowsocks: { type: OutTypes.Shadowsocks, method: 'none', multiplex: {} },
   vmess: { type: OutTypes.VMess, tls: {}, multiplex: {}, transport: {}, security: 'auto', global_padding: false },
   trojan: { type: OutTypes.Trojan, tls: {}, multiplex: {}, transport: {} },
+  naive: { type: OutTypes.Naive, tls: { enabled: true } },
   hysteria: { type: OutTypes.Hysteria, up_mbps: 100, down_mbps: 100, tls: { enabled: true } },
   shadowtls: { type: OutTypes.ShadowTLS, version: 3, tls: { enabled: true } },
   vless: { type: OutTypes.VLESS, tls: {}, multiplex: {}, transport: {} },

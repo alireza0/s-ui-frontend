@@ -42,6 +42,9 @@ export interface Listen {
   udp_fragment?: boolean
   udp_timeout?: string
   detour?: string
+  disable_tcp_keep_alive?: boolean
+  tcp_keep_alive?: string
+  tcp_keep_alive_interval?: string
 }
 
 interface InboundBasics extends Listen {
@@ -89,6 +92,7 @@ export interface Trojan extends InboundBasics {
 }
 export interface Naive extends InboundBasics {
   tls: iTls,
+  quic_congestion_control?: "" | "bbr" | "bbr2" | "cubic" | "reno"
 }
 export interface Hysteria extends InboundBasics {
   up_mbps: number
@@ -153,9 +157,9 @@ export interface Tun extends InboundBasics {
   stack?: string
   auto_route?: boolean
   strict_route?: boolean
-  // iproute2_table_index?: number
-  // iproute2_rule_index?: number
   auto_redirect?: boolean
+  exclude_mptcp?: boolean
+  auto_redirect_iproute2_fallback_rule_index?: number
   // auto_redirect_input_mark?: string
   // auto_redirect_output_mark?: string
   // route_address?: string[]

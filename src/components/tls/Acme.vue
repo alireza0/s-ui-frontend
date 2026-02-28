@@ -114,7 +114,7 @@
         v-for="item in dnsProviders.filter(d => d.provider == acme.dns01_challenge?.provider)[0]?.params"
         :key="item">
           <v-text-field
-          :label="item"
+          :label="$t('tls.acme.dns01Params.' + item)"
           hide-details
           v-model="acme.dns01_challenge[item]">
           </v-text-field>
@@ -174,8 +174,9 @@ export default {
         { title: "Custom", value: "" }
       ],
       dnsProviders: [
-        { provider: "cloudflare", params: [ "api_token" ] },
-        { provider: "alidns", params: [ "access_key_id","access_key_secret","region_id" ] }
+        { provider: "cloudflare", params: [ "api_token", "zone_token" ] },
+        { provider: "alidns", params: [ "access_key_id", "access_key_secret", "region_id", "security_token" ] },
+        { provider: "acmedns", params: [ "username", "password", "subdomain", "server_url" ] }
       ]
     }
   },
@@ -245,7 +246,13 @@ export default {
     },
     optionDns01: {
       get(): boolean { return this.acme?.dns01_challenge != undefined },
-      set(v:boolean) { this.acme.dns01_challenge = v ? { provider: 'cloudflare' } : undefined }
+      set(v:boolean) {
+        if (v) {
+          this.acme.dns01_challenge = { provider: 'cloudflare' }
+        } else {
+          delete this.acme.dns01_challenge
+        }
+      }
     },
   }
 }

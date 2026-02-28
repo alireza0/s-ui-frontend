@@ -30,7 +30,7 @@ interface Route {
 interface RouteRule       {
   inbound?: string[] | string
   ip_version?: 4 | 6,
-  network?: "tcp" | "udp"
+  network?: "tcp" | "udp" | "icmp"
   auth_user?: string[]
   protocol?: string[] | string
   domain?: string[] | string

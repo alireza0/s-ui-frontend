@@ -14,13 +14,21 @@ export interface iTls {
   min_version?: string
   max_version?: string
   cipher_suites?: string[]
+  curve_preferences?: string[]
   certificate?: string[]
   certificate_path?: string
   key?: string[]
   key_path?: string
+  client_authentication?: string
+  client_certificate?: string[]
+  client_certificate_path?: string[]
+  client_certificate_public_key_sha256?: string[]
   acme?: acme
   ech?: ech
   reality?: reality
+  store?: 'mozilla' | 'chrome'
+  kernel_tx?: boolean
+  kernel_rx?: boolean
 }
 
 export interface acme {
@@ -78,8 +86,14 @@ export interface oTls {
   min_version?: string
   max_version?: string
   cipher_suites?: string[]
+  curve_preferences?: string[]
   certificate?: string
   certificate_path?: string
+  certificate_public_key_sha256?: string[]
+  client_certificate?: string[]
+  client_certificate_path?: string
+  client_key?: string[]
+  client_key_path?: string
   fragment?: boolean
   fragment_fallback_delay?: string
   record_fragment?: boolean
@@ -87,8 +101,9 @@ export interface oTls {
     enabled: boolean
     pq_signature_schemes_enabled?: boolean
     dynamic_record_sizing_disabled?: boolean
-    config?: string[],
+    config?: string[]
     config_path?: string
+    query_server_name?: string
   },
   utls?: {
     enabled: boolean

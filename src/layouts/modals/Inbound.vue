@@ -44,7 +44,7 @@
               <Shadowsocks v-if="inbound.type == inTypes.Shadowsocks" direction="in" :data="inbound" />
               <Hysteria v-if="inbound.type == inTypes.Hysteria" direction="in" :data="inbound" />
               <Hysteria2 v-if="inbound.type == inTypes.Hysteria2" direction="in" :data="inbound" />
-              <Naive v-if="inbound.type == inTypes.Naive" :inbound="inbound" />
+              <Naive v-if="inbound.type == inTypes.Naive" direction="in" :data="inbound" />
               <ShadowTls v-if="inbound.type == inTypes.ShadowTLS" direction="in" :data="inbound" />
               <Tuic v-if="inbound.type == inTypes.TUIC" direction="in" :data="inbound" />
               <Tun v-if="inbound.type == inTypes.Tun" :data="inbound" />
@@ -59,15 +59,17 @@
               <OutJsonVue :inData="inbound" :type="inbound.type" />
               <Multiplex v-if="Object.hasOwn(inbound,'multiplex')" direction="out" :data="inbound.out_json" />
               <Dial v-if="inbound.out_json" :dial="inbound.out_json" mode="client" />
-              <v-card style="margin-top: 1rem;">
-                <v-card-subtitle>{{ $t('in.multiDomain') }}
-                  <v-chip color="primary" density="compact" variant="elevated" @click="add_addr"><v-icon icon="mdi-plus" /></v-chip>
-                </v-card-subtitle>
-                <template v-for="addr,index in inbound.addrs">
-                  {{ $t('in.addr') }} #{{ (index+1) }} <v-icon icon="mdi-delete" color="error" @click="inbound.addrs?.splice(index,1)" />
-                  <v-divider></v-divider>
-                  <AddrVue :addr="addr" :hasTls="HasTls.includes(inbound.type)" />
-                </template>
+              <v-card>
+                <v-card-text>
+                  <v-card-subtitle>{{ $t('in.multiDomain') }}
+                    <v-chip color="primary" density="compact" variant="elevated" @click="add_addr"><v-icon icon="mdi-plus" /></v-chip>
+                  </v-card-subtitle>
+                  <template v-for="addr,index in inbound.addrs">
+                    {{ $t('in.addr') }} #{{ (index+1) }} <v-icon icon="mdi-delete" color="error" @click="inbound.addrs?.splice(index,1)" />
+                    <v-divider></v-divider>
+                    <AddrVue :addr="addr" :hasTls="HasTls.includes(inbound.type)" />
+                  </template>
+                </v-card-text>
               </v-card>
             </v-window-item>
           </v-window>

@@ -35,7 +35,7 @@
           multiple
           chips
           :label="$t('network')"
-          :items="['tcp','udp']"
+          :items="['tcp','udp','icmp']"
           v-model="rule.network">
         </v-select>
       </v-col>
@@ -156,6 +156,34 @@
         v-model="source_port_range"></v-text-field>
       </v-col>
     </v-row>
+    <v-row v-if="optionPreferredBy">
+      <v-col cols="12" sm="6">
+        <v-combobox
+          v-model="rule.preferred_by"
+          :items="outTags || inTags"
+          :label="$t('rule.preferredBy')"
+          multiple
+          chips
+          hide-details
+        ></v-combobox>
+      </v-col>
+    </v-row>
+    <v-row v-if="optionInterface">
+      <v-col cols="12" sm="6" md="4">
+        <v-select
+          hide-details
+          :items="interfaceKeys"
+          @update:model-value="updateInterfaceOption($event)"
+          v-model="interfaceOption">
+        </v-select>
+      </v-col>
+      <v-col cols="12" sm="6" v-if="rule.interface_address != undefined || rule.network_interface_address != undefined || rule.default_interface_address != undefined">
+        <v-text-field
+        :label="$t('rule.interfaceAddr') + ' ' + $t('commaSeparated')"
+        hide-details
+        v-model="interface_addr"></v-text-field>
+      </v-col>
+    </v-row>
     <v-row v-if="optionRuleSet">
       <v-col cols="12" sm="6">
         <v-combobox
@@ -207,6 +235,12 @@
               <v-switch v-model="optionSrcPort" color="primary" :label="$t('rule.srcPortRules')" hide-details></v-switch>
             </v-list-item>
             <v-list-item>
+              <v-switch v-model="optionPreferredBy" color="primary" :label="$t('rule.preferredBy')" hide-details></v-switch>
+            </v-list-item>
+            <v-list-item>
+              <v-switch v-model="optionInterface" color="primary" :label="$t('rule.interfaceAddr')" hide-details></v-switch>
+            </v-list-item>
+            <v-list-item>
               <v-switch v-model="optionRuleSet" color="primary" :label="$t('rule.ruleset')" hide-details></v-switch>
             </v-list-item>
           </v-list>
@@ -218,15 +252,17 @@
 
 <script lang="ts">
 export default {
-  props: ['rule', 'clients', 'inTags', 'rsTags', 'deleteable'],
+  props: ['rule', 'clients', 'inTags', 'outTags', 'rsTags', 'deleteable'],
   data() {
     return {
       menu: false,
       domainKeys: ['domain', 'domain_suffix', 'domain_keyword', 'domain_regex', 'ip_cidr', 'ip_is_private'],
+      interfaceKeys: ['interface_address', 'network_interface_address', 'default_interface_address'],
       portKeys: ['port', 'port_range'],
       srcIPKeys: ['source_ip_cidr', 'source_ip_is_private'],
       srcPortKeys: ['source_port', 'source_port_range'],
       domainOption: 'domain',
+      interfaceOption: 'interface_address',
       portOption: 'port',
       srcIPOption: 'source_ip_cidr',
       srcPortOption: 'source_port',
@@ -259,6 +295,10 @@ export default {
     },
     updateSrcPortOption(option:string) {
       this.srcPortKeys.forEach(k => delete this.$props.rule[k])
+      this.$props.rule[option] = []
+    },
+    updateInterfaceOption(option:string) {
+      this.interfaceKeys.forEach(k => delete this.$props.rule[k])
       this.$props.rule[option] = []
     },
   },
@@ -323,9 +363,24 @@ export default {
         this.srcPortOption = 'source_port'
       }
     },
+    optionPreferredBy: {
+      get() { return this.$props.rule.preferred_by != undefined },
+      set(v:boolean) { this.$props.rule.preferred_by = v ? [] : undefined }
+    },
+    optionInterface: {
+      get() { return this.interfaceKeys.some(k => this.$props.rule[k] != undefined) },
+      set(v:boolean) {
+        if (v) {
+          this.$props.rule.interface_address = []
+        } else {
+          this.interfaceKeys.forEach(k => delete this.$props.rule[k])
+        }
+        this.interfaceOption = 'interface_address'
+      }
+    },
     optionRuleSet: {
       get() { return this.$props.rule.rule_set != undefined },
-      set(v:boolean) { 
+      set(v:boolean) {
         if (v) {
           this.$props.rule.rule_set = []
           this.$props.rule.rule_set_ip_cidr_match_source = false
@@ -387,6 +442,16 @@ export default {
       get() { return this.$props.rule.source_port_range?.join(',') },
       set(v:string) { this.$props.rule.source_port_range = v.length>0 ? v.split(',') : [] }
     },
+    interface_addr: {
+      get() {
+        const k = this.interfaceKeys.find(k => this.$props.rule[k] != undefined)
+        return k ? this.$props.rule[k]?.join(',') : ''
+      },
+      set(v:string) {
+        const k = this.interfaceKeys.find(k => this.$props.rule[k] != undefined)
+        if (k) this.$props.rule[k] = v.length>0 ? v.split(',') : []
+      }
+    },
   },
   mounted() {
     const ruleKeys = Object.keys(this.$props.rule)
@@ -405,6 +470,10 @@ export default {
     if (this.optionSrcPort) {
       const enabledOption = this.srcPortKeys.filter(k => ruleKeys.includes(k))
       this.srcPortOption = enabledOption.length>0 ? enabledOption[0] : 'source_port'
+    }
+    if (this.optionInterface) {
+      const enabledOption = this.interfaceKeys.filter(k => ruleKeys.includes(k))
+      this.interfaceOption = enabledOption.length>0 ? enabledOption[0] : 'interface_address'
     }
   }
 }

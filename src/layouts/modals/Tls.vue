@@ -215,6 +215,24 @@
               </v-col>
             </v-row>
           </template>
+          <v-row v-if="optionStore || optionKtls">
+            <v-col cols="12" sm="6" md="4" v-if="optionStore">
+              <v-select
+                hide-details
+                :label="$t('tls.store')"
+                :items="storeItems"
+                v-model="inTls.store">
+              </v-select>
+            </v-col>
+            <template v-if="optionKtls">
+              <v-col cols="12" sm="6" md="4">
+                <v-switch color="primary" :label="$t('tls.kernelTx')" v-model="inTls.kernel_tx" hide-details></v-switch>
+              </v-col>
+              <v-col cols="12" sm="6" md="4">
+                <v-switch color="primary" :label="$t('tls.kernelRx')" v-model="inTls.kernel_rx" hide-details></v-switch>
+              </v-col>
+            </template>
+          </v-row>
           <v-row v-if="outTls.utls != undefined">
             <v-col cols="12" sm="6" md="4">
               <v-select
@@ -251,6 +269,12 @@
                     </v-list-item>
                     <v-list-item>
                       <v-switch v-model="optionFP" color="primary" label="UTLS" hide-details></v-switch>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-switch v-model="optionStore" color="primary" :label="$t('tls.store')" hide-details></v-switch>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-switch v-model="optionKtls" color="primary" :label="$t('tls.ktls')" hide-details></v-switch>
                     </v-list-item>
                   </template>
                   <template v-else>
@@ -331,6 +355,10 @@ export default {
         { title: "ECDHE-RSA-AES256-GCM-SHA384", value: "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384" },
         { title: "ECDHE-ECDSA-CHACHA20-POLY1305-SHA256", value: "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256" },
         { title: "ECDHE-RSA-CHACHA20-POLY1305-SHA256", value: "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256" }
+      ],
+      storeItems: [
+        { title: "Mozilla", value: "mozilla" },
+        { title: "Chrome", value: "chrome" },
       ],
       fingerprints: [
         { title: "Chrome", value: "chrome" },
@@ -526,6 +554,22 @@ export default {
     optionFP: {
       get(): boolean { return this.outTls.utls != undefined },
       set(v:boolean) { this.outTls.utls = v ? defaultOutTls.utls : undefined }
+    },
+    optionStore: {
+      get(): boolean { return this.inTls.store != undefined },
+      set(v:boolean) { this.inTls.store = v ? 'mozilla' : undefined }
+    },
+    optionKtls: {
+      get(): boolean { return this.inTls.kernel_tx != undefined || this.inTls.kernel_rx != undefined },
+      set(v:boolean) {
+        if (v) {
+          this.inTls.kernel_tx = false
+          this.inTls.kernel_rx = false
+        } else {
+          delete this.inTls.kernel_tx
+          delete this.inTls.kernel_rx
+        }
+      }
     },
     optionEch: {
       get(): boolean { return this.outTls.ech != undefined },

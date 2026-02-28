@@ -52,6 +52,17 @@
         v-model.number="udpTimeout"></v-text-field>
       </v-col>
     </v-row>
+    <v-row v-if="optionTcpKeepAlive">
+      <v-col cols="12" sm="6" md="4">
+        <v-switch v-model="data.disable_tcp_keep_alive" color="primary" :label="$t('listen.disableTcpKeepAlive')" hide-details></v-switch>
+      </v-col>
+      <v-col cols="12" sm="6" md="4">
+        <v-text-field v-model="data.tcp_keep_alive" :label="$t('listen.tcpKeepAlive')" hide-details></v-text-field>
+      </v-col>
+      <v-col cols="12" sm="6" md="4">
+        <v-text-field v-model="data.tcp_keep_alive_interval" :label="$t('listen.tcpKeepAliveInterval')" hide-details></v-text-field>
+      </v-col>
+    </v-row>
     <v-card-actions class="pt-0">
       <v-spacer></v-spacer>
       <v-menu v-model="menu" :close-on-content-click="false" location="start">
@@ -68,6 +79,9 @@
             </v-list-item>
             <v-list-item>
               <v-switch v-model="optionUDP" color="primary" :label="$t('listen.udpOptions')" hide-details></v-switch>
+            </v-list-item>
+            <v-list-item>
+              <v-switch v-model="optionTcpKeepAlive" color="primary" :label="$t('listen.tcpKeepAlive')" hide-details></v-switch>
             </v-list-item>
           </v-list>
         </v-card>
@@ -112,6 +126,23 @@ export default {
     optionDetour: {
       get(): boolean { return this.$props.data.detour != undefined },
       set(v:boolean) { this.$props.data.detour = v ? this.inTags[0]?? '' : undefined }
+    },
+    optionTcpKeepAlive: {
+      get(): boolean {
+        return this.$props.data.disable_tcp_keep_alive != undefined ||
+               this.$props.data.tcp_keep_alive != undefined ||
+               this.$props.data.tcp_keep_alive_interval != undefined
+      },
+      set(v:boolean) {
+        if (v) {
+          this.$props.data.tcp_keep_alive = '5m'
+          this.$props.data.tcp_keep_alive_interval = '75s'
+        } else {
+          delete this.$props.data.disable_tcp_keep_alive
+          delete this.$props.data.tcp_keep_alive
+          delete this.$props.data.tcp_keep_alive_interval
+        }
+      }
     }
   }
 }

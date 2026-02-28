@@ -1,5 +1,5 @@
 <template>
-  <v-card :subtitle="type">
+  <v-card :subtitle="$t('pages.basics')">
     <v-row>
       <v-col cols="12" sm="6" md="4" v-if="type == inTypes.SOCKS">
         <v-select
@@ -90,6 +90,7 @@
     </v-row>
     <Headers :data="inData.out_json" v-if="type == inTypes.HTTP" />
     <AnyTls v-if="type == inTypes.AnyTls" :data="inData.out_json" direction="out_json" />
+    <Naive v-if="type == inTypes.Naive" :data="inData.out_json" direction="out_json" />
   </v-card>
 </template>
 
@@ -99,6 +100,7 @@ import Network from './Network.vue'
 import UoT from './UoT.vue'
 import Headers from './Headers.vue'
 import AnyTls from './protocols/AnyTls.vue'
+import Naive from './protocols/Naive.vue'
 
 export default {
   props: ['inData', 'type'],
@@ -145,6 +147,6 @@ export default {
       set(v:number) { this.$props.inData.out_json.hop_interval = v>0 ? v + 's' : undefined }
     },
   },
-  components: { Network, UoT, Headers, AnyTls }
+  components: { Network, UoT, Headers, AnyTls, Naive }
 }
 </script>

@@ -17,7 +17,7 @@ import { createVuetify } from 'vuetify'
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
   defaults: {
-    VRow: { density: 'compact' }, // Apply density to v-row as default
+    VRow: { density: 'compact' },
     VTextField: {
       variant: 'solo-filled',
     },
