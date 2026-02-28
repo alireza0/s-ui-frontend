@@ -121,6 +121,17 @@
                     v-model="clientConfig[key].flow"
                     hide-details>
                   </v-text-field>
+                  <v-select
+                    v-if="key == 'vless' && clientConfig[key].flow && clientConfig[key].flow !== ''"
+                    label="Flow Inbound Tags"
+                    :placeholder="$t('client.vlessFlowTagsPlaceholder')"
+                    v-model="clientConfig[key].flow_inbound_tags"
+                    :items="vlessInboundTags"
+                    clearable
+                    multiple
+                    chips
+                    hide-details>
+                  </v-select>
                   <v-text-field
                     v-if="key == 'hysteria'"
                     label="Auth"
@@ -222,12 +233,18 @@ export default {
         this.client = createClient(newData)
         this.title = "edit"
         this.clientConfig = this.client.config
+        if (this.clientConfig.vless && !this.clientConfig.vless.flow_inbound_tags) {
+          this.clientConfig.vless.flow_inbound_tags = []
+        }
         this.loading = false
       }
       else {
         this.client = createClient()
         this.title = "add"
         this.clientConfig = randomConfigs('client')
+        if (this.clientConfig.vless) {
+          this.clientConfig.vless.flow_inbound_tags = []
+        }
       }
       this.links = this.client.links?.filter(l => l.type == 'local')?? []
       this.extLinks = this.client.links?.filter(l => l.type == 'external')?? []
@@ -283,6 +300,20 @@ export default {
     total() :string { return HumanReadable.sizeFormat(this.client.down + this.client.up) },
     percent() :number { return this.client.volume>0 ? Math.round((this.client.up + this.client.down) *100 / this.client.volume) : 0 },
     percentColor() :string { return (this.client.up+this.client.down) >= this.client.volume ? 'error' : this.percent>90 ? 'warning' : 'success' },
+    vlessInboundTags() {
+      const store = Data();
+      if (!store.inbounds || !this.client.inbounds) {
+        return [];
+      }
+
+      const selectedInboundIds = this.client.inbounds;
+
+      return store.inbounds
+        .filter(inbound => selectedInboundIds.includes(inbound.id))
+        .filter(inbound => inbound.type === 'vless')
+        .filter(inbound => inbound.tls_id > 0)
+        .map(inbound => ({ value: inbound.tag, title: inbound.tag }));
+    }    
   },
   watch: {
     visible(newValue) {

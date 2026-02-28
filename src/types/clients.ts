@@ -133,6 +133,7 @@ export function randomConfigs(user: string): Config {
       name: user,
       uuid: uuid,
       flow: "xtls-rprx-vision",
+      flow_inbound_tags: [],
     },
     anytls: {
       name: user,

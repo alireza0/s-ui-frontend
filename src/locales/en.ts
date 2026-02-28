@@ -208,6 +208,7 @@ export default {
     links: "Links",
     external: "External Link",
     sub: "External Subscription",
+    vlessFlowTagsPlaceholder: "Leave empty to apply to all VLESS outbounds if flow is enabled",
   },
   bulk: {
     order: "Order",
