@@ -213,7 +213,7 @@ const defaultValues: Record<InType, Inbound> = {
   shadowtls: <ShadowTLS>{ type: InTypes.ShadowTLS, version: 3, handshake: {}, handshake_for_server_name: {} },
   tuic: <TUIC>{ type: InTypes.TUIC, congestion_control: "cubic", tls_id: 0 },
   hysteria2: <Hysteria2>{ type: InTypes.Hysteria2, tls_id: 0 },
-  vless: <VLESS>{ type: InTypes.VLESS, tls_id: 0, multiplex: {}, transport: {} },
+  vless: <VLESS>{ type: InTypes.VLESS, tls_id: 0, transport: {} },
   anytls: <AnyTls>{ type: InTypes.AnyTls, tls_id: 0, padding_scheme: [
     "stop=8",
     "0=30-30",
