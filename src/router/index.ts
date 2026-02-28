@@ -87,28 +87,28 @@ const DEFAULT_TITLE = 'S-UI'
 let intervalId:any
 
 // Navigation guard to check authentication state
-router.beforeEach((to, from, next) => {
+router.beforeEach((to) => {
   // Check the session cookie
   const sessionCookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('s-ui='))
   const isAuthenticated = !!sessionCookie
 
   // If the route requires authentication and the user is not authenticated, redirect to /login
   if (to.meta.requiresAuth && !isAuthenticated) {
-    next('/login')
-  } else if (to.path === '/login' && isAuthenticated) {
-    // If already authenticated and visiting /route, redirect to '/'
-    next('/')
+    return '/login'
+  }
+  if (to.path === '/login' && isAuthenticated) {
+    // If already authenticated and visiting /login, redirect to '/'
+    return '/'
+  }
+
+  // Load default data
+  if (to.path !== '/login') {
+    loadDataInterval()
   } else {
-    // Load default data
-    if(to.path != '/login'){
-      loadDataInterval()
-    } else {
-      if (intervalId) {
-        clearInterval(intervalId)
-        intervalId = undefined
-      }
+    if (intervalId) {
+      clearInterval(intervalId)
+      intervalId = undefined
     }
-    next()
   }
 })
 

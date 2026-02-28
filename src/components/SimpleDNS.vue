@@ -1,5 +1,5 @@
 <template>
-  <v-row no-gutters>
+  <v-row density="compact">
     <v-col cols="12" class="v-card-subtitle" style="margin-top: -5px;">{{ label }}</v-col>
     <v-col :cols="data.type == 'local' ? 12 : 4">
       <v-select

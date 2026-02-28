@@ -15,7 +15,7 @@
   <v-row>
     <v-col cols="12" sm="4" md="3" lg="2" v-for="(item, index) in <any[]>tlsConfigs" :key="item.id">
       <v-card rounded="xl" elevation="5" min-width="200" :title="item.name">
-        <v-card-subtitle style="margin-top: -20px;">
+        <v-card-subtitle style="margin-top: -15px;">
           {{ item.server?.server_name?.length>0 ? item.server.server_name : "-" }}
         </v-card-subtitle>
         <v-card-text>

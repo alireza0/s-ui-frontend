@@ -26,11 +26,11 @@
                 </v-row>
               </v-card-title>
               <v-divider></v-divider>
-              <v-row v-for="items in menuItems" no-gutters>
+              <v-row v-for="items in menuItems" density="compact">
                 <v-col cols="12">
                   <v-card :subtitle="items.title" variant="flat">
                     <v-card-text>
-                      <v-row no-gutters>
+                      <v-row density="compact">
                         <v-col cols="12" md="6" lg="3" v-for="item in items.value">
                           <v-switch
                           density="compact"

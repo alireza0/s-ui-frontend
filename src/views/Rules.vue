@@ -76,7 +76,7 @@
     <v-col class="v-card-subtitle" cols="12">{{ $t('rule.ruleset') }}</v-col>
     <v-col cols="12" sm="4" md="3" lg="2" v-for="(item, index) in <any[]>rulesets" :key="item.tag">
       <v-card rounded="xl" elevation="5" min-width="200" :title="item.tag">
-        <v-card-subtitle style="margin-top: -20px;">
+        <v-card-subtitle style="margin-top: -15px;">
           <v-row>
             <v-col>{{ $t('ruleset.' + item.type) }}</v-col>
           </v-row>
@@ -133,7 +133,7 @@
         @drop="onDrop(index)"
       >
       <v-card rounded="xl" elevation="5" min-width="200" :title="index+1">
-        <v-card-subtitle style="margin-top: -20px;">
+        <v-card-subtitle style="margin-top: -15px;">
           <v-row>
             <v-col>{{ item.type != undefined ? $t('rule.logical') + ' (' + item.mode + ')' : $t('rule.simple') }}</v-col>
           </v-row>
