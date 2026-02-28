@@ -83,22 +83,22 @@
         </template>
         <v-card>
           <v-list>
-            <v-list-item>
+            <v-list-item v-if="mode != 'client'">
               <v-switch v-model="optionDetour" color="primary" :label="$t('listen.detour')" hide-details></v-switch>
             </v-list-item>
-            <v-list-item>
+            <v-list-item v-if="mode != 'client'">
               <v-switch v-model="optionBind" color="primary" :label="$t('dial.bindIf')" hide-details></v-switch>
             </v-list-item>
-            <v-list-item>
+            <v-list-item v-if="mode != 'client'">
               <v-switch v-model="optionIPV4" color="primary" :label="$t('dial.bindIp4')" hide-details></v-switch>
             </v-list-item>
-            <v-list-item>
+            <v-list-item v-if="mode != 'client'">
               <v-switch v-model="optionIPV6" color="primary" :label="$t('dial.bindIp6')" hide-details></v-switch>
             </v-list-item>
-            <v-list-item>
+            <v-list-item v-if="mode != 'client'">
               <v-switch v-model="optionRM" color="primary" label="Routing Mark" hide-details></v-switch>
             </v-list-item>
-            <v-list-item>
+            <v-list-item v-if="mode != 'client'">
               <v-switch v-model="optionRA" color="primary" :label="$t('dial.reuseAddr')" hide-details></v-switch>
             </v-list-item>
             <v-list-item>
@@ -110,7 +110,7 @@
             <v-list-item>
               <v-switch v-model="optionCT" color="primary" :label="$t('dial.connTimeout')" hide-details></v-switch>
             </v-list-item>
-            <v-list-item>
+            <v-list-item v-if="mode != 'client'">
               <v-switch v-model="optionDR" color="primary" :label="$t('dial.domainResolver')" hide-details></v-switch>
             </v-list-item>
           </v-list>
@@ -124,7 +124,7 @@
 import Data from '@/store/modules/data'
 
 export default {
-  props: ['dial'],
+  props: ['dial', 'mode'],
   data() {
     return {
       menu: false

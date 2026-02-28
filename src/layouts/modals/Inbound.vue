@@ -58,6 +58,7 @@
             <v-window-item value="c">
               <OutJsonVue :inData="inbound" :type="inbound.type" />
               <Multiplex v-if="Object.hasOwn(inbound,'multiplex')" direction="out" :data="inbound.out_json" />
+              <Dial v-if="inbound.out_json" :dial="inbound.out_json" mode="client" />
               <v-card style="margin-top: 1rem;">
                 <v-card-subtitle>{{ $t('in.multiDomain') }}
                   <v-chip color="primary" density="compact" variant="elevated" @click="add_addr"><v-icon icon="mdi-plus" /></v-chip>
@@ -97,7 +98,7 @@
 <script lang="ts">
 import { InTypes, createInbound, Addr, ShadowTLS } from '@/types/inbounds'
 import RandomUtil from '@/plugins/randomUtil'
-
+import Dial from '@/components/Dial.vue'
 import Listen from '@/components/Listen.vue'
 import Direct from '@/components/protocols/Direct.vue'
 import Users from '@/components/Users.vue'
@@ -165,6 +166,9 @@ export default {
       this.loading = true
       const inboundArray = await Data().loadInbounds([id])
       this.inbound = inboundArray[0]
+      if (this.HasInData.includes(this.inbound.type) && this.inbound.out_json == null) {
+        this.inbound.out_json = {}
+      }
       this.loading = false
     },
     updateData(id: number) {
@@ -269,7 +273,7 @@ export default {
   components: {
     Listen, InTls, Hysteria2, Naive, Direct, Shadowsocks,
     Users, Hysteria, ShadowTls, TProxy, Multiplex, Tuic, Tun,
-    AnyTls, Transport, AddrVue, OutJsonVue
+    AnyTls, Transport, AddrVue, OutJsonVue, Dial
   }
 }
 </script>
