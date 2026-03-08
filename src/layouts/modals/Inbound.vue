@@ -53,7 +53,7 @@
               <Transport v-if="Object.hasOwn(inbound,'transport')" :data="inbound" />
               <Users v-if="hasUser" :clients="clients" :data="initUsers" />
               <InTls v-if="HasTls.includes(inbound.type)"  :inbound="inbound" :tlsConfigs="tlsConfigs" :tls_id="inbound.tls_id" />
-              <Multiplex v-if="Object.hasOwn(inbound,'multiplex')" direction="in" :data="inbound" />
+              <Multiplex v-if="MuxAvailable.includes(inbound.type)" direction="in" :data="inbound" />
             </v-window-item>
             <v-window-item value="c">
               <OutJsonVue :inData="inbound" :type="inbound.type" />
@@ -160,6 +160,12 @@ export default {
         InTypes.VLESS,
         InTypes.AnyTls,
       ],
+      MuxAvailable: [
+        InTypes.VLESS,
+        InTypes.VMess,
+        InTypes.Trojan,
+        InTypes.Shadowsocks,
+      ],
       OnlyTLS: [InTypes.Hysteria, InTypes.Hysteria2, InTypes.TUIC, InTypes.Naive, InTypes.AnyTls ],
     }
   },
@@ -263,7 +269,7 @@ export default {
       if (this.inbound.type == InTypes.ShadowTLS && (<ShadowTLS>this.inbound).version < 3 ) return false
       if ((<any>this.inbound).managed) return false
       return true
-    }
+    },
   },
   watch: {
     visible(newValue) {

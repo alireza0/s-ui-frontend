@@ -4,7 +4,7 @@
       <v-col cols="12" sm="6" md="4">
         <v-switch color="primary" :label="$t('mux.enable')" v-model="muxEnable" hide-details></v-switch>
       </v-col>
-      <template v-if="mux.enabled">
+      <template v-if="muxEnable">
         <template v-if="direction=='out'">
           <v-col cols="12" sm="6" md="4">
             <v-select
@@ -12,7 +12,7 @@
               :items="[ 'smux', 'yamux', 'h2mux']"
               :label="$t('protocol')"
               clearable
-              @click:clear="mux.protocol=undefined"
+              @click:clear="delete mux?.protocol"
               v-model="mux.protocol">
             </v-select>
           </v-col>
@@ -45,14 +45,14 @@
           </v-col>
         </template>
         <v-col cols="12" sm="6" md="4">
-          <v-switch color="primary" :label="$t('mux.padding')" v-model="mux.padding" hide-details></v-switch>
+          <v-switch color="primary" :label="$t('mux.padding')" v-model="padding" hide-details></v-switch>
         </v-col>
         <v-col cols="12" sm="6" md="4">
           <v-switch color="primary" :label="$t('mux.enableBrutal')" v-model="burtalEnable" hide-details></v-switch>
         </v-col>
       </template>
     </v-row>
-    <v-row v-if="mux.brutal?.enabled">
+    <v-row v-if="mux?.brutal?.enabled">
       <v-col cols="12" sm="6" md="4">
         <v-text-field
         :label="$t('stats.upload')"
@@ -85,31 +85,34 @@ export default {
   },
   computed: {
     mux(): oMultiplex {
-      if (!Object.hasOwn(this.$props.data,"multiplex")) this.$props.data.multiplex = {}
-      return <oMultiplex> this.$props.data.multiplex
+      return <oMultiplex> this.$props.data.multiplex ?? null
     },
     muxEnable: {
       get(): boolean { return this.mux ? this.mux.enabled : false },
-      set(newValue:boolean) { this.$props.data.multiplex = newValue ? { enabled: newValue } : {} }
+      set(newValue:boolean) { this.$props.data.multiplex = newValue ? { enabled: newValue } : undefined }
     },
     max_connections: {
-      get(): number { return this.mux.max_connections ? this.mux.max_connections : 0 },
+      get(): number { return this.mux?.max_connections ? this.mux.max_connections : 0 },
       set(newValue:number) { this.mux.max_connections = newValue > 0 ? newValue : undefined }
     },
     min_streams: {
-      get(): number { return this.mux.min_streams ? this.mux.min_streams : 0 },
+      get(): number { return this.mux?.min_streams ? this.mux.min_streams : 0 },
       set(newValue:number) { this.mux.min_streams = newValue > 0 ? newValue : undefined }
     },
     max_streams: {
-      get(): number { return this.mux.max_streams ? this.mux.max_streams : 0 },
+      get(): number { return this.mux?.max_streams ? this.mux.max_streams : 0 },
       set(newValue:number) { this.mux.max_streams = newValue > 0 ? newValue : undefined }
     },
+    padding: {
+      get(): boolean { return this.mux?.padding ? this.mux.padding : false },
+      set(newValue:boolean) { this.mux.padding = newValue ? true : undefined }
+    },
     burtalEnable: {
-      get(): boolean { return this.mux.brutal ? this.mux.brutal.enabled : false },
+      get(): boolean { return this.mux?.brutal ? this.mux.brutal.enabled : false },
       set(newValue:boolean) { this.mux.brutal = newValue ? { enabled: newValue, up_mbps: 100, down_mbps: 100 } : undefined }
     },
     down_mbps: {
-      get() { return this.mux.brutal && this.mux.brutal.down_mbps ? this.mux.brutal.down_mbps : 0 },
+      get() { return this.mux?.brutal && this.mux.brutal.down_mbps ? this.mux.brutal.down_mbps : 0 },
       set(newValue:any) { 
         if (this.mux.brutal){
           this.mux.brutal.down_mbps = newValue.length != 0 ? newValue : 0
@@ -117,7 +120,7 @@ export default {
       }
     },
     up_mbps: {
-      get() { return this.mux.brutal && this.mux.brutal.up_mbps ? this.mux.brutal.up_mbps : 0 },
+      get() { return this.mux?.brutal && this.mux.brutal.up_mbps ? this.mux.brutal.up_mbps : 0 },
       set(newValue:any) {
         if (this.mux.brutal){
           this.mux.brutal.up_mbps = newValue.length != 0 ? newValue : 0
