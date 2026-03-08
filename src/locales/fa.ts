@@ -210,6 +210,10 @@ export default {
     links: "لینک‌ها",
     external: "لینک‌ خارجی",
     sub: "سابسکریپشن خارجی",
+    delayStart: "تأخیر شروع",
+    autoReset: "بازنشانی خودکار",
+    resetDays: "روزهای بازنشانی",
+    nextReset: "بازنشانی بعدی",
   },
   bulk: {
     order: "ترتیب",

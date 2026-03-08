@@ -43,8 +43,22 @@
             <v-col cols="12" sm="6" md="4">
               <v-text-field v-model.number="bulkData.Volume" type="number" min="0" :label="$t('stats.volume')" suffix="GiB" hide-details></v-text-field>
             </v-col>
-            <v-col cols="12" sm="6" md="4">
+            <v-col cols="12" sm="6" md="4" v-if="!(bulkData.delayStart && !bulkData.autoReset)">
               <DatePick :expiry="bulkData.expiry" @submit="setDate" />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12" sm="6" md="4">
+              <v-switch color="primary"
+                v-model="bulkData.delayStart"
+                :label="$t('client.delayStart')" hide-details>
+              </v-switch>
+            </v-col>
+            <v-col cols="12" sm="6" md="4">
+              <v-switch color="primary" v-model="bulkData.autoReset" :label="$t('client.autoReset')" hide-details></v-switch>
+            </v-col>
+            <v-col cols="12" sm="6" md="4" v-if="bulkData.autoReset || bulkData.delayStart">
+              <v-text-field v-model.number="bulkData.resetDays" type="number" min="1" :label="$t('client.resetDays')" hide-details></v-text-field>
             </v-col>
           </v-row>
           <v-row>
@@ -109,6 +123,9 @@ export default {
         clientInbounds: [],
         expiry: 0,
         Volume: 0,
+        delayStart: false,
+        autoReset: false,
+        resetDays: 0,
       },
       patterns: [
         { title: i18n.global.t("bulk.random"), value: "random" },
@@ -128,6 +145,9 @@ export default {
         clientInbounds: [],
         expiry: 0,
         Volume: 0,
+        delayStart: false,
+        autoReset: false,
+        resetDays: 0,
       }
     },
     closeModal() {
@@ -150,11 +170,14 @@ export default {
           inbounds: this.bulkData.clientInbounds.length > 0 ? this.bulkData.clientInbounds.sort() : [],
           links: [],
           volume: this.bulkData.Volume*(1024 ** 3),
-          expiry: this.bulkData.expiry,
+          expiry: (this.bulkData.delayStart && !this.bulkData.autoReset) ? 0 : this.bulkData.expiry,
           up: 0,
           down: 0,
           desc: this.genByPattern(this.bulkData.desc, i),
-          group: this.bulkData.group
+          group: this.bulkData.group,
+          delayStart: this.bulkData.delayStart,
+          autoReset: this.bulkData.autoReset,
+          resetDays: this.bulkData.resetDays,
         }))
       }
       // Check duplicate names

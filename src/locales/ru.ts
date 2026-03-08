@@ -210,6 +210,10 @@ export default {
     links: "Ссылки",
     external: "Внешняя ссылка",
     sub: "Внешняя подписка",
+    delayStart: "Отложенный старт",
+    autoReset: "Авто сброс",
+    resetDays: "Дней до сброса",
+    nextReset: "Следующий сброс",
   },
   bulk: {
     order: "Порядок",

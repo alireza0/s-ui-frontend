@@ -210,6 +210,10 @@ export default {
     links: "Links",
     external: "External Link",
     sub: "External Subscription",
+    delayStart: "Delay Start",
+    autoReset: "Auto Reset",
+    resetDays: "Reset Days",
+    nextReset: "Next Reset",
   },
   bulk: {
     order: "Order",

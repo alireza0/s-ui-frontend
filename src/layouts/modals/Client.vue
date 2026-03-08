@@ -43,8 +43,23 @@
                 <v-col cols="12" sm="6" md="4">
                   <v-text-field v-model.number="Volume" type="number" min="0" :label="$t('stats.volume')" suffix="GiB" hide-details></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" md="4" v-if="!(client.delayStart && !client.autoReset)">
                   <DatePick :expiry="expDate" @submit="setDate" />
+                </v-col>
+                <v-col cols="12" sm="6" md="4" v-if="client.autoReset || client.delayStart">
+                  <v-text-field v-model.number="resetDays" type="number" min="1" :label="$t('client.resetDays')" hide-details></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12" sm="6" md="4">
+                  <v-switch color="primary"
+                    :disabled="client.up+client.down>0"
+                    v-model="client.delayStart"
+                    :label="$t('client.delayStart')" hide-details>
+                  </v-switch>
+                </v-col>
+                <v-col cols="12" sm="6" md="4">
+                  <v-switch color="primary" v-model="client.autoReset" :label="$t('client.autoReset')" hide-details></v-switch>
                 </v-col>
               </v-row>
               <v-row v-if="id > 0">
@@ -53,7 +68,7 @@
                     <div>
                       {{ $t('stats.usage') }}: {{ total }}<sup dir="ltr" v-if="percent>0">({{ percent }}%)</sup>
                     </div>
-                    <v-btn density="compact" variant="text" icon="mdi-restore" @click="client.up=0;client.down=0">
+                    <v-btn density="compact" variant="text" icon="mdi-restore" @click="resetUsage">
                       <v-tooltip activator="parent" location="top">
                         {{ $t('reset') }}
                       </v-tooltip>
@@ -72,6 +87,20 @@
                   <v-icon icon="mdi-upload" color="orange" /><span class="text-orange">{{ up }}</span>
                   / 
                   <v-icon icon="mdi-download" color="success" /><span class="text-success">{{ down }}</span>
+                </v-col>
+              </v-row>
+              <v-row v-if="id >0 && client.autoReset">
+                <v-col cols="12" sm="6" md="4">
+                  <div class="text-medium-emphasis">{{ $t('client.nextReset') }}</div>
+                  <div dir="ltr">{{ nextResetFormatted }}</div>
+                </v-col>
+                <v-col cols="12" sm="6" md="4">
+                  <div class="text-medium-emphasis">{{ $t('main.stats.totalUsage') }}</div>
+                  <div>
+                    <v-icon icon="mdi-upload" color="orange" /><span class="text-orange">{{ totalUp }}</span>
+                    /
+                    <v-icon icon="mdi-download" color="success" /><span class="text-success">{{ totalDown }}</span>
+                  </div>
                 </v-col>
               </v-row>
               <v-row>
@@ -198,6 +227,7 @@ import { createClient, randomConfigs, updateConfigs, Link, shuffleConfigs } from
 import DatePick from '@/components/DateTime.vue'
 import { HumanReadable } from '@/plugins/utils'
 import Data from '@/store/modules/data'
+import { locale } from '@/locales'
 
 export default {
   props: ['visible', 'id', 'inboundTags', 'groups'],
@@ -245,6 +275,9 @@ export default {
       const isDuplicateName = Data().checkClientName(this.$props.id, this.client.name)
       if (isDuplicateName) return
 
+      // check if delayStart is true and autoReset is false, set expiry to 0
+      if (this.client.delayStart && !this.client.autoReset) this.client.expiry = 0
+
       // save data
       this.loading = true
       this.client.config = updateConfigs(this.clientConfig, this.client.name)
@@ -263,6 +296,12 @@ export default {
     },
     shuffle(k?:string) {
       shuffleConfigs(this.clientConfig, k)
+    },
+    resetUsage(){
+      this.client.totalUp = (this.client.totalUp ?? 0) + this.client.up
+      this.client.totalDown = (this.client.totalDown ?? 0) + this.client.down
+      this.client.up = 0
+      this.client.down = 0
     }
   },
   computed: {
@@ -278,9 +317,21 @@ export default {
       get() { return this.client.volume == 0 ? 0 : (this.client.volume / (1024 ** 3)) },
       set(v:number) { this.client.volume = v > 0 ? v*(1024 ** 3) : 0 }
     },
+    resetDays: {
+      get() { return this.client.resetDays?? 1 },
+      set(v:number) { this.client.resetDays = v }
+    },
     up() :string { return HumanReadable.sizeFormat(this.client.up) },
     down() :string { return HumanReadable.sizeFormat(this.client.down) },
     total() :string { return HumanReadable.sizeFormat(this.client.down + this.client.up) },
+    totalUp() :string { return HumanReadable.sizeFormat((this.client.totalUp ?? 0) + this.client.up) },
+    totalDown() :string { return HumanReadable.sizeFormat((this.client.totalDown ?? 0) + this.client.down) },
+    nextResetFormatted() :string {
+      const ts = this.client.nextReset?? 0
+      if (ts == 0) return '-'
+      const date = new Date(ts*1000)
+      return date.toLocaleString(locale)
+    },
     percent() :number { return this.client.volume>0 ? Math.round((this.client.up + this.client.down) *100 / this.client.volume) : 0 },
     percentColor() :string { return (this.client.up+this.client.down) >= this.client.volume ? 'error' : this.percent>90 ? 'warning' : 'success' },
   },

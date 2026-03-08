@@ -210,6 +210,10 @@ export default {
     links: "Liên kết",
     external: "Liên kết bên ngoài",
     sub: "Đăng ký bên ngoài",
+    delayStart: "Trì hoãn bắt đầu",
+    autoReset: "Tự động đặt lại",
+    resetDays: "Số ngày đặt lại",
+    nextReset: "Đặt lại lần sau",
   },
   bulk: {
     order: "Sắp xếp",

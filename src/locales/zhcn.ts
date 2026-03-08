@@ -210,6 +210,10 @@ export default {
     links: "链接",
     external: "外部链接",
     sub: "外部订阅",
+    delayStart: "延迟启动",
+    autoReset: "自动重置",
+    resetDays: "重置天数",
+    nextReset: "下次重置",
   },
   bulk: {
     order: "排序",
