@@ -123,6 +123,8 @@ export default {
     action: "فرمان",
     add: "ایجاد",
     addbulk: "ایجاد انبوه",
+    editbulk: "ویرایش انبوه",
+    delbulk: "حذف انبوه",
     new: "جدید",
     edit: "ویرایش",
     del: "حذف",
@@ -212,6 +214,11 @@ export default {
   bulk: {
     order: "ترتیب",
     random: "تصادفی",
+    changeLimits: "تغییر محدودیت‌ها",
+    addInbounds: "افزودن اینباندها",
+    removeInbounds: "حذف اینباندها",
+    addDays: "افزودن روز",
+    addVolume: "افزودن حجم",
   },
   types: {
     un: "نام کاربری",

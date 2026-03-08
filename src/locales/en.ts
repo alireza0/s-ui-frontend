@@ -123,6 +123,8 @@ export default {
     action: "Action",
     add: "Add",
     addbulk: "Add Bulk",
+    editbulk: "Edit Bulk",
+    delbulk: "Delete Bulk",
     new: "New",
     edit: "Edit",
     del: "Delete",
@@ -212,6 +214,11 @@ export default {
   bulk: {
     order: "Order",
     random: "Random",
+    changeLimits: "Change limits",
+    addInbounds: "Add inbounds",
+    removeInbounds: "Remove inbounds",
+    addDays: "Add days",
+    addVolume: "Add volume",
   },
   types: {
     un: "Username",

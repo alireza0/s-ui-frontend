@@ -123,6 +123,8 @@ export default {
     action: "Действие",
     add: "Добавить",
     addbulk: "Добавить пакетно",
+    editbulk: "Редактировать пакетно",
+    delbulk: "Удалить пакетно",
     new: "Новый",
     edit: "Редактировать",
     del: "Удалить",
@@ -212,6 +214,11 @@ export default {
   bulk: {
     order: "Порядок",
     random: "Случайный",
+    changeLimits: "Изменить лимиты",
+    addInbounds: "Добавить входящие",
+    removeInbounds: "Удалить входящие",
+    addDays: "Добавить дни",
+    addVolume: "Добавить объём",
   },
   types: {
     un: "Имя пользователя",

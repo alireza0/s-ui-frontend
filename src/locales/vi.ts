@@ -123,6 +123,8 @@ export default {
     action: "Hành động",
     add: "Thêm",
     addbulk: "Thêm Hàng loạt",
+    editbulk: "Chỉnh sửa hàng loạt",
+    delbulk: "Xóa hàng loạt",
     new: "Mới",
     edit: "Chỉnh sửa",
     del: "Xóa",
@@ -212,6 +214,11 @@ export default {
   bulk: {
     order: "Sắp xếp",
     random: "Ngẫu nhiên",
+    changeLimits: "Thay đổi giới hạn",
+    addInbounds: "Thêm inbound",
+    removeInbounds: "Xóa inbound",
+    addDays: "Thêm ngày",
+    addVolume: "Thêm dung lượng",
   },
   types: {
     un: "Tên người dùng",

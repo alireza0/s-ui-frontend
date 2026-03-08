@@ -49,15 +49,18 @@
           </v-row>
           <v-row>
             <v-col>
-              <v-combobox
+              <v-select
                 v-model="bulkData.clientInbounds"
                 :items="inboundTags"
                 :label="$t('client.inboundTags')"
-                :return-object="false"
                 multiple
                 chips
                 hide-details
-              ></v-combobox>
+              >
+                <template v-slot:append>
+                  <v-icon @click="setAllInbounds" icon="mdi-set-all" v-tooltip:top="$t('all')" />
+                </template>
+              </v-select>
             </v-col>
           </v-row>
         </v-container>
@@ -144,7 +147,7 @@ export default {
           enable: true,
           name: name,
           config: randomConfigs(name),
-          inbounds: this.bulkData.clientInbounds,
+          inbounds: this.bulkData.clientInbounds.length > 0 ? this.bulkData.clientInbounds.sort() : [],
           links: [],
           volume: this.bulkData.Volume*(1024 ** 3),
           expiry: this.bulkData.expiry,
@@ -183,6 +186,9 @@ export default {
     },
     setDate(v:number){
       this.bulkData.expiry = v
+    },
+    setAllInbounds(){
+      this.bulkData.clientInbounds = this.inboundTags.map((i:any) => i.value).sort()
     }
   },
   computed: {},

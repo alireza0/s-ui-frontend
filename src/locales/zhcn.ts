@@ -123,6 +123,8 @@ export default {
     action: "操作",
     add: "添加",
     addbulk: "批量添加",
+    editbulk: "批量编辑",
+    delbulk: "批量删除",
     new: "新建",
     edit: "编辑",
     del: "删除",
@@ -212,6 +214,11 @@ export default {
   bulk: {
     order: "排序",
     random: "随机",
+    changeLimits: "更改限制",
+    addInbounds: "添加入站",
+    removeInbounds: "移除入站",
+    addDays: "增加天数",
+    addVolume: "增加流量",
   },
   types: {
     un: "用户名",

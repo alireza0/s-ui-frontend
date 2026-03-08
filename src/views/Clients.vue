@@ -8,12 +8,19 @@
     :inboundTags="inboundTags"
     @close="closeModal"
   />
-  <ClientBulk 
+  <ClientAddBulk 
     v-model="addBulkModal"
     :visible="addBulkModal"
     :groups="groups"
     :inboundTags="inboundTags"
-    @close="closeBulk"
+    @close="closeAddBulk"
+  />
+  <ClientEditBulk 
+    v-model="editBulkModal"
+    :visible="editBulkModal"
+    :inboundTags="inboundTags"
+    :clients="clients"
+    @close="closeEditBulk"
   />
   <QrCode
     v-model="qrcode.visible"
@@ -45,6 +52,12 @@
               <v-icon icon="mdi-account-multiple-plus"></v-icon>
             </template>
             <v-list-item-title v-text="$t('actions.addbulk')"></v-list-item-title>
+          </v-list-item>
+          <v-list-item link @click="editBulk">
+            <template v-slot:prepend>
+              <v-icon icon="mdi-account-multiple-check"></v-icon>
+            </template>
+            <v-list-item-title v-text="$t('actions.editbulk')"></v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -228,7 +241,8 @@
 <script lang="ts" setup>
 import Data from '@/store/modules/data'
 import ClientModal from '@/layouts/modals/Client.vue'
-import ClientBulk from '@/layouts/modals/ClientBulk.vue'
+import ClientAddBulk from '@/layouts/modals/ClientAddBulk.vue'
+import ClientEditBulk from '@/layouts/modals/ClientEditBulk.vue'
 import QrCode from '@/layouts/modals/QrCode.vue'
 import Stats from '@/layouts/modals/Stats.vue'
 import { Client } from '@/types/clients'
@@ -389,8 +403,19 @@ const addBulk = () => {
   actionMenu.value = false
 }
 
-const closeBulk = () => {
+const closeAddBulk = () => {
   addBulkModal.value = false
+}
+
+const editBulkModal = ref(false)
+
+const editBulk = () => {
+  editBulkModal.value = true
+  actionMenu.value = false
+}
+
+const closeEditBulk = () => {
+  editBulkModal.value = false
 }
 
 const percent = (c: Client) => { return c.volume>0 ? Math.round((c.up+c.down) *100 / c.volume) : 0 }
