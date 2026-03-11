@@ -54,12 +54,12 @@
                 <v-col cols="12" sm="6" md="4">
                   <v-switch color="primary"
                     :disabled="client.up+client.down>0"
-                    v-model="client.delayStart"
+                    v-model="delayStart"
                     :label="$t('client.delayStart')" hide-details>
                   </v-switch>
                 </v-col>
                 <v-col cols="12" sm="6" md="4">
-                  <v-switch color="primary" v-model="client.autoReset" :label="$t('client.autoReset')" hide-details></v-switch>
+                  <v-switch color="primary" v-model="autoReset" :label="$t('client.autoReset')" hide-details></v-switch>
                 </v-col>
               </v-row>
               <v-row v-if="id > 0">
@@ -317,9 +317,31 @@ export default {
       get() { return this.client.volume == 0 ? 0 : (this.client.volume / (1024 ** 3)) },
       set(v:number) { this.client.volume = v > 0 ? v*(1024 ** 3) : 0 }
     },
+    delayStart: {
+      get() { return this.client.delayStart?? false },
+      set(v:boolean) {
+        this.client.delayStart = v
+        this.client.resetDays = v ? 1 : 0
+        if (v && !this.autoReset) this.client.expiry = 0
+      }
+    },
+    autoReset: {
+      get() { return this.client.autoReset?? false },
+      set(v:boolean) {
+        this.client.autoReset = v
+        this.client.resetDays = v ? 1 : 0
+        if (!v) this.client.nextReset = 0
+      }
+    },
     resetDays: {
       get() { return this.client.resetDays?? 1 },
-      set(v:number) { this.client.resetDays = v }
+      set(v:number|null) {
+        if (!v) v = 1
+        if (this.client.nextReset && this.client.nextReset > 0) {
+          this.client.nextReset += (v-(this.client.resetDays?? 0))*24*60*60
+        }
+        this.client.resetDays = v
+      }
     },
     up() :string { return HumanReadable.sizeFormat(this.client.up) },
     down() :string { return HumanReadable.sizeFormat(this.client.down) },
