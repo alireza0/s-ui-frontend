@@ -258,9 +258,9 @@ export default {
         case 'predefined':
           newRule.rcode = this.ruleData.rcode?.length > 0 ? this.ruleData.rcode : undefined
           if (this.ruleData.rcode == 'NOERROR') {
-            newRule.answer = this.ruleData.answer?.length > 0 ? this.ruleData.answer.split(',') : undefined
-            newRule.ns = this.ruleData.ns?.length > 0 ? this.ruleData.ns.split(',') : undefined
-            newRule.extra = this.ruleData.extra?.length > 0 ? this.ruleData.extra.split(',') : undefined
+            newRule.answer = this.ruleData.answer
+            newRule.ns = this.ruleData.ns
+            newRule.extra = this.ruleData.extra
           }
           break
       }
