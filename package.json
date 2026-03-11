@@ -33,7 +33,7 @@
     "@vitejs/plugin-vue": "^6.0.4",
     "eslint-plugin-vue": "^10.8.0",
     "material-design-icons-iconfont": "^6.7.0",
-    "sass": "^1.97.3",
+    "sass": "^1.98.0",
     "typescript": "^5.9.3",
     "vite": "^7.3.1",
     "vite-plugin-vuetify": "^2.1.3",
