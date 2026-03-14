@@ -66,8 +66,7 @@
             :label="$t('rule.domain')"
             hide-details
             v-model="domain"
-            rows="3"
-            auto-grow
+            rows="5"
             no-resize
             density="compact"
             style="font-family: monospace; font-size: 13px;"
@@ -82,8 +81,7 @@
             :label="$t('rule.domainSufix')"
             hide-details
             v-model="domain_suffix"
-            rows="3"
-            auto-grow
+            rows="5"
             no-resize
             density="compact"
             style="font-family: monospace; font-size: 13px;"
@@ -98,8 +96,7 @@
             :label="$t('rule.domainKw')"
             hide-details
             v-model="domain_keyword"
-            rows="3"
-            auto-grow
+            rows="5"
             no-resize
             density="compact"
             style="font-family: monospace; font-size: 13px;"
@@ -114,8 +111,7 @@
             :label="$t('rule.domainRgx')"
             hide-details
             v-model="domain_regex"
-            rows="3"
-            auto-grow
+            rows="5"
             no-resize
             density="compact"
             style="font-family: monospace; font-size: 13px;"
@@ -130,8 +126,7 @@
             :label="$t('rule.ip')"
             hide-details
             v-model="ip_cidr"
-            rows="3"
-            auto-grow
+            rows="5"
             no-resize
             density="compact"
             style="font-family: monospace; font-size: 13px;"
@@ -159,8 +154,7 @@
             :label="$t('rule.port')"
             hide-details
             v-model="port"
-            rows="3"
-            auto-grow
+            rows="5"
             no-resize
             density="compact"
             style="font-family: monospace; font-size: 13px;"
@@ -175,8 +169,7 @@
             :label="$t('rule.portRange')"
             hide-details
             v-model="port_range"
-            rows="3"
-            auto-grow
+            rows="5"
             no-resize
             density="compact"
             style="font-family: monospace; font-size: 13px;"
@@ -201,8 +194,7 @@
             :label="$t('rule.srcCidr')"
             hide-details
             v-model="source_ip_cidr"
-            rows="3"
-            auto-grow
+            rows="5"
             no-resize
             density="compact"
             style="font-family: monospace; font-size: 13px;"
@@ -230,8 +222,7 @@
             :label="$t('rule.srcPort')"
             hide-details
             v-model="source_port"
-            rows="3"
-            auto-grow
+            rows="5"
             no-resize
             density="compact"
             style="font-family: monospace; font-size: 13px;"
@@ -246,8 +237,7 @@
             :label="$t('rule.srcPortRange')"
             hide-details
             v-model="source_port_range"
-            rows="3"
-            auto-grow
+            rows="5"
             no-resize
             density="compact"
             style="font-family: monospace; font-size: 13px;"
@@ -283,8 +273,7 @@
             :label="$t('rule.interfaceAddr')"
             hide-details
             v-model="interface_addr"
-            rows="3"
-            auto-grow
+            rows="5"
             no-resize
             density="compact"
             style="font-family: monospace; font-size: 13px;"
@@ -377,7 +366,6 @@
             :label="bulkLabel"
             variant="outlined"
             rows="16"
-            auto-grow
             hide-details
             spellcheck="false"
             style="font-family: monospace; font-size: 13px;"
