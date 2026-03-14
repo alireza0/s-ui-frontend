@@ -6,8 +6,9 @@
             <v-card-title class="headline" v-text="$t('login.title')"></v-card-title>
             <v-card-text>
               <v-form @submit.prevent="login" ref="form">
-                <v-text-field v-model="username" :label="$t('login.username')" :rules="usernameRules" required></v-text-field>
-                <v-text-field v-model="password" :label="$t('login.password')" :rules="passwordRules" type="password" required></v-text-field>
+                <v-text-field v-model="username" prepend-icon="mdi-account" :label="$t('login.username')" :rules="usernameRules" required></v-text-field>
+                <v-text-field v-model="password" prepend-icon="mdi-form-textbox-password" :label="$t('login.password')" :rules="passwordRules" type="password" required></v-text-field>
+				<v-text-field v-model="passcode" prepend-icon="mdi-shield-lock-outline" :label="$t('login.passcode')" :rules="passcodeRules" required></v-text-field>
                 <v-btn :loading="loading" type="submit" color="primary" block class="mt-2" v-text="$t('actions.submit')"></v-btn>
               </v-form>
               <v-select
@@ -79,13 +80,21 @@ const passwordRules = [
   },
 ]
 
+const passcode = ref('')
+const passcodeRules = [
+  (value: string) => {
+    if (value?.length == 6) return true
+    return i18n.global.t('login.passcodeRules')
+  },
+]
+
 const loading = ref(false)
 const router = useRouter()
 
 const login = async () => {
-  if (username.value == '' || password.value == '') return
+  if (username.value == '' || password.value == '' || passcode.value == '') return
   loading.value=true
-  const response = await HttpUtil.post('api/login',{user: username.value, pass: password.value})
+  const response = await HttpUtil.post('api/login',{user: username.value, pass: password.value, passcode: passcode.value})
   if(response.success){
     setTimeout(() => {
       loading.value=false
