@@ -59,35 +59,80 @@
           v-model="domainOption">
         </v-select>
       </v-col>
+      <!-- domain -->
       <v-col cols="12" sm="6" v-if="rule.domain != undefined">
-        <v-text-field
-        :label="$t('rule.domain') + ' ' + $t('commaSeparated')"
-        hide-details
-        v-model="domain"></v-text-field>
+        <div class="d-flex align-start gap-1">
+          <v-textarea
+            :label="$t('rule.domain')"
+            hide-details
+            v-model="domain"
+            rows="5"
+            no-resize
+            density="compact"
+            style="font-family: monospace; font-size: 13px;"
+          ></v-textarea>
+          <v-btn icon="mdi-arrow-expand" size="small" variant="text" :title="'Bulk edit'" @click="openBulk('domain')"></v-btn>
+        </div>
       </v-col>
+      <!-- domain_suffix -->
       <v-col cols="12" sm="6" v-if="rule.domain_suffix != undefined">
-        <v-text-field
-        :label="$t('rule.domainSufix') + ' ' + $t('commaSeparated')"
-        hide-details
-        v-model="domain_suffix"></v-text-field>
+        <div class="d-flex align-start gap-1">
+          <v-textarea
+            :label="$t('rule.domainSufix')"
+            hide-details
+            v-model="domain_suffix"
+            rows="5"
+            no-resize
+            density="compact"
+            style="font-family: monospace; font-size: 13px;"
+          ></v-textarea>
+          <v-btn icon="mdi-arrow-expand" size="small" variant="text" :title="'Bulk edit'" @click="openBulk('domain_suffix')"></v-btn>
+        </div>
       </v-col>
+      <!-- domain_keyword -->
       <v-col cols="12" sm="6" v-if="rule.domain_keyword != undefined">
-        <v-text-field
-        :label="$t('rule.domainKw') + ' ' + $t('commaSeparated')"
-        hide-details
-        v-model="domain_keyword"></v-text-field>
+        <div class="d-flex align-start gap-1">
+          <v-textarea
+            :label="$t('rule.domainKw')"
+            hide-details
+            v-model="domain_keyword"
+            rows="5"
+            no-resize
+            density="compact"
+            style="font-family: monospace; font-size: 13px;"
+          ></v-textarea>
+          <v-btn icon="mdi-arrow-expand" size="small" variant="text" :title="'Bulk edit'" @click="openBulk('domain_keyword')"></v-btn>
+        </div>
       </v-col>
+      <!-- domain_regex -->
       <v-col cols="12" sm="6" v-if="rule.domain_regex != undefined">
-        <v-text-field
-        :label="$t('rule.domainRgx') + ' ' + $t('commaSeparated')"
-        hide-details
-        v-model="domain_regex"></v-text-field>
+        <div class="d-flex align-start gap-1">
+          <v-textarea
+            :label="$t('rule.domainRgx')"
+            hide-details
+            v-model="domain_regex"
+            rows="5"
+            no-resize
+            density="compact"
+            style="font-family: monospace; font-size: 13px;"
+          ></v-textarea>
+          <v-btn icon="mdi-arrow-expand" size="small" variant="text" :title="'Bulk edit'" @click="openBulk('domain_regex')"></v-btn>
+        </div>
       </v-col>
+      <!-- ip_cidr -->
       <v-col cols="12" sm="6" v-if="rule.ip_cidr != undefined">
-        <v-text-field
-        :label="$t('rule.ip') + ' ' + $t('commaSeparated')"
-        hide-details
-        v-model="ip_cidr"></v-text-field>
+        <div class="d-flex align-start gap-1">
+          <v-textarea
+            :label="$t('rule.ip')"
+            hide-details
+            v-model="ip_cidr"
+            rows="5"
+            no-resize
+            density="compact"
+            style="font-family: monospace; font-size: 13px;"
+          ></v-textarea>
+          <v-btn icon="mdi-arrow-expand" size="small" variant="text" :title="'Bulk edit'" @click="openBulk('ip_cidr')"></v-btn>
+        </div>
       </v-col>
       <v-col cols="12" sm="6" v-if="rule.ip_is_private != undefined">
         <v-switch v-model="rule.ip_is_private" color="primary" :label="$t('rule.privateIp')" hide-details></v-switch>
@@ -102,17 +147,35 @@
           v-model="portOption">
         </v-select>
       </v-col>
+      <!-- port -->
       <v-col cols="12" sm="6" v-if="rule.port != undefined">
-        <v-text-field
-        :label="$t('rule.port') + ' ' + $t('commaSeparated')"
-        hide-details
-        v-model="port"></v-text-field>
+        <div class="d-flex align-start gap-1">
+          <v-textarea
+            :label="$t('rule.port')"
+            hide-details
+            v-model="port"
+            rows="5"
+            no-resize
+            density="compact"
+            style="font-family: monospace; font-size: 13px;"
+          ></v-textarea>
+          <v-btn icon="mdi-arrow-expand" size="small" variant="text" :title="'Bulk edit'" @click="openBulk('port')"></v-btn>
+        </div>
       </v-col>
+      <!-- port_range -->
       <v-col cols="12" sm="6" v-if="rule.port_range != undefined">
-        <v-text-field
-        :label="$t('rule.portRange') + ' ' + $t('commaSeparated')"
-        hide-details
-        v-model="port_range"></v-text-field>
+        <div class="d-flex align-start gap-1">
+          <v-textarea
+            :label="$t('rule.portRange')"
+            hide-details
+            v-model="port_range"
+            rows="5"
+            no-resize
+            density="compact"
+            style="font-family: monospace; font-size: 13px;"
+          ></v-textarea>
+          <v-btn icon="mdi-arrow-expand" size="small" variant="text" :title="'Bulk edit'" @click="openBulk('port_range')"></v-btn>
+        </div>
       </v-col>
     </v-row>
     <v-row v-if="optionSrcIP">
@@ -124,11 +187,20 @@
           v-model="srcIPOption">
         </v-select>
       </v-col>
+      <!-- source_ip_cidr -->
       <v-col cols="12" sm="6" v-if="rule.source_ip_cidr != undefined">
-        <v-text-field
-        :label="$t('rule.srcCidr') + ' ' + $t('commaSeparated')"
-        hide-details
-        v-model="source_ip_cidr"></v-text-field>
+        <div class="d-flex align-start gap-1">
+          <v-textarea
+            :label="$t('rule.srcCidr')"
+            hide-details
+            v-model="source_ip_cidr"
+            rows="5"
+            no-resize
+            density="compact"
+            style="font-family: monospace; font-size: 13px;"
+          ></v-textarea>
+          <v-btn icon="mdi-arrow-expand" size="small" variant="text" :title="'Bulk edit'" @click="openBulk('source_ip_cidr')"></v-btn>
+        </div>
       </v-col>
       <v-col cols="12" sm="6" v-if="rule.source_ip_is_private != undefined">
         <v-switch v-model="rule.source_ip_is_private" color="primary" :label="$t('rule.srcPrivateIp')" hide-details></v-switch>
@@ -143,17 +215,35 @@
           v-model="srcPortOption">
         </v-select>
       </v-col>
+      <!-- source_port -->
       <v-col cols="12" sm="6" v-if="rule.source_port != undefined">
-        <v-text-field
-        :label="$t('rule.srcPort') + ' ' + $t('commaSeparated')"
-        hide-details
-        v-model="source_port"></v-text-field>
+        <div class="d-flex align-start gap-1">
+          <v-textarea
+            :label="$t('rule.srcPort')"
+            hide-details
+            v-model="source_port"
+            rows="5"
+            no-resize
+            density="compact"
+            style="font-family: monospace; font-size: 13px;"
+          ></v-textarea>
+          <v-btn icon="mdi-arrow-expand" size="small" variant="text" :title="'Bulk edit'" @click="openBulk('source_port')"></v-btn>
+        </div>
       </v-col>
+      <!-- source_port_range -->
       <v-col cols="12" sm="6" v-if="rule.source_port_range != undefined">
-        <v-text-field
-        :label="$t('rule.srcPortRange') + ' ' + $t('commaSeparated')"
-        hide-details
-        v-model="source_port_range"></v-text-field>
+        <div class="d-flex align-start gap-1">
+          <v-textarea
+            :label="$t('rule.srcPortRange')"
+            hide-details
+            v-model="source_port_range"
+            rows="5"
+            no-resize
+            density="compact"
+            style="font-family: monospace; font-size: 13px;"
+          ></v-textarea>
+          <v-btn icon="mdi-arrow-expand" size="small" variant="text" :title="'Bulk edit'" @click="openBulk('source_port_range')"></v-btn>
+        </div>
       </v-col>
     </v-row>
     <v-row v-if="optionPreferredBy">
@@ -178,10 +268,18 @@
         </v-select>
       </v-col>
       <v-col cols="12" sm="6" v-if="rule.interface_address != undefined || rule.network_interface_address != undefined || rule.default_interface_address != undefined">
-        <v-text-field
-        :label="$t('rule.interfaceAddr') + ' ' + $t('commaSeparated')"
-        hide-details
-        v-model="interface_addr"></v-text-field>
+        <div class="d-flex align-start gap-1">
+          <v-textarea
+            :label="$t('rule.interfaceAddr')"
+            hide-details
+            v-model="interface_addr"
+            rows="5"
+            no-resize
+            density="compact"
+            style="font-family: monospace; font-size: 13px;"
+          ></v-textarea>
+          <v-btn icon="mdi-arrow-expand" size="small" variant="text" :title="'Bulk edit'" @click="openBulk('interface_addr')"></v-btn>
+        </div>
       </v-col>
     </v-row>
     <v-row v-if="optionRuleSet">
@@ -247,6 +345,43 @@
         </v-card>
       </v-menu>
     </v-card-actions>
+
+    <!-- ───────────────── Bulk Edit Dialog ───────────────── -->
+    <v-dialog v-model="bulkDialog" max-width="620" scrollable>
+      <v-card>
+        <v-card-title class="d-flex align-center pa-4">
+          <span>{{ bulkLabel }} — bulk edit</span>
+          <v-spacer />
+          <v-chip size="small" color="primary" variant="tonal" class="mr-2">
+            {{ bulkLineCount }} items
+          </v-chip>
+        </v-card-title>
+        <v-divider />
+        <v-card-text class="pa-4">
+          <p class="text-caption text-medium-emphasis mb-3">
+            One entry per line. Empty lines and duplicates are ignored on apply.
+          </p>
+          <v-textarea
+            v-model="bulkText"
+            :label="bulkLabel"
+            variant="outlined"
+            rows="16"
+            hide-details
+            spellcheck="false"
+            style="font-family: monospace; font-size: 13px;"
+          ></v-textarea>
+        </v-card-text>
+        <v-divider />
+        <v-card-actions class="pa-3">
+          <v-btn @click="bulkDialog = false" variant="text">Cancel</v-btn>
+          <v-spacer />
+          <v-btn @click="bulkClear" color="error" variant="text">Clear all</v-btn>
+          <v-btn @click="bulkApply" color="primary" variant="flat">Apply</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!-- ──────────────────────────────────────────────────── -->
+
   </v-card>
 </template>
 
@@ -278,6 +413,11 @@ export default {
         { title: 'RDP', value: 'rdp' },
         { title: 'NTP', value: 'ntp' },
       ],
+      // Bulk edit dialog state
+      bulkDialog: false,
+      bulkField: '' as string,
+      bulkText: '',
+      bulkLabel: '',
     }
   },
   methods: {
@@ -301,8 +441,37 @@ export default {
       this.interfaceKeys.forEach(k => delete this.$props.rule[k])
       this.$props.rule[option] = []
     },
+    // ── Bulk edit helpers ──
+    openBulk(field: string) {
+      this.bulkField = field
+      this.bulkLabel = field
+      // Get current value via the computed getter
+      const val = (this as any)[field]
+      this.bulkText = typeof val === 'string' ? val : ''
+      this.bulkDialog = true
+    },
+    bulkApply() {
+      const lines = this.bulkText
+        .split('\n')
+        .map((l: string) => l.trim())
+        .filter((l: string) => l.length > 0)
+      // Deduplicate
+      const unique = [...new Set(lines)]
+      // Write back via the computed setter — join with \n so computed setter picks it up
+      ;(this as any)[this.bulkField] = unique.join('\n')
+      this.bulkDialog = false
+    },
+    bulkClear() {
+      this.bulkText = ''
+    },
   },
   computed: {
+    bulkLineCount(): number {
+      return this.bulkText
+        .split('\n')
+        .filter((l: string) => l.trim().length > 0)
+        .length
+    },
     optionInbound: {
       get() { return this.$props.rule.inbound != undefined },
       set(v:boolean) { this.$props.rule.inbound = v ? [] : undefined }
@@ -394,62 +563,65 @@ export default {
       get() { return this.$props.rule.network != undefined },
       set(v:boolean) { this.$props.rule.network = v ? [] : undefined }
     },
+    // ── String↔Array computed via \n (textarea one-per-line) ──
     domain: {
-      get() { return this.$props.rule.domain?.join(',') },
-      set(v:string) { this.$props.rule.domain = v.length>0 ? v.split(',') : [] }
+      get() { return this.$props.rule.domain?.join('\n') ?? '' },
+      set(v:string) { this.$props.rule.domain = v.length > 0 ? v.split('\n').map((s:string) => s.trim()).filter((s:string) => s.length > 0) : [] }
     },
     domain_suffix: {
-      get() { return this.$props.rule.domain_suffix?.join(',') },
-      set(v:string) { this.$props.rule.domain_suffix = v.length>0 ? v.split(',') : [] }
+      get() { return this.$props.rule.domain_suffix?.join('\n') ?? '' },
+      set(v:string) { this.$props.rule.domain_suffix = v.length > 0 ? v.split('\n').map((s:string) => s.trim()).filter((s:string) => s.length > 0) : [] }
     },
     domain_keyword: {
-      get() { return this.$props.rule.domain_keyword?.join(',') },
-      set(v:string) { this.$props.rule.domain_keyword = v.length>0 ? v.split(',') : [] }
+      get() { return this.$props.rule.domain_keyword?.join('\n') ?? '' },
+      set(v:string) { this.$props.rule.domain_keyword = v.length > 0 ? v.split('\n').map((s:string) => s.trim()).filter((s:string) => s.length > 0) : [] }
     },
     domain_regex: {
-      get() { return this.$props.rule.domain_regex?.join(',') },
-      set(v:string) { this.$props.rule.domain_regex = v.length>0 ? v.split(',') : [] }
+      get() { return this.$props.rule.domain_regex?.join('\n') ?? '' },
+      set(v:string) { this.$props.rule.domain_regex = v.length > 0 ? v.split('\n').map((s:string) => s.trim()).filter((s:string) => s.length > 0) : [] }
     },
     ip_cidr: {
-      get() { return this.$props.rule.ip_cidr?.join(',') },
-      set(v:string) { this.$props.rule.ip_cidr = v.length>0 ? v.split(',') : [] }
+      get() { return this.$props.rule.ip_cidr?.join('\n') ?? '' },
+      set(v:string) { this.$props.rule.ip_cidr = v.length > 0 ? v.split('\n').map((s:string) => s.trim()).filter((s:string) => s.length > 0) : [] }
     },
     port: {
-      get() { return this.$props.rule.port?.join(',') },
+      get() { return this.$props.rule.port?.join('\n') ?? '' },
       set(v:string) {
-        if(!v.endsWith(',')) {
-          this.$props.rule.port = v.length > 0 ? v.split(',').map(str => parseInt(str, 10)) : []
+        const lines = v.split('\n').map((s:string) => s.trim()).filter((s:string) => s.length > 0)
+        if (!v.endsWith('\n')) {
+          this.$props.rule.port = lines.length > 0 ? lines.map((str:string) => parseInt(str, 10)).filter((n:number) => !isNaN(n)) : []
         }
       }
     },
     port_range: {
-      get() { return this.$props.rule.port_range?.join(',') },
-      set(v:string) { this.$props.rule.port_range = v.length>0 ? v.split(',') : [] }
+      get() { return this.$props.rule.port_range?.join('\n') ?? '' },
+      set(v:string) { this.$props.rule.port_range = v.length > 0 ? v.split('\n').map((s:string) => s.trim()).filter((s:string) => s.length > 0) : [] }
     },
     source_ip_cidr: {
-      get() { return this.$props.rule.source_ip_cidr?.join(',') },
-      set(v:string) { this.$props.rule.source_ip_cidr = v.length>0 ? v.split(',') : [] }
+      get() { return this.$props.rule.source_ip_cidr?.join('\n') ?? '' },
+      set(v:string) { this.$props.rule.source_ip_cidr = v.length > 0 ? v.split('\n').map((s:string) => s.trim()).filter((s:string) => s.length > 0) : [] }
     },
     source_port: {
-      get() { return this.$props.rule.source_port?.join(',') },
+      get() { return this.$props.rule.source_port?.join('\n') ?? '' },
       set(v:string) {
-        if(!v.endsWith(',')) {
-          this.$props.rule.source_port = v.length > 0 ? v.split(',').map(str => parseInt(str, 10)) : []
+        const lines = v.split('\n').map((s:string) => s.trim()).filter((s:string) => s.length > 0)
+        if (!v.endsWith('\n')) {
+          this.$props.rule.source_port = lines.length > 0 ? lines.map((str:string) => parseInt(str, 10)).filter((n:number) => !isNaN(n)) : []
         }
       }
     },
     source_port_range: {
-      get() { return this.$props.rule.source_port_range?.join(',') },
-      set(v:string) { this.$props.rule.source_port_range = v.length>0 ? v.split(',') : [] }
+      get() { return this.$props.rule.source_port_range?.join('\n') ?? '' },
+      set(v:string) { this.$props.rule.source_port_range = v.length > 0 ? v.split('\n').map((s:string) => s.trim()).filter((s:string) => s.length > 0) : [] }
     },
     interface_addr: {
       get() {
         const k = this.interfaceKeys.find(k => this.$props.rule[k] != undefined)
-        return k ? this.$props.rule[k]?.join(',') : ''
+        return k ? this.$props.rule[k]?.join('\n') ?? '' : ''
       },
       set(v:string) {
         const k = this.interfaceKeys.find(k => this.$props.rule[k] != undefined)
-        if (k) this.$props.rule[k] = v.length>0 ? v.split(',') : []
+        if (k) this.$props.rule[k] = v.length > 0 ? v.split('\n').map((s:string) => s.trim()).filter((s:string) => s.length > 0) : []
       }
     },
   },
