@@ -57,7 +57,46 @@
             <v-col cols="12" sm="6" md="4">
               <v-switch color="primary" v-model="bulkData.autoReset" :label="$t('client.autoReset')" hide-details></v-switch>
             </v-col>
-            <v-col cols="12" sm="6" md="4" v-if="bulkData.autoReset || bulkData.delayStart">
+          </v-row>
+          <v-row v-if="bulkData.autoReset">
+            <v-col cols="12" sm="6" md="4">
+              <v-select
+                v-model="bulkData.resetType"
+                :items="resetTypeItems"
+                :label="$t('client.resetType')"
+                hide-details
+              ></v-select>
+            </v-col>
+            <v-col cols="12" sm="6" md="4" v-if="bulkData.resetType === 'periodic'">
+              <v-text-field v-model.number="bulkData.resetDays" type="number" min="1" :label="$t('client.resetDays')" hide-details></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6" md="4" v-if="showScheduledReset">
+              <v-select
+                v-model="bulkData.resetHour"
+                :items="resetHourItems"
+                :label="$t('client.resetHour')"
+                hide-details
+              ></v-select>
+            </v-col>
+            <v-col cols="12" sm="6" md="4" v-if="bulkData.resetType === 'weekly'">
+              <v-select
+                v-model="bulkData.resetWeekDay"
+                :items="weekDayItems"
+                :label="$t('client.resetWeekDay')"
+                hide-details
+              ></v-select>
+            </v-col>
+            <v-col cols="12" sm="6" md="4" v-if="bulkData.resetType === 'monthly'">
+              <v-select
+                v-model="bulkData.resetMonthDay"
+                :items="monthDayItems"
+                :label="$t('client.resetMonthDay')"
+                hide-details
+              ></v-select>
+            </v-col>
+          </v-row>
+          <v-row v-if="bulkData.delayStart && !bulkData.autoReset">
+            <v-col cols="12" sm="6" md="4">
               <v-text-field v-model.number="bulkData.resetDays" type="number" min="1" :label="$t('client.resetDays')" hide-details></v-text-field>
             </v-col>
           </v-row>
@@ -126,7 +165,28 @@ export default {
         delayStart: false,
         autoReset: false,
         resetDays: 0,
+        resetType: 'periodic' as Client['resetType'],
+        resetHour: 0,
+        resetWeekDay: 1,
+        resetMonthDay: 1,
       },
+      resetTypeItems: [
+        { title: this.$t('client.resetTypePeriodic'), value: 'periodic' },
+        { title: this.$t('client.resetTypeDaily'), value: 'daily' },
+        { title: this.$t('client.resetTypeWeekly'), value: 'weekly' },
+        { title: this.$t('client.resetTypeMonthly'), value: 'monthly' },
+      ],
+      resetHourItems: Array.from({ length: 24 }, (_, hour) => ({ title: `${String(hour).padStart(2, '0')}:00`, value: hour })),
+      weekDayItems: [
+        { title: this.$t('client.weekDaySun'), value: 0 },
+        { title: this.$t('client.weekDayMon'), value: 1 },
+        { title: this.$t('client.weekDayTue'), value: 2 },
+        { title: this.$t('client.weekDayWed'), value: 3 },
+        { title: this.$t('client.weekDayThu'), value: 4 },
+        { title: this.$t('client.weekDayFri'), value: 5 },
+        { title: this.$t('client.weekDaySat'), value: 6 },
+      ],
+      monthDayItems: Array.from({ length: 31 }, (_, day) => ({ title: `${day + 1}`, value: day + 1 })),
       patterns: [
         { title: i18n.global.t("bulk.random"), value: "random" },
         { title: i18n.global.t("bulk.order"), value: "order" },
@@ -148,6 +208,10 @@ export default {
         delayStart: false,
         autoReset: false,
         resetDays: 0,
+        resetType: 'periodic' as Client['resetType'],
+        resetHour: 0,
+        resetWeekDay: 1,
+        resetMonthDay: 1,
       }
     },
     closeModal() {
@@ -178,6 +242,10 @@ export default {
           delayStart: this.bulkData.delayStart,
           autoReset: this.bulkData.autoReset,
           resetDays: this.bulkData.resetDays,
+          resetType: this.bulkData.resetType as Client['resetType'],
+          resetHour: this.bulkData.resetHour,
+          resetWeekDay: this.bulkData.resetWeekDay,
+          resetMonthDay: this.bulkData.resetMonthDay,
         }))
       }
       // Check duplicate names
@@ -214,7 +282,11 @@ export default {
       this.bulkData.clientInbounds = this.inboundTags.map((i:any) => i.value).sort()
     }
   },
-  computed: {},
+  computed: {
+    showScheduledReset(): boolean {
+      return this.bulkData.autoReset === true && this.bulkData.resetType !== 'periodic'
+    },
+  },
   watch: {
     visible(newValue) {
       if (newValue) {
