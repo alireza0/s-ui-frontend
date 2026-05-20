@@ -22,6 +22,10 @@ export interface Client {
   delayStart?: boolean
   autoReset?: boolean
   resetDays?: number
+  resetType?: "periodic" | "daily" | "weekly" | "monthly"
+  resetHour?: number
+  resetWeekDay?: number
+  resetMonthDay?: number
   nextReset?: number
   totalUp?: number
   totalDown?: number
@@ -42,6 +46,10 @@ const defaultClient: Client = {
   delayStart: false,
   autoReset: false,
   resetDays: 0,
+  resetType: "periodic",
+  resetHour: 0,
+  resetWeekDay: 1,
+  resetMonthDay: 1,
   nextReset: 0,
   totalUp: 0,
   totalDown: 0,

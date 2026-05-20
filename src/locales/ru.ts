@@ -210,8 +210,23 @@ export default {
     sub: "Внешняя подписка",
     delayStart: "Отложенный старт",
     autoReset: "Авто сброс",
-    resetDays: "Дней до сброса",
-    nextReset: "Следующий сброс",
+    resetDays: "Интервал (дней)",
+    resetType: "Расписание автосброса",
+    resetTypePeriodic: "Каждые N дней",
+    resetTypeDaily: "Ежедневно в заданное время",
+    resetTypeWeekly: "Еженедельно в заданный день",
+    resetTypeMonthly: "Ежемесячно в заданную дату",
+    resetHour: "Время сброса (час)",
+    resetWeekDay: "День недели сброса",
+    resetMonthDay: "День месяца сброса",
+    weekDaySun: "Воскресенье",
+    weekDayMon: "Понедельник",
+    weekDayTue: "Вторник",
+    weekDayWed: "Среда",
+    weekDayThu: "Четверг",
+    weekDayFri: "Пятница",
+    weekDaySat: "Суббота",
+    nextReset: "Время следующего сброса",
   },
   bulk: {
     order: "Порядок",
@@ -635,6 +650,4 @@ export default {
   },
 }
  
-
-
 

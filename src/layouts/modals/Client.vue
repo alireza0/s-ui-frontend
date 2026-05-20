@@ -46,9 +46,6 @@
                 <v-col cols="12" sm="6" md="4" v-if="!(client.delayStart && !client.autoReset)">
                   <DatePick :expiry="expDate" @submit="setDate" />
                 </v-col>
-                <v-col cols="12" sm="6" md="4" v-if="client.autoReset || client.delayStart">
-                  <v-text-field v-model.number="resetDays" type="number" min="1" :label="$t('client.resetDays')" hide-details></v-text-field>
-                </v-col>
               </v-row>
               <v-row>
                 <v-col cols="12" sm="6" md="4">
@@ -60,6 +57,46 @@
                 </v-col>
                 <v-col cols="12" sm="6" md="4">
                   <v-switch color="primary" v-model="autoReset" :label="$t('client.autoReset')" hide-details></v-switch>
+                </v-col>
+                <v-col cols="12" sm="6" md="4" v-if="client.delayStart && !client.autoReset">
+                  <v-text-field v-model.number="resetDays" type="number" min="1" :label="$t('client.resetDays')" hide-details></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row v-if="client.autoReset">
+                <v-col cols="12" sm="6" md="4">
+                  <v-select
+                    v-model="resetType"
+                    :items="resetTypeItems"
+                    :label="$t('client.resetType')"
+                    hide-details
+                  ></v-select>
+                </v-col>
+                <v-col cols="12" sm="6" md="4" v-if="resetType === 'periodic'">
+                  <v-text-field v-model.number="resetDays" type="number" min="1" :label="$t('client.resetDays')" hide-details></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="4" v-if="showScheduledReset">
+                  <v-select
+                    v-model="resetHour"
+                    :items="resetHourItems"
+                    :label="$t('client.resetHour')"
+                    hide-details
+                  ></v-select>
+                </v-col>
+                <v-col cols="12" sm="6" md="4" v-if="client.autoReset && resetType === 'weekly'">
+                  <v-select
+                    v-model="resetWeekDay"
+                    :items="weekDayItems"
+                    :label="$t('client.resetWeekDay')"
+                    hide-details
+                  ></v-select>
+                </v-col>
+                <v-col cols="12" sm="6" md="4" v-if="client.autoReset && resetType === 'monthly'">
+                  <v-select
+                    v-model="resetMonthDay"
+                    :items="monthDayItems"
+                    :label="$t('client.resetMonthDay')"
+                    hide-details
+                  ></v-select>
                 </v-col>
               </v-row>
               <v-row v-if="id > 0">
@@ -242,6 +279,23 @@ export default {
       links: <Link[]>[],
       extLinks: <Link[]>[],
       subLinks: <Link[]>[],
+      resetTypeItems: [
+        { title: this.$t('client.resetTypePeriodic'), value: 'periodic' },
+        { title: this.$t('client.resetTypeDaily'), value: 'daily' },
+        { title: this.$t('client.resetTypeWeekly'), value: 'weekly' },
+        { title: this.$t('client.resetTypeMonthly'), value: 'monthly' },
+      ],
+      resetHourItems: Array.from({ length: 24 }, (_, hour) => ({ title: `${String(hour).padStart(2, '0')}:00`, value: hour })),
+      weekDayItems: [
+        { title: this.$t('client.weekDaySun'), value: 0 },
+        { title: this.$t('client.weekDayMon'), value: 1 },
+        { title: this.$t('client.weekDayTue'), value: 2 },
+        { title: this.$t('client.weekDayWed'), value: 3 },
+        { title: this.$t('client.weekDayThu'), value: 4 },
+        { title: this.$t('client.weekDayFri'), value: 5 },
+        { title: this.$t('client.weekDaySat'), value: 6 },
+      ],
+      monthDayItems: Array.from({ length: 31 }, (_, day) => ({ title: `${day + 1}`, value: day + 1 })),
     }
   },
   methods: {
@@ -321,7 +375,7 @@ export default {
       get() { return this.client.delayStart?? false },
       set(v:boolean) {
         this.client.delayStart = v
-        this.client.resetDays = v ? 1 : 0
+        if (v && !this.client.autoReset && (!this.client.resetDays || this.client.resetDays < 1)) this.client.resetDays = 1
         if (v && !this.autoReset) this.client.expiry = 0
       }
     },
@@ -329,19 +383,50 @@ export default {
       get() { return this.client.autoReset?? false },
       set(v:boolean) {
         this.client.autoReset = v
-        this.client.resetDays = v ? 1 : 0
+        if (v) {
+          this.client.resetType = this.client.resetType ?? 'periodic'
+          if (this.client.resetType === 'periodic' && (!this.client.resetDays || this.client.resetDays < 1)) {
+            this.client.resetDays = 1
+          }
+        } else if (!this.client.delayStart) {
+          this.client.resetDays = 0
+        }
         if (!v) this.client.nextReset = 0
+      }
+    },
+    resetType: {
+      get() { return this.client.resetType ?? 'periodic' },
+      set(v:'periodic' | 'daily' | 'weekly' | 'monthly') {
+        this.client.resetType = v
+        if (v === 'periodic' && (!this.client.resetDays || this.client.resetDays < 1)) {
+          this.client.resetDays = 1
+        }
       }
     },
     resetDays: {
       get() { return this.client.resetDays?? 1 },
       set(v:number|null) {
         if (!v) v = 1
-        if (this.client.nextReset && this.client.nextReset > 0) {
+        if (this.client.nextReset && this.client.nextReset > 0 && this.resetType === 'periodic') {
           this.client.nextReset += (v-(this.client.resetDays?? 0))*24*60*60
         }
         this.client.resetDays = v
       }
+    },
+    resetHour: {
+      get() { return this.client.resetHour ?? 0 },
+      set(v:number) { this.client.resetHour = v }
+    },
+    resetWeekDay: {
+      get() { return this.client.resetWeekDay ?? 1 },
+      set(v:number) { this.client.resetWeekDay = v }
+    },
+    resetMonthDay: {
+      get() { return this.client.resetMonthDay ?? 1 },
+      set(v:number) { this.client.resetMonthDay = v }
+    },
+    showScheduledReset(): boolean {
+      return this.client.autoReset === true && this.resetType !== 'periodic'
     },
     up() :string { return HumanReadable.sizeFormat(this.client.up) },
     down() :string { return HumanReadable.sizeFormat(this.client.down) },
