@@ -71,6 +71,11 @@ export default {
         animation: false,
         responsive: true,
         maintainAspectRatio: false,
+        elements: {
+          point: {
+            radius: 0
+          }
+        },
         interaction: {
           intersect: false,
           mode: 'index',
@@ -183,7 +188,7 @@ export default {
           this.updateData1(v.mem.current*100/v.mem.total)
           break
         case 'h-net':
-          if (this.oldValues.net.sent) {
+          if (this.oldValues.net.sent !== undefined && this.oldValues.net.recv !== undefined) {
             const downSpeed = (v.net.recv-this.oldValues.net.recv)/2  // Each 2 sec
             const upSpeed = (v.net.sent-this.oldValues.net.sent)/2  // Each 2 sec
             this.updateData2(upSpeed,downSpeed)
@@ -191,7 +196,7 @@ export default {
           this.oldValues.net = v.net
           break
         case 'hp-net':
-          if (this.oldValues.net.psent) {
+          if (this.oldValues.net.psent !== undefined && this.oldValues.net.precv !== undefined) {
             const downSpeed = (v.net.precv-this.oldValues.net.precv)/2  // Each 2 sec
             const upSpeed = (v.net.psent-this.oldValues.net.psent)/2  // Each 2 sec
             this.updateData2(upSpeed,downSpeed)
@@ -199,7 +204,7 @@ export default {
           this.oldValues.net = v.net
           break
         case 'h-dio':
-          if (this.oldValues.dio.read) {
+          if (this.oldValues.dio.read !== undefined && this.oldValues.dio.write !== undefined) {
             const downSpeed = (v.dio.read-this.oldValues.dio.read)/2  // Each 2 sec
             const upSpeed = (v.dio.write-this.oldValues.dio.write)/2  // Each 2 sec
             this.updateData2(upSpeed,downSpeed)
