@@ -42,6 +42,10 @@ export default {
           intersect: false,
           mode: 'index',
         },
+        elements: {
+          point: { pointStyle: false },
+          line: { tension: 0.2, borderWidth: 1 },
+        },
         plugins: {
           tooltip: {
             enabled: false
@@ -74,6 +78,10 @@ export default {
         interaction: {
           intersect: false,
           mode: 'index',
+        },
+        elements: {
+          point: { pointStyle: false },
+          line: { tension: 0.2, borderWidth: 1 },
         },
         plugins: {
           tooltip: {
@@ -163,7 +171,7 @@ export default {
           },
           {
             label: '',
-            backgroundColor: 'rgba(0, 128, 0, 0.1)',
+            backgroundColor: 'rgba(0, 128, 0, 0.2)',
             borderColor: 'rgba(0, 128, 0,0.8)',
             fill: true,
             data: newData2
