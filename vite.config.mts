@@ -46,6 +46,9 @@ export default defineConfig({
     }
   },
   define: { 'process.env': {} },
+  optimizeDeps: {
+    exclude: ['vue-i18n'],
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
