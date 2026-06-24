@@ -71,6 +71,14 @@
           <v-col cols="12" sm="6" md="4">
             <v-text-field v-model="settings.timeLocation" :label="$t('setting.timeLoc')" hide-details></v-text-field>
           </v-col>
+          <v-col cols="12" sm="6" md="4">
+            <v-text-field
+              v-model="settings.globalReset"
+              :label="$t('setting.globalReset')"
+              v-tooltip:top="$t('setting.globalResetHint')"
+              hide-details
+              placeholder="0 0 1 * *"></v-text-field>
+          </v-col>
         </v-row>
       </v-window-item>
 
@@ -175,6 +183,7 @@ const settings = ref({
 	subURI: "",
   subJsonExt: "",
   subClashExt: "",
+  globalReset: "",
 })
 
 onMounted(async () => {

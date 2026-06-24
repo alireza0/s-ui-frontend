@@ -35,6 +35,16 @@
     :tag="stats.tag"
     @close="closeStats"
   />
+  <v-dialog v-model="resetTrafficModal" width="auto">
+    <v-card rounded="lg" :title="$t('actions.resetTraffic')">
+      <v-divider></v-divider>
+      <v-card-text>{{ $t('confirm') }}</v-card-text>
+      <v-card-actions>
+        <v-btn color="error" variant="outlined" :loading="resetTrafficLoading" @click="resetTraffic">{{ $t('yes') }}</v-btn>
+        <v-btn color="success" variant="outlined" @click="resetTrafficModal = false">{{ $t('no') }}</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
   <v-row justify="center" align="center">
     <v-col cols="auto">
       <v-btn color="primary" @click="showModal(0)">{{ $t('actions.add') }}</v-btn>
@@ -58,6 +68,12 @@
               <v-icon icon="mdi-account-multiple-check"></v-icon>
             </template>
             <v-list-item-title v-text="$t('actions.editbulk')"></v-list-item-title>
+          </v-list-item>
+          <v-list-item link @click="confirmResetTraffic">
+            <template v-slot:prepend>
+              <v-icon icon="mdi-restore"></v-icon>
+            </template>
+            <v-list-item-title v-text="$t('actions.resetTraffic')"></v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -250,6 +266,7 @@ import { computed, ref } from 'vue'
 import { HumanReadable } from '@/plugins/utils'
 import { i18n, locale } from '@/locales'
 import { useDisplay } from 'vuetify'
+import HttpUtils from '@/plugins/httputil'
 
 const { smAndDown } = useDisplay()
 
@@ -416,6 +433,24 @@ const editBulk = () => {
 
 const closeEditBulk = () => {
   editBulkModal.value = false
+}
+
+const resetTrafficModal = ref(false)
+const resetTrafficLoading = ref(false)
+
+const confirmResetTraffic = () => {
+  resetTrafficModal.value = true
+  actionMenu.value = false
+}
+
+const resetTraffic = async () => {
+  resetTrafficLoading.value = true
+  const msg = await HttpUtils.post('api/resetTraffic', {})
+  resetTrafficLoading.value = false
+  if (msg.success) {
+    resetTrafficModal.value = false
+    await Data().loadData()
+  }
 }
 
 const percent = (c: Client) => { return c.volume>0 ? Math.round((c.up+c.down) *100 / c.volume) : 0 }
