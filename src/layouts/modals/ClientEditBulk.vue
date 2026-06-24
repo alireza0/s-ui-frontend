@@ -80,7 +80,7 @@
           color="primary"
           variant="tonal"
           :loading="loading"
-          :disabled="selectedClients.values.length == 0"
+          :disabled="selectedClients.model != 'all' && selectedClients.values.length == 0"
           @click="saveChanges"
         >
           {{ $t('actions.save') }}
