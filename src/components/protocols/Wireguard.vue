@@ -67,6 +67,9 @@
     </v-row>
     <v-row>
       <v-col cols="12" sm="8">
+        <v-text-field v-model="data.ext.server" :label="$t('types.wg.server')" hide-details></v-text-field>
+      </v-col>
+      <v-col cols="12" sm="8">
         <v-text-field v-model="data.ext.dns" :label="$t('dns.title') + ' ' + $t('commaSeparated')" hide-details></v-text-field>
       </v-col>
     </v-row>

@@ -283,6 +283,7 @@ export default {
       allowedIp: "IPs được Phép",
       peer: "Đối tác",
       peers: "Đối tác",
+      server: "Máy chủ",
     },
     lb: {
       defaultOut: "Đầu ra Mặc định",

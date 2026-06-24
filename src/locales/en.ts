@@ -283,6 +283,7 @@ export default {
       allowedIp: "Allowed IPs",
       peer: "Peer",
       peers: "Peers",
+      server: "Server",
     },
     lb: {
       defaultOut: "Default Outbound",

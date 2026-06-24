@@ -38,7 +38,7 @@ export default {
     async load() {
       this.wgData = this.$props.data
       this.wgLinks = []
-      const address = location.hostname
+      const address = this.wgData.ext?.server || location.hostname
       this.wgData.peers.forEach((_: any, index: number) => {
         this.wgLinks.push(this.getWireguardLink(index, address))
       })

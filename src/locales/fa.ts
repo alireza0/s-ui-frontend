@@ -283,6 +283,7 @@ export default {
       allowedIp: "آدرس‌های مجاز",
       peer: "همتا",
       peers: "همتاها",
+      server: "سرور",
     },
     lb: {
       defaultOut: "خروجی پیش‌فرض",

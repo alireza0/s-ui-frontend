@@ -283,6 +283,7 @@ export default {
       allowedIp: "允许的 IP 地址",
       peer: "对等体",
       peers: "对等体",
+      server: "服务器",
     },
     lb: {
       defaultOut: "默认出站",

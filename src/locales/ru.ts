@@ -284,6 +284,7 @@ export default {
       allowedIp: "Разрешенные IP",
       peer: "Пир",
       peers: "Пиры",
+      server: "Сервер",
     },
     lb: {
       defaultOut: "Исходящий по умолчанию",

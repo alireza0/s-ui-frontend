@@ -283,6 +283,7 @@ export default {
       allowedIp: "允許的 IP",
       peer: "對等方",
       peers: "對等方",
+      server: "伺服器",
     },
     lb: {
       defaultOut: "默認外部",
