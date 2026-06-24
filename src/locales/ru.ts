@@ -616,6 +616,8 @@ export default {
     usage: "Использование",
     enable: "Включить статистику",
     graphTitle: "График трафика",
+    from: "С",
+    to: "По",
     B: "Б",
     KB: "КБ",
     MB: "МБ",
