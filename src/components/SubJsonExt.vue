@@ -144,6 +144,9 @@
             <v-list-item>
               <v-switch v-model="enableExp" color="primary" label="Experimental" hide-details></v-switch>
             </v-list-item>
+            <v-list-item>
+              <v-switch v-model="enableRules" color="primary" :label="$t('pages.rules')" hide-details></v-switch>
+            </v-list-item>
           </v-list>
         </v-card>
       </v-menu>
@@ -164,6 +167,11 @@ export default {
       enableEditor: false,
       subJsonExt: <any>{},
       levels: ["trace", "debug", "info", "warn", "error", "fatal", "panic"],
+      defaultRules: [
+        { action: "sniff" },
+        { clash_mode: "Direct", action: "route", outbound: "direct" },
+        { clash_mode: "Global", action: "route", outbound: "proxy" },
+      ],
       defaultLog: {
         "level": "info",
         "timestamp": true
@@ -422,6 +430,24 @@ export default {
       set(v:boolean) { this.subJsonExt.inbounds[0].platform = v ? this.defaultInb[0].platform : undefined }
     },
     rules():any { return this.subJsonExt?.rules?? undefined },
+    enableRules: {
+      get(): boolean {
+        return Array.isArray(this.rules) && this.rules.some((r:any) => JSON.stringify(r) === JSON.stringify(this.defaultRules[2]))
+      },
+      set(v:boolean) {
+        if (v) {
+          if (!Array.isArray(this.subJsonExt.rules)) this.subJsonExt.rules = []
+          this.defaultRules.forEach((d:any) => {
+            if (!this.subJsonExt.rules.some((r:any) => JSON.stringify(r) === JSON.stringify(d))) {
+              this.subJsonExt.rules.push(JSON.parse(JSON.stringify(d)))
+            }
+          })
+        } else if (Array.isArray(this.subJsonExt.rules)) {
+          this.subJsonExt.rules = this.subJsonExt.rules.filter((r:any) => !this.defaultRules.some((d:any) => JSON.stringify(d) === JSON.stringify(r)))
+          if (this.subJsonExt.rules.length === 0) delete this.subJsonExt.rules
+        }
+      }
+    },
     ruleToDirect: {
       get() :string[] {
         const ruleIndex = this.rules?.findIndex((r:any) => r.outbound == "direct" && Object.hasOwn(r,'rule_set'))
