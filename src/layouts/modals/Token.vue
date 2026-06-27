@@ -98,14 +98,14 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
-                color="blue-darken-1"
+                color="primary"
                 variant="outlined"
                 @click="showNewToken = false"
               >
                 {{ $t('actions.close') }}
               </v-btn>
               <v-btn
-                color="blue-darken-1"
+                color="primary"
                 variant="tonal"
                 @click="addToken"
               >
@@ -118,7 +118,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          color="blue-darken-1"
+          color="primary"
           variant="outlined"
           @click="closeModal"
         >

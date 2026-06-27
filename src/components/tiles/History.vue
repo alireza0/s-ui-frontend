@@ -4,6 +4,7 @@
 
 <script lang="ts">
 import { ref } from 'vue'
+import { useTheme } from 'vuetify'
 import { Line } from 'vue-chartjs'
 import {
   Chart as ChartJS,
@@ -31,6 +32,7 @@ export default {
   props: ['tilesData','type'],
   data() {
     return {
+      theme: useTheme(),
       loaded: false,
       labels: new Array(20).fill(''),
       oldValues: <any>{net: {}, dio: {}},
@@ -108,25 +110,40 @@ export default {
     }
   },
   computed: {
+    chartColors() {
+      const onSurface = this.theme.current.colors['on-surface']
+      return {
+        text: onSurface,
+        gridY: '#888888',
+        gridX: onSurface
+      }
+    },
     options() {
+      const { text, gridY, gridX } = this.chartColors
+      const applyTheme = (o:any) => {
+        o.scales.y.grid.color = gridY
+        o.scales.y.ticks.color = text
+        o.scales.x = { grid: { color: gridX }, ticks: { color: text } }
+        return o
+      }
       switch (this.$props.type){
         case "h-net":
           this.optionsNet.scales.y.ticks.callback = (label:any, index: number) => {
             return label == 0 ? "0" : HumanReadable.sizeFormat(label,0)
           }
-          return this.optionsNet
+          return applyTheme(this.optionsNet)
         case "hp-net":
           this.optionsNet.scales.y.ticks.callback = (label:any, index: number) => {
             return label == 0 ? "0" : HumanReadable.packetFormat(label,0)
           }
-          return this.optionsNet
+          return applyTheme(this.optionsNet)
         case "h-dio":
           this.optionsNet.scales.y.ticks.callback = (label:any, index: number) => {
             return label == 0 ? "0" : HumanReadable.sizeFormat(label,0)
           }
-          return this.optionsNet
+          return applyTheme(this.optionsNet)
       }
-      return this.options1
+      return applyTheme(this.options1)
     }
   },
   methods: {

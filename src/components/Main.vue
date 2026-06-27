@@ -114,7 +114,7 @@
                   </v-col>
                   <v-col cols="3">S-UI</v-col>
                   <v-col cols="9">
-                    <v-chip density="compact" color="blue">
+                    <v-chip density="compact" color="primary">
                       v{{ tilesData.sys?.appVersion }}
                     </v-chip>
                   </v-col>

@@ -124,14 +124,14 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
-                color="blue-darken-1"
+                color="primary"
                 variant="outlined"
                 @click="clearFilter"
               >
                 {{ $t('actions.del') }}
               </v-btn>
               <v-btn
-                color="blue-darken-1"
+                color="primary"
                 variant="tonal"
                 @click="doFilter"
               >

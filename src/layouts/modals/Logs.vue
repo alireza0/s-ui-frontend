@@ -41,7 +41,7 @@
             </v-btn>
           </v-col>
         </v-row>
-        <v-card style="background-color: background" dir="ltr" v-html="lines.join('<br />')"></v-card>
+        <v-card style="margin-top: .5rem;" color="background" dir="ltr" v-html="lines.join('<br />')"></v-card>
       </v-card-text>
     </v-card>
   </v-dialog>

@@ -62,6 +62,7 @@ import {
   Filler,
 } from 'chart.js'
 import { ref } from 'vue'
+import { useTheme } from 'vuetify'
 import { Line } from 'vue-chartjs'
 import DatePick from '@/components/DateTime.vue'
 ChartJS.register(
@@ -83,6 +84,7 @@ export default {
   props: ['visible','resource','tag'],
   data() {
     return {
+      theme: useTheme(),
       loading: false,
       loaded: false,
       alert: false,
@@ -100,7 +102,7 @@ export default {
         { value: 480, title: i18n.global.n(20) + i18n.global.t('date.d')},
         { value: 720, title: i18n.global.n(30) + i18n.global.t('date.d')},
       ],
-      options: {
+      baseOptions: {
         responsive: true,
         maintainAspectRatio: false,
         interaction: {
@@ -137,6 +139,32 @@ export default {
       },
       usage: ref(<any>{}),
     }
+  },
+  computed: {
+    options() {
+      const onSurface = this.theme.current.colors['on-surface']
+      const text = onSurface
+      const gridY = '#888888'
+      const gridX = onSurface
+      return {
+        ...this.baseOptions,
+        plugins: {
+          ...this.baseOptions.plugins,
+          legend: { labels: { color: text } },
+        },
+        scales: {
+          y: {
+            ...this.baseOptions.scales.y,
+            grid: { color: gridY },
+            ticks: { ...this.baseOptions.scales.y.ticks, color: text },
+          },
+          x: {
+            grid: { color: gridX },
+            ticks: { color: text },
+          },
+        },
+      }
+    },
   },
   methods: {
     async loadData() {

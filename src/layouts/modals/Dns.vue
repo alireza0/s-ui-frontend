@@ -98,8 +98,8 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue-darken-1" variant="outlined" @click="close">{{ $t('actions.close') }}</v-btn>
-        <v-btn color="blue-darken-1" variant="tonal" @click="save">{{ $t('actions.save') }}</v-btn>
+        <v-btn color="primary" variant="outlined" @click="close">{{ $t('actions.close') }}</v-btn>
+        <v-btn color="primary" variant="tonal" @click="save">{{ $t('actions.save') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

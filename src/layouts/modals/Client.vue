@@ -87,7 +87,7 @@
                   </v-progress-linear>
                 </v-col>
                 <v-col cols="12" sm="6" md="4">
-                  <v-icon icon="mdi-upload" color="orange" /><span class="text-orange">{{ up }}</span>
+                  <v-icon icon="mdi-upload" color="warning" /><span class="text-warning">{{ up }}</span>
                   / 
                   <v-icon icon="mdi-download" color="success" /><span class="text-success">{{ down }}</span>
                 </v-col>
@@ -100,7 +100,7 @@
                 <v-col cols="12" sm="6" md="4">
                   <div class="text-medium-emphasis">{{ $t('main.stats.totalUsage') }}</div>
                   <div>
-                    <v-icon icon="mdi-upload" color="orange" /><span class="text-orange">{{ totalUp }}</span>
+                    <v-icon icon="mdi-upload" color="warning" /><span class="text-warning">{{ totalUp }}</span>
                     /
                     <v-icon icon="mdi-download" color="success" /><span class="text-success">{{ totalDown }}</span>
                   </div>

@@ -48,20 +48,15 @@
   
 <script lang="ts" setup>
 import { ref } from "vue"
-import { useLocale,useTheme } from 'vuetify'
+import { useLocale } from 'vuetify'
 import { i18n, languages } from '@/locales'
 import { useRouter } from 'vue-router'
 import HttpUtil from '@/plugins/httputil'
+import { useThemeSwitcher } from '@/composables/useThemeSwitcher'
 
 
-const theme = useTheme()
 const locale = useLocale()
-
-const themes = [
-  { value: 'light', icon: 'mdi-white-balance-sunny' },
-  { value: 'dark', icon: 'mdi-moon-waning-crescent' },
-  { value: 'system', icon: 'mdi-laptop' },
-]
+const { themes, changeTheme, isActiveTheme } = useThemeSwitcher()
 
 const username = ref('')
 const usernameRules = [
@@ -98,14 +93,6 @@ const login = async () => {
 const changeLocale = (l: any) => {
   locale.current.value = l ?? 'en'
   localStorage.setItem('locale', locale.current.value)
-}
-const changeTheme = (th: string) => {
-  theme.change(th)
-  localStorage.setItem('theme', th)
-}
-const isActiveTheme = (th: string) => {
-  const current = localStorage.getItem('theme') ?? 'system'
-  return current == th
 }
 </script>
   

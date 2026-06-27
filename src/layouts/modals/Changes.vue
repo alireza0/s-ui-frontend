@@ -70,7 +70,7 @@
             <tr>
               <td :colspan="columns.length">
                 <v-card dir="ltr" v-if="item.index>0">Index: {{ item.index }}</v-card>
-                <v-card style="background-color: background" dir="ltr"><pre>{{ item.obj }}</pre></v-card>
+                <v-card color="background" dir="ltr"><pre>{{ item.obj }}</pre></v-card>
               </td>
             </tr>
           </template>
