@@ -205,6 +205,7 @@ export default {
     name: "Имя",
     desc: "Описание",
     group: "Группа",
+    remark: "Примечание",
     inboundTags: "Теги входящих",
     basics: "Основы",
     config: "Конфигурация",
@@ -633,6 +634,8 @@ export default {
   date: {
     expiry: "Срок действия",
     expired: "Истек",
+    created: "Создан",
+    lastOnline: "Последнее подключение",
     d: "д",
     h: "ч",
     m: "м",

@@ -205,6 +205,7 @@ export default {
     name: "Tên",
     desc: "Mô tả",
     group: "Nhóm",
+    remark: "Ghi chú",
     inboundTags: "Thẻ đầu vào",
     basics: "Cơ bản",
     config: "Cấu hình",
@@ -633,6 +634,8 @@ export default {
   date: {
     expiry: "Hết hạn",
     expired: "Đã hết hạn",
+    created: "Đã tạo",
+    lastOnline: "Trực tuyến lần cuối",
     d: "ng",
     h: "g",
     m: "p",

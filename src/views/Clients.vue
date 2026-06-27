@@ -201,6 +201,24 @@
             <template v-else>-</template>
           </div>
         </template>
+        <template v-slot:item.createdAt="{ item }">
+          <div class="text-start">
+            <template v-if="item.createdAt>0">
+              <v-tooltip activator="parent" location="top" :text="new Date(item.createdAt * 1000).toLocaleString(locale)" />
+              {{ new Date(item.createdAt * 1000).toLocaleDateString(locale) }}
+            </template>
+            <template v-else>-</template>
+          </div>
+        </template>
+        <template v-slot:item.onlineAt="{ item }">
+          <div class="text-start">
+            <template v-if="item.onlineAt>0">
+              <v-tooltip activator="parent" location="top" :text="new Date(item.onlineAt * 1000).toLocaleString(locale)" />
+              {{ new Date(item.onlineAt * 1000).toLocaleString(locale) }}
+            </template>
+            <template v-else>-</template>
+          </div>
+        </template>
         <template v-slot:item.actions="{ item }">
         <v-icon
           class="me-2"
@@ -319,6 +337,8 @@ const headers = [
   { title: i18n.global.t('stats.volume'), key: 'volume' },
   { title: i18n.global.t('date.expiry'), key: 'expiry' },
   { title: i18n.global.t('online'), key: 'online' },
+  { title: i18n.global.t('date.created'), key: 'createdAt' },
+  { title: i18n.global.t('date.lastOnline'), key: 'onlineAt' },
   { key: 'data-table-group', width: 0 },
 ]
 

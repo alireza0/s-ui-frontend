@@ -19,12 +19,15 @@ export interface Client {
   down: number
   desc: string
   group: string
+  remark?: string
   delayStart?: boolean
   autoReset?: boolean
   resetDays?: number
   nextReset?: number
   totalUp?: number
   totalDown?: number
+  createdAt?: number
+  onlineAt?: number
 }
 
 const defaultClient: Client = {
@@ -39,12 +42,15 @@ const defaultClient: Client = {
   down: 0,
   desc: "",
   group: "",
+  remark: "",
   delayStart: false,
   autoReset: false,
   resetDays: 0,
   nextReset: 0,
   totalUp: 0,
   totalDown: 0,
+  createdAt: 0,
+  onlineAt: 0,
 }
 
 type Config = {

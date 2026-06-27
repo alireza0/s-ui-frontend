@@ -205,6 +205,7 @@ export default {
     name: "Name",
     desc: "Description",
     group: "Group",
+    remark: "Remark",
     inboundTags: "Inbound Tags",
     basics: "Basics",
     config: "Config",
@@ -635,6 +636,8 @@ export default {
   date: {
     expiry: "Expiry",
     expired: "Expired",
+    created: "Created",
+    lastOnline: "Last online",
     d: "d",
     h: "h",
     m: "m",

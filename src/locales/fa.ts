@@ -205,6 +205,7 @@ export default {
     name: "نام",
     desc: "شرح",
     group: "گروه",
+    remark: "نام نمایشی",
     inboundTags: "برچسب‌های ورودی",
     basics: "پایه",
     config: "تنظیم",
@@ -633,6 +634,8 @@ export default {
   date: {
     expiry: "انقضا",
     expired: "منقضی",
+    created: "ایجاد",
+    lastOnline: "آخرین اتصال",
     d: "ر",
     h: "س",
     m: "د",

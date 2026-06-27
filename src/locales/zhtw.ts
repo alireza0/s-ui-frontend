@@ -205,6 +205,7 @@ export default {
     name: "名稱",
     desc: "描述",
     group: "組",
+    remark: "備註",
     inboundTags: "入站標簽",
     basics: "基礎",
     config: "配置",
@@ -633,6 +634,8 @@ export default {
   date: {
     expiry: "到期",
     expired: "已到期",
+    created: "建立時間",
+    lastOnline: "最後上線",
     d: "天",
     h: "時",
     m: "分",
