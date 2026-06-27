@@ -1,8 +1,10 @@
 <template>
   <v-dialog transition="dialog-bottom-transition" width="800">
     <v-card class="rounded-lg">
-      <v-card-title>
+      <v-card-title class="d-flex align-center">
         {{ $t('actions.' + title) + " " + $t('objects.ruleset') }}
+        <v-spacer></v-spacer>
+        <DocLink section="ruleset" />
       </v-card-title>
       <v-divider></v-divider>
       <v-card-text style="padding: 0 16px;">
@@ -77,7 +79,9 @@
 <script lang="ts">
 import RandomUtil from '@/plugins/randomUtil'
 import { ruleset } from '@/types/rules'
+import DocLink from '@/components/DocLink.vue'
 export default {
+  components: { DocLink },
   props: ['visible', 'data', 'index', 'outTags'],
   emits: ['close', 'save'],
   data() {

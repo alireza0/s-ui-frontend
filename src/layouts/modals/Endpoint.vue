@@ -1,8 +1,10 @@
 <template>
   <v-dialog transition="dialog-bottom-transition" width="800">
     <v-card class="rounded-lg">
-      <v-card-title>
+      <v-card-title class="d-flex align-center">
         {{ $t('actions.' + title) + " " + $t('objects.endpoint') }}
+        <v-spacer></v-spacer>
+        <DocLink section="endpoint" :type="endpoint.type" />
       </v-card-title>
       <v-divider></v-divider>
       <v-card-text style="padding: 0 16px; overflow-y: scroll;">
@@ -21,14 +23,14 @@
             <v-text-field v-model="endpoint.tag" :label="$t('objects.tag')" hide-details></v-text-field>
           </v-col>
         </v-row>
-        <Wireguard v-if="endpoint.type == epTypes.Wireguard"
+        <Wireguard v-if="endpoint.type == epTypes.Wireguard && endpoint.ext"
           :data="endpoint"
           @getWgPubKey="getWgPubKey"
           @newWgKey="newWgKey"
           @addPeer="addWgPeer"
           @delPeer="delWgPeer"
           @refreshPeerKey="refreshWgPeerKey" />
-        <Warp v-if="endpoint.type == epTypes.Warp" :data="endpoint" />
+        <Warp v-if="endpoint.type == epTypes.Warp && endpoint.ext" :data="endpoint" />
         <TailscaleVue v-if="endpoint.type == epTypes.Tailscale" :data="endpoint" />
         <Dial :dial="endpoint" />
       </v-card-text>
@@ -56,6 +58,7 @@
 
 <script lang="ts">
 import { EpTypes, createEndpoint } from '@/types/endpoints'
+import DocLink from '@/components/DocLink.vue'
 import RandomUtil from '@/plugins/randomUtil'
 import Dial from '@/components/Dial.vue'
 import Wireguard from '@/components/protocols/Wireguard.vue'
@@ -222,6 +225,6 @@ export default {
       }
     },
   },
-  components: { Dial, Wireguard, Warp, TailscaleVue }
+  components: { DocLink, Dial, Wireguard, Warp, TailscaleVue }
 }
 </script>

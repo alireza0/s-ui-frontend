@@ -1,8 +1,10 @@
 <template>
   <v-dialog transition="dialog-bottom-transition" width="800">
     <v-card class="rounded-lg">
-      <v-card-title>
+      <v-card-title class="d-flex align-center">
         {{ $t('actions.' + title) + " " + $t('objects.tls') }}
+        <v-spacer></v-spacer>
+        <DocLink section="tls" />
       </v-card-title>
       <v-divider></v-divider>
       <v-card-text style="padding: 0 16px; overflow-y: scroll;">
@@ -315,6 +317,7 @@
 <script lang="ts">
 import { tls, iTls, defaultInTls, oTls, defaultOutTls } from '@/types/tls'
 import AcmeVue from '@/components/tls/Acme.vue'
+import DocLink from '@/components/DocLink.vue'
 import EchVue from '@/components/tls/Ech.vue'
 import HttpUtils from '@/plugins/httputil'
 import { push } from 'notivue'
@@ -587,6 +590,6 @@ export default {
       }
     },
   },
-  components: { AcmeVue, EchVue }
+  components: { DocLink, AcmeVue, EchVue }
 }
 </script>

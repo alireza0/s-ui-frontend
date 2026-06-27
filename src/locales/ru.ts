@@ -17,6 +17,7 @@ export default {
   now: "Сейчас",
   network: "Сеть",
   copyToClipboard: "Копировать в буфер обмена",
+  docs: "Документация",
   noData: "Нет данных!",
   invalidLogin: "Неверный логин!",
   online: "В сети",

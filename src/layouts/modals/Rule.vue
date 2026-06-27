@@ -1,8 +1,10 @@
 <template>
   <v-dialog transition="dialog-bottom-transition" width="800">
     <v-card class="rounded-lg">
-      <v-card-title>
+      <v-card-title class="d-flex align-center">
         {{ $t('actions.' + title) + " " + $t('objects.rule') }}
+        <v-spacer></v-spacer>
+        <DocLink section="rule" />
       </v-card-title>
       <v-divider></v-divider>
       <v-card-text style="padding: 0 16px;">
@@ -171,6 +173,7 @@
 <script lang="ts">
 import { logicalRule, rule, actionKeys } from '@/types/rules'
 import RuleOptions from '@/components/Rule.vue'
+import DocLink from '@/components/DocLink.vue'
 export default {
   props: ['visible', 'data', 'index', 'clients', 'inTags', 'outTags', 'rsTags'],
   emits: ['close', 'save'],
@@ -318,7 +321,7 @@ export default {
       }
     },
   },
-  components: { RuleOptions }
+  components: { DocLink, RuleOptions }
 }
 
 </script>

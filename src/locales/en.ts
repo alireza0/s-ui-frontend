@@ -17,6 +17,7 @@ export default {
   now: "Now",
   network: "Network",
   copyToClipboard: "Copy to clipboard",
+  docs: "Documentation",
   noData: "No data!",
   invalidLogin: "Invalid Login!",
   online: "Online",

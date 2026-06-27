@@ -1,8 +1,10 @@
 <template>
   <v-dialog transition="dialog-bottom-transition" width="800">
     <v-card class="rounded-lg">
-      <v-card-title>
+      <v-card-title class="d-flex align-center">
         {{ $t('actions.' + title) + " " + $t('objects.dnsrule') }}
+        <v-spacer></v-spacer>
+        <DocLink section="dnsRule" />
       </v-card-title>
       <v-divider></v-divider>
       <v-card-text style="padding: 0 16px;">
@@ -155,6 +157,7 @@
 <script lang="ts">
 import { logicalDnsRule, dnsRule, actionDnsRuleKeys } from '@/types/dns'
 import RuleOptions from '@/components/DnsRule.vue'
+import DocLink from '@/components/DocLink.vue'
 import { i18n } from '@/locales'
 export default {
   props: ['visible', 'data', 'index', 'clients', 'inTags', 'serverTags', 'ruleSets'],
@@ -307,7 +310,7 @@ export default {
       }
     },
   },
-  components: { RuleOptions }
+  components: { DocLink, RuleOptions }
 }
 
 </script>

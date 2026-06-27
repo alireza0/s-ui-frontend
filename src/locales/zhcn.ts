@@ -17,6 +17,7 @@ export default {
   now: "当前",
   network: "网络",
   copyToClipboard: "复制到剪贴板",
+  docs: "文档",
   noData: "无数据！",
   invalidLogin: "登录无效！",
   online: "在线",

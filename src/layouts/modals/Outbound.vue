@@ -1,8 +1,10 @@
 <template>
   <v-dialog transition="dialog-bottom-transition" width="800">
     <v-card class="rounded-lg">
-      <v-card-title>
+      <v-card-title class="d-flex align-center">
         {{ $t('actions.' + title) + " " + $t('objects.outbound') }}
+        <v-spacer></v-spacer>
+        <DocLink section="outbound" :type="outbound.type" />
       </v-card-title>
       <v-divider></v-divider>
       <v-card-text style="padding: 0 16px; overflow-y: scroll;">
@@ -107,6 +109,7 @@
 
 <script lang="ts">
 import { OutTypes, createOutbound } from '@/types/outbounds'
+import DocLink from '@/components/DocLink.vue'
 import RandomUtil from '@/plugins/randomUtil'
 import Dial from '@/components/Dial.vue'
 import Multiplex from '@/components/Multiplex.vue'
@@ -204,7 +207,7 @@ export default {
       }
     },
   },
-  components: { Dial, Multiplex, Transport, OutTLS,
+  components: { DocLink, Dial, Multiplex, Transport, OutTLS,
     Direct, Socks, Http, Shadowsocks, Vmess, Trojan,
     Wireguard, Hysteria, Naive, ShadowTls, Vless, Tuic,
     Hysteria2, AnyTls, Tor, Ssh, Selector, UrlTest }

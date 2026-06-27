@@ -1,8 +1,10 @@
 <template>
   <v-dialog transition="dialog-bottom-transition" width="800">
     <v-card class="rounded-lg">
-      <v-card-title>
+      <v-card-title class="d-flex align-center">
         {{ $t('actions.' + title) + " " + $t('objects.dnsserver') }}
+        <v-spacer></v-spacer>
+        <DocLink section="dnsServer" />
       </v-card-title>
       <v-divider></v-divider>
       <v-card-text>
@@ -104,7 +106,8 @@
 </template>
 
 <script lang="ts">
-import DialVue from '@/components/Dial.vue' 
+import DialVue from '@/components/Dial.vue'
+import DocLink from '@/components/DocLink.vue'
 import oTlsVue from '@/components/tls/OutTLS.vue'
 import Headers from '@/components/Headers.vue'
 import RandomUtil from '@/plugins/randomUtil'
@@ -205,6 +208,6 @@ export default {
       }
     },
   },
-  components: { DialVue, oTlsVue, Headers }
+  components: { DocLink, DialVue, oTlsVue, Headers }
 }
 </script>

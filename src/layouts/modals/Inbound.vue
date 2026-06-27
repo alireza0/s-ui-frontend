@@ -1,8 +1,10 @@
 <template>
   <v-dialog transition="dialog-bottom-transition" width="800" @after-enter="updateData(id)">
     <v-card class="rounded-lg" :loading="loading">
-      <v-card-title>
+      <v-card-title class="d-flex align-center">
         {{ $t('actions.' + title) + " " + $t('objects.inbound') }}
+        <v-spacer></v-spacer>
+        <DocLink section="inbound" :type="inbound.type" />
       </v-card-title>
       <v-divider></v-divider>
       <v-skeleton-loader
@@ -99,6 +101,7 @@
 
 <script lang="ts">
 import { InTypes, createInbound, Addr, ShadowTLS } from '@/types/inbounds'
+import DocLink from '@/components/DocLink.vue'
 import RandomUtil from '@/plugins/randomUtil'
 import Dial from '@/components/Dial.vue'
 import Listen from '@/components/Listen.vue'
@@ -279,6 +282,7 @@ export default {
     },
   },
   components: {
+    DocLink,
     Listen, InTls, Hysteria2, Naive, Direct, Shadowsocks,
     Users, Hysteria, ShadowTls, TProxy, Multiplex, Tuic, Tun,
     AnyTls, Transport, AddrVue, OutJsonVue, Dial

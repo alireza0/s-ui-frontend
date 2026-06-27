@@ -17,6 +17,7 @@ export default {
   now: "اکنون",
   network: "شبکه",
   copyToClipboard: "کپی در حافظه",
+  docs: "مستندات",
   noData: "بدون داده!",
   invalidLogin: "ورود نامعتبر!",
   online: "آنلاین",

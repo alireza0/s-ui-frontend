@@ -17,6 +17,7 @@ export default {
   now: "Hiện tại",
   network: "Mạng",
   copyToClipboard: "Sao chép vào clipboard",
+  docs: "Tài liệu",
   noData: "Không có dữ liệu!",
   invalidLogin: "Đăng nhập không hợp lệ!",
   online: "Trực tuyến",

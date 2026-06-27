@@ -7,7 +7,12 @@
     </v-col>
   </v-row>
   <v-expansion-panels>
-    <v-expansion-panel :title="$t('basic.log.title')">
+    <v-expansion-panel>
+      <v-expansion-panel-title>
+        {{ $t('basic.log.title') }}
+        <v-spacer></v-spacer>
+        <DocLink :href="LOG_DOC" @click.stop />
+      </v-expansion-panel-title>
       <v-expansion-panel-text>
         <v-row>
           <v-col cols="12" sm="6" md="3" lg="2">
@@ -36,7 +41,12 @@
         </v-row>
       </v-expansion-panel-text>
     </v-expansion-panel>
-    <v-expansion-panel title="NTP">
+    <v-expansion-panel>
+      <v-expansion-panel-title>
+        NTP
+        <v-spacer></v-spacer>
+        <DocLink :href="NTP_DOC" @click.stop />
+      </v-expansion-panel-title>
       <v-expansion-panel-text>
         <v-row>
           <v-col cols="12" sm="6" md="3" lg="2">
@@ -73,10 +83,15 @@
         <Dial :dial="appConfig.ntp" v-if="appConfig.ntp?.enabled" />
       </v-expansion-panel-text>
     </v-expansion-panel>
-    <v-expansion-panel title="Experimental">
+    <v-expansion-panel>
+      <v-expansion-panel-title>
+        Experimental
+        <v-spacer></v-spacer>
+        <DocLink :href="EXPERIMENTAL_DOC" @click.stop />
+      </v-expansion-panel-title>
       <v-expansion-panel-text>
         <v-row>
-          <v-col class="v-card-subtitle">Cache File</v-col>
+          <v-col class="v-card-subtitle">Cache File <DocLink :href="CACHE_FILE_DOC" /></v-col>
         </v-row>
         <v-row>
           <v-col cols="12" sm="6" md="3" lg="2">
@@ -104,7 +119,7 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col class="v-card-subtitle">Clash API</v-col>
+          <v-col class="v-card-subtitle">Clash API <DocLink :href="CLASH_API_DOC" /></v-col>
         </v-row>
         <v-row>
           <v-col cols="12" sm="6" md="3" lg="2">
@@ -173,7 +188,7 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col class="v-card-subtitle">V2Ray API</v-col>
+          <v-col class="v-card-subtitle">V2Ray API <DocLink :href="V2RAY_API_DOC" /></v-col>
         </v-row>
         <v-row>
           <v-col cols="12" sm="6" md="3" lg="2">
@@ -232,9 +247,11 @@
 <script lang="ts" setup>
 import Data from '@/store/modules/data'
 import Dial from '@/components/Dial.vue'
+import DocLink from '@/components/DocLink.vue'
 import { computed, ref, onBeforeMount } from 'vue'
 import { Config, Ntp } from '@/types/config'
 import { FindDiff } from '@/plugins/utils'
+import { LOG_DOC, NTP_DOC, EXPERIMENTAL_DOC, CACHE_FILE_DOC, CLASH_API_DOC, V2RAY_API_DOC } from '@/plugins/docs'
 
 const oldConfig = ref({})
 const loading = ref(false)

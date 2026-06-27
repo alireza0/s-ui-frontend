@@ -1,8 +1,10 @@
 <template>
   <v-dialog transition="dialog-bottom-transition" width="800">
     <v-card class="rounded-lg">
-      <v-card-title>
+      <v-card-title class="d-flex align-center">
         {{ $t('actions.' + title) + " " + $t('objects.service') }}
+        <v-spacer></v-spacer>
+        <DocLink section="service" :type="srv.type" />
       </v-card-title>
       <v-divider></v-divider>
       <v-card-text style="padding: 0 16px; overflow-y: scroll;">
@@ -52,6 +54,7 @@
 
 <script lang="ts">
 import { SrvTypes, createSrv } from '@/types/services'
+import DocLink from '@/components/DocLink.vue'
 import RandomUtil from '@/plugins/randomUtil'
 import Listen from '@/components/Listen.vue'
 import Derp from '@/components/services/Derp.vue'
@@ -123,6 +126,6 @@ export default {
       }
     },
   },
-  components: { Listen, InTLS, Derp, Ocm, Ccm, SSMapi },
+  components: { DocLink, Listen, InTLS, Derp, Ocm, Ccm, SSMapi },
 }
 </script>
