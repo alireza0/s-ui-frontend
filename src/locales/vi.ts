@@ -180,6 +180,8 @@ export default {
     webUri: "URI bảng điều khiển",
     sessionAge: "Tuổi tối đa của phiên",
     trafficAge: "Tuổi lưu thông tối đa",
+    statsBucketSeconds: "Khoảng lấy mẫu lưu lượng",
+    statsBucketSecondsHint: "Bản ghi lưu lượng được gộp theo số giây này; lớn hơn = ít dòng hơn, độ phân giải biểu đồ thấp hơn",
     timeLoc: "Vị trí múi giờ",
     globalReset: "Đặt lại toàn bộ lưu lượng (cron)",
     globalResetHint: "Lịch cron; để trống = tắt",

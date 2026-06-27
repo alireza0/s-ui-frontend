@@ -180,6 +180,8 @@ export default {
     webUri: "面板 URI",
     sessionAge: "會話最大連接數",
     trafficAge: "流量最大年齡",
+    statsBucketSeconds: "流量取樣間隔",
+    statsBucketSecondsHint: "流量記錄以此秒數分桶儲存；越大＝列數越少，圖表解析度越低",
     timeLoc: "時區",
     globalReset: "重置所有流量 (cron)",
     globalResetHint: "Cron 排程；留空 = 關閉",

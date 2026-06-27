@@ -180,6 +180,8 @@ export default {
     webUri: "Panel URI",
     sessionAge: "Session Maximum Age",
     trafficAge: "Traffic Maximum Age",
+    statsBucketSeconds: "Traffic Sample Interval",
+    statsBucketSecondsHint: "Traffic samples are grouped into buckets of this many seconds; larger = fewer rows, lower chart resolution",
     timeLoc: "Timezone Location",
     globalReset: "Reset All Traffic (cron)",
     globalResetHint: "Cron schedule; empty = disabled",

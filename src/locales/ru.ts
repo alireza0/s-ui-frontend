@@ -180,6 +180,8 @@ export default {
     webUri: "URI панели",
     sessionAge: "Максимальная длительность сессии",
     trafficAge: "Максимальная длительность трафика",
+    statsBucketSeconds: "Интервал выборки трафика",
+    statsBucketSecondsHint: "Записи трафика группируются в интервалы такой длины (сек); больше = меньше строк, ниже детализация графика",
     timeLoc: "Часовой пояс",
     globalReset: "Сброс всего трафика (cron)",
     globalResetHint: "Расписание cron; пусто = выкл",

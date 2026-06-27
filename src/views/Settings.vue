@@ -69,6 +69,17 @@
               ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="4">
+            <v-text-field
+              type="number"
+              v-model.number="statsBucketSeconds"
+              min="1"
+              :label="$t('setting.statsBucketSeconds')"
+              :suffix="$t('date.s')"
+              v-tooltip:top="$t('setting.statsBucketSecondsHint')"
+              hide-details
+              ></v-text-field>
+          </v-col>
+          <v-col cols="12" sm="6" md="4">
             <v-text-field v-model="settings.timeLocation" :label="$t('setting.timeLoc')" hide-details></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="4">
@@ -170,6 +181,7 @@ const settings = ref({
   webURI: "",
 	sessionMaxAge: "0",
   trafficAge: "30",
+  statsBucketSeconds: "60",
 	timeLocation: "Asia/Tehran",
   subListen: "",
 	subPort: "2096",
@@ -275,6 +287,11 @@ const sessionMaxAge = computed({
 const trafficAge = computed({
   get: () => { return settings.value.trafficAge.length>0 ? parseInt(settings.value.trafficAge) : 0 },
   set: (v:number) => { settings.value.trafficAge = v>0 ? v.toString() : "0" }
+})
+
+const statsBucketSeconds = computed({
+  get: () => { return settings.value.statsBucketSeconds.length>0 ? parseInt(settings.value.statsBucketSeconds) : 60 },
+  set: (v:number) => { settings.value.statsBucketSeconds = v>0 ? v.toString() : "60" }
 })
 
 const subPort = computed({

@@ -180,6 +180,8 @@ export default {
     webUri: "آدرس نهایی پنل",
     sessionAge: "بیشینه زمان لاگین ماندن",
     trafficAge: "بیشینه زمان ذخیره ترافیک",
+    statsBucketSeconds: "بازهٔ نمونه‌برداری ترافیک",
+    statsBucketSecondsHint: "نمونه‌های ترافیک در باکت‌هایی به این اندازه (ثانیه) ذخیره می‌شوند؛ بزرگ‌تر = ردیف کمتر، دقت نمودار کمتر",
     timeLoc: "منطقه زمانی",
     globalReset: "ریست کل ترافیک (cron)",
     globalResetHint: "زمان‌بندی cron؛ خالی = غیرفعال",
