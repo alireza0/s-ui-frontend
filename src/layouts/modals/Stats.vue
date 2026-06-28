@@ -187,11 +187,12 @@ export default {
       const data = await HttpUtils.get('api/stats', params)
       if (data.success && data.obj.stats) {
         const {stats, bucketSpan, startTime} = data.obj
+        const count = data.obj.numBuckets ?? 360
         const l = String(i18n.global.locale) == 'fa' ? "fa-IR" : "en-US"
         const labels = <string[]>[]
         const uplinkData = <(number|null)[]>[]
         const downlinkData = <(number|null)[]>[]
-        for (let i = 0; i<360; i++) {
+        for (let i = 0; i<count; i++) {
           const step = startTime + (i*bucketSpan)
           labels.push(this.genLable(step*1000,l,span))
           if (!stats[i]) {
