@@ -1,5 +1,5 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" width="800">
+  <v-dialog transition="dialog-bottom-transition" width="100%" max-width="900">
     <v-card class="rounded-lg">
       <v-card-title class="d-flex align-center">
         {{ $t('actions.' + title) + " " + $t('objects.dnsserver') }}
@@ -9,7 +9,7 @@
       <v-divider></v-divider>
       <v-card-text>
         <v-row>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-select
               v-model="dnsServer.type"
               :items="dnsTypes"
@@ -18,15 +18,15 @@
               hide-details
             />
           </v-col>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-text-field v-model="dnsServer.tag" :label="$t('objects.tag')" hide-details />
           </v-col>
         </v-row>
         <v-row v-if="HasServer.includes(dnsServer.type)">
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-text-field v-model="dnsServer.server" :label="$t('in.addr')" hide-details />
           </v-col>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-text-field v-model.number="dnsServer.server_port" type="number" min="0" :label="$t('in.port')" hide-details />
           </v-col>
         </v-row>
@@ -49,7 +49,7 @@
               <v-chip color="primary" density="compact" variant="elevated" @click="addHostsPredefined"><v-icon icon="mdi-plus" /></v-chip>
             </v-card-subtitle>
             <v-row v-for="(pd, index) in hostsPredefined">
-              <v-col cols="12" sm="6" md="4">
+              <v-col cols="12" sm="6" lg="4">
                 <v-text-field v-model="pd.name" :label="$t('setting.domain')" @input="update_pds_key(index,$event.target.value)" hide-details></v-text-field>
               </v-col>
               <v-col cols="12" sm="6">
@@ -67,31 +67,31 @@
           </v-card>
         </template>
         <v-row v-if="dnsServer.type == 'local'">
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-switch v-model="dnsServer.prefer_go" color="primary" :label="$t('dns.local.preferGo')" hide-details></v-switch>
           </v-col>
         </v-row>
         <v-row v-if="dnsServer.type == 'dhcp'">
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-text-field v-model="dnsServer.interface" :label="$t('types.tun.ifName')" hide-details />
           </v-col>
         </v-row>
         <v-row v-if="dnsServer.type == 'fakeip'">
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-text-field v-model="dnsServer.inet4_range" :label="$t('dns.rule.inet4Range')" hide-details />
           </v-col>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-text-field v-model="dnsServer.inet6_range" :label="$t('dns.rule.inet6Range')" hide-details />
           </v-col>
         </v-row>
         <v-row v-if="dnsServer.type == 'tailscale' || dnsServer.type == 'resolved'">
-          <v-col cols="12" sm="6" md="4" v-if="dnsServer.type == 'tailscale'">
+          <v-col cols="12" sm="6" lg="4" v-if="dnsServer.type == 'tailscale'">
             <v-select v-model="dnsServer.endpoint" :label="$t('objects.endpoint')" :items="tsTags" hide-details />
           </v-col>
-          <v-col cols="12" sm="6" md="4" v-if="dnsServer.type == 'resolved'">
+          <v-col cols="12" sm="6" lg="4" v-if="dnsServer.type == 'resolved'">
             <v-select v-model="dnsServer.service" :label="$t('objects.service')" :items="rslvdTags" hide-details />
           </v-col>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-switch v-model="dnsServer.accept_default_resolvers" :label="$t('dns.rule.acceptDefault')" hide-details></v-switch>
           </v-col>
         </v-row>

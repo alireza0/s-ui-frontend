@@ -1,21 +1,21 @@
 <template>
   <v-card subtitle="HTTP">
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
         :label="$t('types.un')"
         hide-details
         v-model="username">
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
         :label="$t('types.pw')"
         hide-details
         v-model="password">
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
         :label="$t('transport.path')"
         hide-details

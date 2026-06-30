@@ -1,17 +1,17 @@
 <template>
   <v-card subtitle="Direct">
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <Network :data="data" />
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
         :label="$t('types.direct.overrideAddr')"
         hide-details
         v-model="data.override_address">
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
         :label="$t('types.direct.overridePort')"
         type="number"

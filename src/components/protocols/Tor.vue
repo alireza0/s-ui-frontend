@@ -1,26 +1,26 @@
 <template>
   <v-card subtitle="Tor">
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field v-model="data.executable_path" :label="$t('types.tor.execPath')" hide-details></v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field v-model="data.data_directory" :label="$t('types.tor.dataDir')" hide-details></v-text-field>
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field v-model="extra_args" :label="$t('types.tor.extArgs') + ' ' + $t('commaSeparated')" hide-details></v-text-field>
       </v-col>
     </v-row>
-    <div class="v-card-subtitle" style="margin: 10px;">Torrc
+    <div class="text-subtitle-2 text-medium-emphasis ma-2">Torrc
       <v-chip color="primary" density="compact" variant="elevated" @click="add_torrc_option"><v-icon icon="mdi-plus" /></v-chip>
     </div>
     <v-row v-for="(torrc, index) in torrc_options">
       <v-col cols="auto" align-self="center" justify-self="center">
         <v-icon @click="del_torrc_option(index)" color="error" icon="mdi-delete" />
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
           :label="$t('objects.key')"
           hide-details
@@ -28,7 +28,7 @@
           v-model="torrc.name">
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
           :label="$t('objects.value')"
           hide-details

@@ -1,7 +1,7 @@
 <template>
   <v-card :subtitle="$t('objects.listen')">
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
         :label="$t('in.addr')"
         hide-details
@@ -9,7 +9,7 @@
         v-model="data.listen">
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
         :label="$t('in.port')"
         hide-details
@@ -21,7 +21,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4" v-if="optionDetour">
+      <v-col cols="12" sm="6" lg="4" v-if="optionDetour">
         <v-select
         :label="$t('listen.detourText')"
         hide-details
@@ -31,18 +31,18 @@
       </v-col>
     </v-row>
     <v-row v-if="optionTCP">
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch v-model="data.tcp_fast_open" color="primary" label="TCP Fast Open" hide-details></v-switch>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch v-model="data.tcp_multi_path" color="primary" label="TCP Multi Path" hide-details></v-switch>
       </v-col>
     </v-row>
     <v-row v-if="optionUDP">
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch v-model="data.udp_fragment" color="primary" label="UDP Fragment" hide-details></v-switch>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
         label="UDP NAT expiration"
         hide-details
@@ -53,13 +53,13 @@
       </v-col>
     </v-row>
     <v-row v-if="optionTcpKeepAlive">
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch v-model="data.disable_tcp_keep_alive" color="primary" :label="$t('listen.disableTcpKeepAlive')" hide-details></v-switch>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field v-model="data.tcp_keep_alive" :label="$t('listen.tcpKeepAlive')" hide-details></v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field v-model="data.tcp_keep_alive_interval" :label="$t('listen.tcpKeepAliveInterval')" hide-details></v-text-field>
       </v-col>
     </v-row>

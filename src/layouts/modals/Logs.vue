@@ -13,7 +13,7 @@
       <v-divider></v-divider>
       <v-card-text>
         <v-row>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-select
             hide-details
             :label="$t('basic.log.level')"
@@ -22,7 +22,7 @@
             @update:model-value="loadData">
             </v-select>
           </v-col>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-select
             hide-details
             :label="$t('count')"
@@ -41,7 +41,7 @@
             </v-btn>
           </v-col>
         </v-row>
-        <v-card style="margin-top: .5rem;" color="background" dir="ltr" v-html="lines.join('<br />')"></v-card>
+        <v-card class="mt-2 border" rounded="lg" color="background" dir="ltr" v-html="lines.join('<br />')"></v-card>
       </v-card-text>
     </v-card>
   </v-dialog>

@@ -9,8 +9,7 @@
       indeterminate
       size="64"
     ></v-progress-circular>
-    <br />
-    {{ $t('loading') }}
+    <div class="text-no-wrap mt-2">{{ $t('loading') }}</div>
   </v-overlay>
   <Message />
   <router-view />
@@ -25,10 +24,3 @@ const loading:Ref = inject('loading')?? ref(false)
 // Change page title
 document.title = "S-UI " + document.location.hostname
 </script>
-
-<style>
-.v-overlay .v-list-item,
-.v-field__input {
-  direction: ltr;
-}
-</style>

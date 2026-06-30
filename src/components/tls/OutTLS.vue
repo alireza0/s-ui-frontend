@@ -1,16 +1,16 @@
 <template>
   <v-card :subtitle="$t('objects.tls')">
     <v-row v-if="tlsOptional">
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch color="primary" :label="$t('tls.enable')" v-model="tlsEnable" hide-details></v-switch>
       </v-col>
     </v-row>
     <template v-if="tls.enabled">
       <v-row>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-switch color="primary" :label="$t('tls.disableSni')" v-model="disable_sni" hide-details></v-switch>
         </v-col>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-switch color="primary" :label="$t('tls.insecure')" v-model="insecure" hide-details></v-switch>
         </v-col>
       </v-row>
@@ -52,14 +52,14 @@
         </v-row>
       </template>
       <v-row>
-        <v-col cols="12" sm="6" md="4" v-if="tls.server_name != undefined">
+        <v-col cols="12" sm="6" lg="4" v-if="tls.server_name != undefined">
           <v-text-field
             label="SNI"
             hide-details
             v-model="tls.server_name">
           </v-text-field>
         </v-col>
-        <v-col cols="12" sm="6" md="4" v-if="tls.alpn">
+        <v-col cols="12" sm="6" lg="4" v-if="tls.alpn">
           <v-select
             hide-details
             label="ALPN"
@@ -70,7 +70,7 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" sm="6" md="4" v-if="tls.min_version">
+        <v-col cols="12" sm="6" lg="4" v-if="tls.min_version">
           <v-select
             hide-details
             :label="$t('tls.minVer')"
@@ -78,7 +78,7 @@
             v-model="tls.min_version">
           </v-select>
         </v-col>
-        <v-col cols="12" sm="6" md="4" v-if="tls.max_version">
+        <v-col cols="12" sm="6" lg="4" v-if="tls.max_version">
           <v-select
             hide-details
             :label="$t('tls.maxVer')"
@@ -126,7 +126,7 @@
       </v-row>
       <template v-if="tls.ech != undefined">
         <v-row>
-          <v-col class="v-card-subtitle">ECH</v-col>
+          <v-col class="text-subtitle-2 text-medium-emphasis">ECH</v-col>
         </v-row>
         <v-row>
           <v-col cols="auto">
@@ -181,13 +181,13 @@
         </v-row>
       </template>
       <v-row v-if="tls.fragment != undefined">
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-switch color="primary" :label="$t('tls.fragment')" v-model="tls.fragment" hide-details></v-switch>
         </v-col>
-        <v-col cols="12" sm="6" md="4" v-if="tls.fragment">
+        <v-col cols="12" sm="6" lg="4" v-if="tls.fragment">
           <v-switch color="primary" :label="$t('tls.recordFragment')" v-model="tls.record_fragment" hide-details></v-switch>
         </v-col>
-        <v-col cols="12" sm="6" md="4" v-if="tls.fragment">
+        <v-col cols="12" sm="6" lg="4" v-if="tls.fragment">
           <v-text-field
           :label="$t('tls.fragmentDelay')"
           hide-details

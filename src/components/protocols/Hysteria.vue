@@ -1,7 +1,7 @@
 <template>
   <v-card subtitle="Hysteria">
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
         :label="$t('stats.upload')"
         hide-details
@@ -10,7 +10,7 @@
         v-model.number="up_mbps">
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
         :label="$t('stats.download')"
         hide-details
@@ -22,14 +22,14 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
        <v-text-field
        :label="$t('types.hy.obfs')"
         hide-details
         v-model="data.obfs">
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="direction=='out'">
+      <v-col cols="12" sm="6" lg="4" v-if="direction=='out'">
         <v-text-field
         :label="$t('types.hy.auth')"
         hide-details
@@ -38,15 +38,15 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4" v-if="direction=='out'">
+      <v-col cols="12" sm="6" lg="4" v-if="direction=='out'">
         <Network :data="data" />
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch v-model="data.disable_mtu_discovery" color="primary" label="Disable MTU discovery" hide-details></v-switch>
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4" v-if="data.recv_window_conn != undefined">
+      <v-col cols="12" sm="6" lg="4" v-if="data.recv_window_conn != undefined">
         <v-text-field
         label="Recv window conn"
         hide-details
@@ -55,7 +55,7 @@
         v-model.number="data.recv_window_conn">
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="data.recv_window != undefined">
+      <v-col cols="12" sm="6" lg="4" v-if="data.recv_window != undefined">
         <v-text-field
         label="Recv window"
         hide-details
@@ -64,7 +64,7 @@
         v-model.number="data.recv_window">
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="data.recv_window_client != undefined">
+      <v-col cols="12" sm="6" lg="4" v-if="data.recv_window_client != undefined">
         <v-text-field
         label="Recv window client"
         hide-details
@@ -73,7 +73,7 @@
         v-model.number="data.recv_window_client">
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="data.max_conn_client != undefined">
+      <v-col cols="12" sm="6" lg="4" v-if="data.max_conn_client != undefined">
         <v-text-field
         label="Max conn client"
         hide-details

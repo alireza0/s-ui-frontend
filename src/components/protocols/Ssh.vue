@@ -48,10 +48,10 @@
       </template>
       <template v-else>
         <v-row>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-text-field v-model="data.user" :label="$t('types.un')" hide-details></v-text-field>
           </v-col>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-text-field v-model="data.password" :label="$t('types.pw')" hide-details></v-text-field>
           </v-col>
         </v-row>
@@ -66,10 +66,10 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4" v-if="data.host_key_algorithms != undefined">
+      <v-col cols="12" sm="6" lg="4" v-if="data.host_key_algorithms != undefined">
         <v-text-field v-model="algorithms" :label="$t('types.ssh.algorithm') + ' ' + $t('commaSeparated')" hide-details></v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="data.client_version != undefined">
+      <v-col cols="12" sm="6" lg="4" v-if="data.client_version != undefined">
         <v-text-field v-model="data.client_version" :label="$t('types.ssh.clientVer')" hide-details></v-text-field>
       </v-col>
     </v-row>

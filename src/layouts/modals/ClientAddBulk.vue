@@ -1,14 +1,14 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" width="800">
+  <v-dialog transition="dialog-bottom-transition" width="100%" max-width="900">
     <v-card class="rounded-lg">
       <v-card-title>
         {{ $t('actions.addbulk') }}
       </v-card-title>
       <v-divider></v-divider>
-      <v-card-text style="padding: 0 16px; overflow-y: scroll;">
-        <v-container style="padding: 0;">
+      <v-card-text class="px-4" style="overflow-y: auto;">
+        <div>
           <v-row>
-            <v-col cols="12" sm="6" md="4">
+            <v-col cols="12" sm="6" lg="4">
               <v-text-field v-model.number="count" type="number" min="1" max="100" :label="$t('count')" hide-details></v-text-field>
             </v-col>
           </v-row>
@@ -37,27 +37,27 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="12" sm="6" md="4">
+            <v-col cols="12" sm="6" lg="4">
               <v-combobox v-model="bulkData.group" :items="groups" :label="$t('client.group')" hide-details></v-combobox>
             </v-col>
-            <v-col cols="12" sm="6" md="4">
+            <v-col cols="12" sm="6" lg="4">
               <v-text-field v-model.number="bulkData.Volume" type="number" min="0" :label="$t('stats.volume')" suffix="GiB" hide-details></v-text-field>
             </v-col>
-            <v-col cols="12" sm="6" md="4" v-if="!(bulkData.delayStart && !bulkData.autoReset)">
+            <v-col cols="12" sm="6" lg="4" v-if="!(bulkData.delayStart && !bulkData.autoReset)">
               <DatePick :expiry="bulkData.expiry" @submit="setDate" />
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="12" sm="6" md="4">
+            <v-col cols="12" sm="6" lg="4">
               <v-switch color="primary"
                 v-model="bulkData.delayStart"
                 :label="$t('client.delayStart')" hide-details>
               </v-switch>
             </v-col>
-            <v-col cols="12" sm="6" md="4">
+            <v-col cols="12" sm="6" lg="4">
               <v-switch color="primary" v-model="bulkData.autoReset" :label="$t('client.autoReset')" hide-details></v-switch>
             </v-col>
-            <v-col cols="12" sm="6" md="4" v-if="bulkData.autoReset || bulkData.delayStart">
+            <v-col cols="12" sm="6" lg="4" v-if="bulkData.autoReset || bulkData.delayStart">
               <v-text-field v-model.number="bulkData.resetDays" type="number" min="1" :label="$t('client.resetDays')" hide-details></v-text-field>
             </v-col>
           </v-row>
@@ -77,7 +77,7 @@
               </v-select>
             </v-col>
           </v-row>
-        </v-container>
+        </div>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>

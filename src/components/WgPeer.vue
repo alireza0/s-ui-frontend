@@ -16,14 +16,14 @@
     </v-col>
   </v-row>
   <v-row>
-    <v-col cols="12" sm="6" md="4">
+    <v-col cols="12" sm="6" lg="4">
       <v-text-field
       :label="$t('out.addr')"
       hide-details
       v-model="address">
       </v-text-field>
     </v-col>
-    <v-col cols="12" sm="6" md="4">
+    <v-col cols="12" sm="6" lg="4">
       <v-text-field
       :label="$t('out.port')"
       type="number"
@@ -32,7 +32,7 @@
       v-model.number="port">
       </v-text-field>
     </v-col>
-    <v-col cols="12" sm="6" md="4">
+    <v-col cols="12" sm="6" lg="4">
       <v-text-field
       label="KeepAlive"
       type="number"

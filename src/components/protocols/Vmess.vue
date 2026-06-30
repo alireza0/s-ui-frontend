@@ -4,7 +4,7 @@
       <v-col cols="12" sm="6">
         <v-text-field v-model="data.uuid" label="UUID" hide-details></v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
           label="Alter ID"
           hide-details
@@ -15,7 +15,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-select
           hide-details
           :label="$t('types.vmess.security')"
@@ -23,7 +23,7 @@
           v-model="data.security">
         </v-select>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-select
           hide-details
           :label="$t('types.vless.udpEnc')"
@@ -31,13 +31,13 @@
           v-model="packet_encoding">
         </v-select>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <Network :data="data" />
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch v-model="data.global_padding" color="primary" :label="$t('types.vmess.globalPadding')" hide-details></v-switch>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch v-model="data.authenticated_length" color="primary" :label="$t('types.vmess.authLen')" hide-details></v-switch>
       </v-col>
     </v-row>

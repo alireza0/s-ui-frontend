@@ -8,7 +8,7 @@
         </v-chip>
       </v-card-subtitle>
       <v-row v-for="(header, index) in hdrs">
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-text-field
             :label="$t('objects.key')"
             hide-details
@@ -16,7 +16,7 @@
             v-model="header.name">
           </v-text-field>
         </v-col>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-text-field
             :label="$t('objects.value')"
             hide-details

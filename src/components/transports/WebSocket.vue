@@ -1,13 +1,13 @@
 <template>
   <v-row>
-    <v-col cols="12" sm="6" md="4">
+    <v-col cols="12" sm="6" lg="4">
       <v-text-field
       :label="$t('transport.path')"
       hide-details
       v-model="transport.path">
       </v-text-field>
     </v-col>
-    <v-col cols="12" sm="6" md="4">
+    <v-col cols="12" sm="6" lg="4">
       <v-text-field
       :label="$t('transport.host')"
       hide-details
@@ -16,7 +16,7 @@
     </v-col>
   </v-row>
   <v-row>
-    <v-col cols="12" sm="6" md="4">
+    <v-col cols="12" sm="6" lg="4">
       <v-text-field
       label="Max Early Data"
       hide-details
@@ -25,7 +25,7 @@
       v-model.number="max_early_data">
       </v-text-field>
     </v-col>
-    <v-col cols="12" sm="6" md="4">
+    <v-col cols="12" sm="6" lg="4">
       <v-text-field
       label="Early Data Header Name"
       hide-details

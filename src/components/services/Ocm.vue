@@ -28,7 +28,7 @@
       {{ $t('types.ocm.users') }}
       <v-chip color="primary" density="compact" variant="elevated" @click="addUser"><v-icon icon="mdi-plus" /></v-chip>
     </v-card-title>
-    <v-card v-for="(user, index) in (data.users || [])" :key="index" class="border" style="margin: 4px; padding: 8px;" rounded="xl">
+    <v-card v-for="(user, index) in (data.users || [])" :key="index" class="border ma-1 pa-2" rounded="lg">
       <v-row>
         <v-col cols="auto" align-self="center">
           <v-icon @click="delUser(index)" color="error" icon="mdi-delete" />

@@ -21,7 +21,7 @@
           hide-details
         ></v-combobox>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="optionIPver">
+      <v-col cols="12" sm="6" lg="4" v-if="optionIPver">
         <v-select
           hide-details
           :label="$t('rule.ipVer')"
@@ -41,7 +41,7 @@
       </v-col>
     </v-row>
     <v-row v-if="optionDomain">
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-select
           hide-details
           :items="domainKeys"
@@ -75,7 +75,7 @@
       </v-col>
     </v-row>
     <v-row v-if="optionPort">
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-select
           hide-details
           :items="portKeys"
@@ -97,7 +97,7 @@
       </v-col>
     </v-row>
     <v-row v-if="optionSrcIP">
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-select
           hide-details
           :items="srcIPKeys"
@@ -107,7 +107,7 @@
       </v-col>
     </v-row>
     <v-row v-if="optionSrcPort">
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-select
           hide-details
           :items="srcPortKeys"

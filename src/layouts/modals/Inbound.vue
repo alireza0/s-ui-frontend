@@ -1,5 +1,5 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" width="800" @after-enter="updateData(id)">
+  <v-dialog transition="dialog-bottom-transition" width="100%" max-width="900" @after-enter="updateData(id)">
     <v-card class="rounded-lg" :loading="loading">
       <v-card-title class="d-flex align-center">
         {{ $t('actions.' + title) + " " + $t('objects.inbound') }}
@@ -13,10 +13,10 @@
           type="card, text, divider, list-item-two-line"
           v-if="loading"
         ></v-skeleton-loader>
-      <v-card-text style="padding: 0 16px; overflow-y: scroll;">
-        <v-container style="padding: 0;" :hidden="loading">
+      <v-card-text class="px-4" style="overflow-y: auto;">
+        <div :hidden="loading">
           <v-row>
-            <v-col cols="12" sm="6" md="4">
+            <v-col cols="12" sm="6" lg="4">
               <v-select
               hide-details
               :label="$t('type')"
@@ -25,7 +25,7 @@
               @update:modelValue="changeType">
               </v-select>
             </v-col>
-            <v-col cols="12" sm="6" md="4">
+            <v-col cols="12" sm="6" lg="4">
               <v-text-field v-model="inbound.tag" :label="$t('objects.tag')" hide-details></v-text-field>
             </v-col>
           </v-row>
@@ -39,7 +39,7 @@
             <v-tab value="s">{{ $t('in.sSide') }}</v-tab>
             <v-tab value="c">{{ $t('in.cSide') }}</v-tab>
           </v-tabs>
-          <v-window v-model="side" style="margin-top: 10px;">
+          <v-window v-model="side">
             <v-window-item value="s">
               <Listen :data="inbound" :inTags="inTags" v-if="inbound.type != inTypes.Tun" />
               <Direct v-if="inbound.type == inTypes.Direct" :data="inbound" />
@@ -75,7 +75,7 @@
               </v-card>
             </v-window-item>
           </v-window>
-        </v-container>
+        </div>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>

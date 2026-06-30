@@ -12,7 +12,7 @@
     <v-tab value="t4">{{ $t('setting.clashSub') }}</v-tab>
   </v-tabs>
   <v-card-text>
-    <v-row align="center" justify="center" style="margin-bottom: 10px;">
+    <v-row align="center" justify="center">
       <v-col cols="auto">
         <v-btn color="primary" @click="save" :loading="loading" :disabled="!stateChange">
           {{ $t('actions.save') }}

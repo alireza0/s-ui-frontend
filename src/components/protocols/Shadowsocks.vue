@@ -1,7 +1,7 @@
 <template>
   <v-card subtitle="Shadowsocks">
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-select
           hide-details
           :label="$t('in.ssMethod')"
@@ -10,13 +10,13 @@
           v-model="data.method">
         </v-select>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <Network :data="data" />
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="direction == 'out'">
+      <v-col cols="12" sm="6" lg="4" v-if="direction == 'out'">
         <UoT :data="data" />
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="direction == 'in'">
+      <v-col cols="12" sm="6" lg="4" v-if="direction == 'in'">
         <v-switch
           v-model="data.managed"
           color="primary"

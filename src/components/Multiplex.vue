@@ -1,12 +1,12 @@
 <template>
   <v-card :subtitle="$t('objects.multiplex')">
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch color="primary" :label="$t('mux.enable')" v-model="muxEnable" hide-details></v-switch>
       </v-col>
       <template v-if="muxEnable">
         <template v-if="direction=='out'">
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-select
               hide-details
               :items="[ 'smux', 'yamux', 'h2mux']"
@@ -16,7 +16,7 @@
               v-model="mux.protocol">
             </v-select>
           </v-col>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-text-field
             :label="$t('mux.maxConn')"
             hide-details
@@ -25,7 +25,7 @@
             v-model.number="max_connections">
             </v-text-field>
           </v-col>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-text-field
             :label="$t('mux.minStr')"
             hide-details
@@ -34,7 +34,7 @@
             v-model.number="min_streams">
             </v-text-field>
           </v-col>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-text-field
             :label="$t('mux.maxStr')"
             hide-details
@@ -44,16 +44,16 @@
             </v-text-field>
           </v-col>
         </template>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-switch color="primary" :label="$t('mux.padding')" v-model="padding" hide-details></v-switch>
         </v-col>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-switch color="primary" :label="$t('mux.enableBrutal')" v-model="burtalEnable" hide-details></v-switch>
         </v-col>
       </template>
     </v-row>
     <v-row v-if="mux?.brutal?.enabled">
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
         :label="$t('stats.upload')"
         hide-details
@@ -62,7 +62,7 @@
         v-model.number="up_mbps">
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
         :label="$t('stats.download')"
         hide-details

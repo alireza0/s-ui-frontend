@@ -1,20 +1,20 @@
 <template>
   <v-row>
-    <v-col cols="12" sm="6" md="4">
+    <v-col cols="12" sm="6" lg="4">
       <v-text-field
       :label="$t('transport.hosts')"
       hide-details
       v-model="hosts">
       </v-text-field>
     </v-col>
-    <v-col cols="12" sm="6" md="4">
+    <v-col cols="12" sm="6" lg="4">
       <v-text-field
       :label="$t('transport.path')"
       hide-details
       v-model="transport.path">
       </v-text-field>
     </v-col>
-    <v-col cols="12" sm="6" md="4">
+    <v-col cols="12" sm="6" lg="4">
       <v-select
       :label="$t('transport.httpMethod')"
       hide-details
@@ -26,7 +26,7 @@
     </v-col>
   </v-row>
   <v-row>
-    <v-col cols="12" sm="6" md="4">
+    <v-col cols="12" sm="6" lg="4">
       <v-text-field
       :label="$t('transport.idleTimeout')"
       hide-details
@@ -36,7 +36,7 @@
       v-model.number="idle_timeout">
       </v-text-field>
     </v-col>
-    <v-col cols="12" sm="6" md="4">
+    <v-col cols="12" sm="6" lg="4">
       <v-text-field
       :label="$t('transport.pingTimeout')"
       hide-details

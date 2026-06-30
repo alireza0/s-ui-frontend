@@ -1,5 +1,5 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" width="800">
+  <v-dialog transition="dialog-bottom-transition" width="100%" max-width="900">
     <v-card class="rounded-lg" :loading="loading">
       <v-card-title>
         <v-row>
@@ -10,10 +10,10 @@
           <v-col cols="auto"><v-icon icon="mdi-close" @click="$emit('close')"></v-icon></v-col>
         </v-row>
       </v-card-title>
-      <v-card-subtitle style="margin-top: -20px">
+      <v-card-subtitle>
         {{ $t('objects.' + resource) + " : " + tag }}
       </v-card-subtitle>
-      <v-card-text class="text-center" style="padding: 0">
+      <v-card-text class="text-center pa-0">
         <v-btn-toggle v-model="limit"
           @update:model-value="selectPreset" density="compact"
           color="primary" :loading="loading"

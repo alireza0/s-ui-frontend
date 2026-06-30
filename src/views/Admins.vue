@@ -20,14 +20,14 @@
   />
   <v-row>
     <v-col cols="12" justify="center" align="center">
-      <v-btn color="primary" @click="showChangesModal('')" style="margin: 0 5px;">{{ $t('admin.changes') }}</v-btn>
+      <v-btn color="primary" @click="showChangesModal('')" class="mx-1">{{ $t('admin.changes') }}</v-btn>
       <v-btn color="primary" @click="showTokenModal()">{{ $t('admin.api.token') }}</v-btn>
     </v-col>
   </v-row>
   <v-row>
     <v-col cols="12" sm="4" md="3" lg="2" v-for="(item, index) in <any[]>users" :key="item.id">
-      <v-card rounded="xl" elevation="5" min-width="200" :title="item.username">
-        <v-card-subtitle style="margin-top: -15px;">
+      <v-card min-width="200" :title="item.username">
+        <v-card-subtitle>
           {{ $t('admin.lastLogin') }}
         </v-card-subtitle>
         <v-card-text>
@@ -51,7 +51,7 @@
           </v-row>
         </v-card-text>
         <v-divider></v-divider>
-        <v-card-actions style="padding: 0;">
+        <v-card-actions class="px-2 py-1">
           <v-btn icon="mdi-account-edit" @click="showEditModal(item)">
             <v-icon />
             <v-tooltip activator="parent" location="top" :text="$t('actions.edit')"></v-tooltip>

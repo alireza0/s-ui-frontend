@@ -1,8 +1,8 @@
 <template>
-  <v-app-bar :elevation="5">
+  <v-app-bar :elevation="2">
     <v-icon v-if="isMobile" icon="mdi-menu" @click="$emit('toggleDrawer')" />
     <span v-else style="width: 24px"></span>
-    <v-app-bar-title :text="$t(<string>route.name)" class="align-center text-center " />
+    <v-app-bar-title :text="$t(<string>route.name)" class="align-center text-center text-truncate" />
     <v-menu>
       <template v-slot:activator="{ props }">
         <v-btn icon v-bind="props">

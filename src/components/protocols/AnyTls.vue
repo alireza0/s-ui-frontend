@@ -19,7 +19,7 @@
         v-model="data.password">
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
         :label="$t('types.anytls.idleInterval')"
         type="number"
@@ -29,7 +29,7 @@
         v-model.number="idleInterval">
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
         :label="$t('types.anytls.idleTimeout')"
         type="number"
@@ -39,7 +39,7 @@
         v-model.number="idleTimeout">
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
         :label="$t('types.anytls.minIdle')"
         type="number"

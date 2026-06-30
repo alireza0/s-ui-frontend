@@ -4,13 +4,13 @@
       <v-col cols="12" sm="6">
         <v-text-field v-model="data.uuid" label="UUID" hide-details></v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field v-model="data.password" :label="$t('types.pw')" hide-details></v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <Network :data="data" />
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-select
           hide-details
           label="UDP Relay Mode"
@@ -20,12 +20,12 @@
           v-model="data.udp_relay_mode">
         </v-select>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch color="primary" label="UDP Over Stream" v-model="data.udp_over_stream" hide-details></v-switch>
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-select
           hide-details
           :label="$t('types.tuic.congControl')"
@@ -33,12 +33,12 @@
           v-model="data.congestion_control">
         </v-select>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch color="primary" label="Zero-RTT Handshake" v-model="data.zero_rtt_handshake" hide-details></v-switch>
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4" v-if="direction == 'in'">
+      <v-col cols="12" sm="6" lg="4" v-if="direction == 'in'">
         <v-text-field
         :label="$t('types.tuic.authTimeout')"
         hide-details
@@ -48,7 +48,7 @@
         v-model.number="auth_timeout">
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
         :label="$t('types.tuic.hb')"
         hide-details

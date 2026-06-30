@@ -1,5 +1,5 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" width="800">
+  <v-dialog transition="dialog-bottom-transition" width="100%" max-width="900">
     <v-card class="rounded-lg">
       <v-card-title class="d-flex align-center">
         {{ $t('actions.' + title) + " " + $t('objects.ruleset') }}
@@ -7,9 +7,9 @@
         <DocLink section="ruleset" />
       </v-card-title>
       <v-divider></v-divider>
-      <v-card-text style="padding: 0 16px;">
+      <v-card-text class="px-4">
         <v-row>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-select
               hide-details
               :label="$t('type')"
@@ -18,10 +18,10 @@
               v-model="rule_set.type">
             </v-select>
           </v-col>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-text-field v-model="rule_set.tag" :label="$t('objects.tag')" hide-details></v-text-field>
           </v-col>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-select
               hide-details
               :label="$t('ruleset.format')"
@@ -39,7 +39,7 @@
           <v-col cols="12">
             <v-text-field v-model="rule_set.url" label="URL" hide-details></v-text-field>
           </v-col>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-select
               hide-details
               :label="$t('objects.outbound')"
@@ -49,7 +49,7 @@
               v-model="rule_set.download_detour">
             </v-select>
           </v-col>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-text-field v-model.number="update_intervals" :suffix="$t('date.d')" type="number" min="0" :label="$t('ruleset.interval')" hide-details></v-text-field>
           </v-col>
         </v-row>

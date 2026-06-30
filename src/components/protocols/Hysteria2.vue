@@ -1,10 +1,10 @@
 <template>
   <v-card subtitle="Hysteria2">
     <v-row>
-      <v-col cols="12" sm="6" md="4" v-if="direction == 'in'">
+      <v-col cols="12" sm="6" lg="4" v-if="direction == 'in'">
         <v-switch v-model="data.ignore_client_bandwidth" color="primary" :label="$t('types.hy.ignoreBw')" hide-details></v-switch>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="!data.ignore_client_bandwidth">
+      <v-col cols="12" sm="6" lg="4" v-if="!data.ignore_client_bandwidth">
         <v-text-field
         :label="$t('stats.upload')"
         hide-details
@@ -14,7 +14,7 @@
         v-model.number="up_mbps">
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="!data.ignore_client_bandwidth">
+      <v-col cols="12" sm="6" lg="4" v-if="!data.ignore_client_bandwidth">
         <v-text-field
         :label="$t('stats.download')"
         hide-details
@@ -26,7 +26,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4" v-if="data.obfs != undefined">
+      <v-col cols="12" sm="6" lg="4" v-if="data.obfs != undefined">
       <v-text-field
         :label="$t('types.hy.obfs')"
         hide-details
@@ -37,7 +37,7 @@
     <template v-if="direction == 'in'">
       <v-card subtitle="Hysteria2 Masquerade" v-if="data.masquerade != undefined">
         <v-row>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-select v-model="masqueradeType" hide-details :label="$t('type')" :items="masqTypes"></v-select>
           </v-col>
           <v-col cols="12" sm="8" v-if="masqueradeType == ''">
@@ -56,7 +56,7 @@
             hide-details>
             </v-text-field>
           </v-col>
-          <v-col cols="12" sm="6" md="4" v-if="masqueradeType == 'string'">
+          <v-col cols="12" sm="6" lg="4" v-if="masqueradeType == 'string'">
             <v-text-field
             label="HTTP Code"
             type="number"
@@ -76,7 +76,7 @@
             hide-details>
             </v-text-field>
           </v-col>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-switch
             label="Rewrite Host"
             v-model="data.masquerade.rewrite_host"
@@ -101,14 +101,14 @@
     </template>
     <template v-else>
       <v-row>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-text-field
           :label="$t('types.pw')"
           hide-details
           v-model="data.password">
           </v-text-field>
         </v-col>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <Network :data="data" />
         </v-col>
         <v-col cols="12" sm="8" v-if="optionMPort">
@@ -117,7 +117,7 @@
             v-model="server_ports">
           </v-text-field>
         </v-col>
-        <v-col cols="12" sm="6" md="4" v-if="optionMPort">
+        <v-col cols="12" sm="6" lg="4" v-if="optionMPort">
           <v-text-field
             :label="$t('ruleset.interval')"
             type="number"

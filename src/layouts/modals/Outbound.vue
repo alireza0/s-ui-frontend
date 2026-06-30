@@ -1,5 +1,5 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" width="800">
+  <v-dialog transition="dialog-bottom-transition" width="100%" max-width="900">
     <v-card class="rounded-lg">
       <v-card-title class="d-flex align-center">
         {{ $t('actions.' + title) + " " + $t('objects.outbound') }}
@@ -7,8 +7,8 @@
         <DocLink section="outbound" :type="outbound.type" />
       </v-card-title>
       <v-divider></v-divider>
-      <v-card-text style="padding: 0 16px; overflow-y: scroll;">
-        <v-container style="padding: 0;">
+      <v-card-text class="px-4" style="overflow-y: auto;">
+        <div>
           <v-tabs
             v-model="tab"
             align-tabs="center"
@@ -19,7 +19,7 @@
           <v-window v-model="tab">
             <v-window-item value="t1">
               <v-row>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" lg="4">
                   <v-select
                   hide-details
                   :label="$t('type')"
@@ -28,19 +28,19 @@
                   @update:modelValue="changeType">
                   </v-select>
                 </v-col>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" lg="4">
                   <v-text-field v-model="outbound.tag" :label="$t('objects.tag')" hide-details></v-text-field>
                 </v-col>
               </v-row>
               <v-row v-if="!NoServer.includes(outbound.type)">
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" lg="4">
                   <v-text-field
                   :label="$t('out.addr')"
                   hide-details
                   v-model="outbound.server">
                   </v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" lg="4">
                   <v-text-field
                   :label="$t('out.port')"
                   type="number"
@@ -83,7 +83,7 @@
               </v-row>
             </v-window-item>
           </v-window>
-        </v-container>
+        </div>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>

@@ -21,8 +21,8 @@
   </v-row>
   <v-row>
     <v-col cols="12" sm="4" md="3" lg="2" v-for="(item, index) in <any[]>inbounds" :key="item.tag">
-      <v-card rounded="xl" elevation="5" min-width="200" :title="item.tag">
-        <v-card-subtitle style="margin-top: -15px;">
+      <v-card min-width="200" :title="item.tag">
+        <v-card-subtitle>
           <v-row>
             <v-col>{{ item.type }}</v-col>
           </v-row>
@@ -69,12 +69,12 @@
           </v-row>
         </v-card-text>
         <v-divider></v-divider>
-        <v-card-actions style="padding: 0;">
+        <v-card-actions class="px-2 py-1">
           <v-btn icon="mdi-file-edit" @click="showModal(item.id)">
             <v-icon />
             <v-tooltip activator="parent" location="top" :text="$t('actions.edit')"></v-tooltip>
           </v-btn>
-          <v-btn icon="mdi-file-remove" style="margin-inline-start:0;" color="warning" @click="delOverlay[index] = true">
+          <v-btn icon="mdi-file-remove" class="ms-0" color="warning" @click="delOverlay[index] = true">
             <v-icon />
             <v-tooltip activator="parent" location="top" :text="$t('actions.del')"></v-tooltip>
           </v-btn>

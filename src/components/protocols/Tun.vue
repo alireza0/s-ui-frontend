@@ -6,15 +6,15 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field v-model="data.interface_name" :label="$t('types.tun.ifName')" placeholder="tun0" hide-details clearable @click:clear="delete data.interface_name"></v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field type="number" v-model.number="data.mtu" label="MTU" hide-details></v-text-field>
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
           type="number"
           v-model.number="udpTimeout"
@@ -24,7 +24,7 @@
           hide-details>
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-select
           v-model="data.stack"
           label="Stack"
@@ -32,24 +32,24 @@
           hide-details
         ></v-select>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch v-model="data.endpoint_independent_nat" color="primary" label="Independent NAT" hide-details></v-switch>
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch v-model="autoRoute" color="primary" label="Auto Route" hide-details></v-switch>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="autoRoute">
+      <v-col cols="12" sm="6" lg="4" v-if="autoRoute">
         <v-switch v-model="data.auto_redirect" color="primary" label="Auto Redirect" hide-details></v-switch>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="autoRoute">
+      <v-col cols="12" sm="6" lg="4" v-if="autoRoute">
         <v-switch v-model="data.strict_route" color="primary" label="Strict Route" hide-details></v-switch>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="autoRoute && data.auto_redirect">
+      <v-col cols="12" sm="6" lg="4" v-if="autoRoute && data.auto_redirect">
         <v-switch v-model="data.exclude_mptcp" color="primary" :label="$t('types.tun.excludeMptcp')" hide-details></v-switch>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="autoRoute && data.auto_redirect">
+      <v-col cols="12" sm="6" lg="4" v-if="autoRoute && data.auto_redirect">
         <v-text-field
           type="number"
           v-model.number="fallbackRuleIndex"

@@ -4,36 +4,158 @@
  * Configures SASS variables and Vuetify overwrites
  */
 
-// https://vuetifyjs.com/features/sass-variables/`
+// https://vuetifyjs.com/en/features/sass-variables/`
 // @use 'vuetify/settings' with (
 //   $color-pack: false
 // );
-@font-face {
-    font-display: swap;
-    font-family: 'Vazirmatn';
-    font-style: normal;
-    font-weight: 400;
-    src: url('@/assets/Vazirmatn-UI-NL-Regular.woff2') format('woff2');
-    unicode-range: U+0600-06FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE80-FEFC, U+0030-0039;
-}
-$body-font-family: "Vazirmatn";
 
-$typoOptions: text-h1, text-sm-h1, text-md-h1, text-lg-h1, text-h2, text-sm-h2,
-  text-md-h2, text-lg-h2, text-h3, text-sm-h3, text-md-h3, text-lg-h3, text-h4,
-  text-sm-h4, text-md-h4, text-lg-h4, text-h5, text-sm-h5, text-md-h5,
-  text-lg-h5, text-h6, text-sm-h6, text-md-h6, text-lg-h6, headline, title,
-  subtitle-1, subtitle-2, text-body-1, text-sm-body-1, text-md-body-1,
-  text-lg-body-1, text-body-2, text-sm-body-2, text-md-body-2, text-lg-body-2,
-  text-caption;
+@font-face {
+  font-display: swap;
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 400;
+  src: url('@/assets/Vazirmatn-UI-NL-Regular.woff2') format('woff2');
+  unicode-range: U+0600-06FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE80-FEFC, U+0030-0039;
+}
+
+// Default UI font: native system stack (no Roboto dependency, no Persian font for non-fa)
 body {
-  font-family: -apple-system, BlinkMacSystemFont, $body-font-family, sans-serif !important;
-  @each $typoOption in $typoOptions {
-    .#{$typoOption} {
-      font-family: -apple-system, BlinkMacSystemFont, $body-font-family, sans-serif !important;
-    }
-  }
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+}
+
+// Persian font only when the document language is fa
+:lang(fa) {
+  font-family: -apple-system, BlinkMacSystemFont, 'Vazirmatn', sans-serif;
 }
 
 .v-btn {
   letter-spacing: 0;
 }
+
+// --- Root-cause: eliminate the "card-in-card" stacking feeling ----------------
+// Top-level cards: thin uniform border, no heavy shadow (elevation handled via defaults=0)
+.v-card {
+  border: 1px solid rgba(var(--v-theme-on-surface), 0.12);
+}
+
+// Nested cards (section wrappers inside dialogs): fully flat — no border, no surface
+// background, no shadow, no radius. They become transparent fieldsets, killing the
+// "one layer wrapping another" bloat. Cards that explicitly opt into a border
+// (class="border", e.g. peer/user item cards) are excluded so list items stay framed.
+.v-card .v-card:not(.border) {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+// Flush nested section padding so content aligns with the dialog body
+.v-card .v-card:not(.border) > .v-card-title,
+.v-card .v-card:not(.border) > .v-card-subtitle,
+.v-card .v-card:not(.border) > .v-card-text {
+  padding-inline: 0;
+}
+.v-card .v-card:not(.border) > .v-card-text {
+  padding-block: 0;
+}
+
+// --- Root-cause: dialog form spacing & anti-wrap --------------------------------
+// Dialog titles and tab labels must never wrap (long translations break layout alignment)
+.v-dialog .v-card-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.v-tabs .v-tab {
+  white-space: nowrap;
+}
+
+// App bar title: truncate instead of wrapping into the toolbar
+.v-app-bar-title .v-app-bar-title__text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Form rows inside dialogs: consistent vertical breathing room between fields.
+.v-dialog .v-card-text .v-row + .v-row {
+  margin-top: 4px;
+}
+
+// ROOT CAUSE: an outlined field's floating label uses `transform: translateY(-50%)`
+// and climbs ~9px (comfortable density) above the field's top border. When the
+// field is the first row inside a v-window that immediately follows another
+// element (tabs, a button row, anything), the label has no room to float and is
+// clipped/overlapped by that preceding element.
+//
+// This is NOT a dialog-only issue: Settings.vue is a plain v-card (not a dialog)
+// with `button row + v-window + first outlined row`, and shows the same defect.
+// So the fix must be scope-agnostic: give any v-window that has a preceding
+// sibling a safe top gap. `:not(:first-child)` avoids adding margin to windows
+// that are already the first element (no overlap risk there).
+.v-window:not(:first-child) {
+  margin-top: 16px;
+}
+
+// ROOT CAUSE (dialog-only): Vuetify ships a dialog-specific rule
+//   .v-dialog > .v-overlay__content > .v-card > .v-card-text { padding: 16px 24px 24px }
+// with specificity (0,0,4,0) that BEATS a plain `.v-card-text` override, so the
+// dialog body top padding collapsed to 16px — too tight for an outlined label
+// floating above the first row when the window's own 16px (above) plus the
+// field's float still close on the divider/title. Use the SAME high-specificity
+// child selector as Vuetify (loaded later via settings.scss) to restore a safe
+// top gap inside dialog bodies specifically.
+// Also re-declare the horizontal padding explicitly so the safe edge spacing is
+// guaranteed regardless of which Vuetify dialog padding branch matches (some
+// dialogs land on the generic `.v-card-text { padding: 1rem }` branch which is
+// only 16px — visually fine, but making it explicit avoids any edge case where
+// content sits flush against the left/right card border).
+.v-dialog > .v-overlay__content > .v-card > .v-card-text,
+.v-dialog > .v-overlay__content > form > .v-card > .v-card-text {
+  padding: 24px 24px 24px;
+}
+
+// Outlined floating label: opaque surface background so the label "notch" reads
+// cleanly over any divider/border line behind it (theme-aware, matches card surface).
+.v-field--variant-outlined .v-label.v-field-label--floating {
+  background: rgb(var(--v-theme-surface));
+  padding-inline: 4px;
+}
+
+// Inputs: a touch of bottom breathing space so labels/hints don't collide with the
+// next field. Keep small to preserve density.
+.v-text-field.v-input--density-comfortable,
+.v-select.v-input--density-comfortable,
+.v-combobox.v-input--density-comfortable,
+.v-textarea.v-input--density-comfortable {
+  margin-bottom: 4px;
+}
+
+// --- Root-cause: thin, theme-aware scrollbars ----------------------------------
+// Replace the heavy OS default scrollbar with a slim one that matches the theme.
+// Firefox: thin + theme-aware via scrollbar-color. Chrome/Safari/Edge: webkit.
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--v-theme-on-surface), 0.25) transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--v-theme-on-surface), 0.25);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--v-theme-on-surface), 0.4);
+}
+// Dialogs: even thinner webkit scrollbar (6px vs global 8px).
+// Firefox already uses `thin` from the global rule above.
+.v-dialog ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
