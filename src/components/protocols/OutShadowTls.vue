@@ -1,7 +1,7 @@
 <template>
   <v-card subtitle="ShadowTls">
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-select
           hide-details
           :items="[1,2,3]"
@@ -9,7 +9,7 @@
           v-model="version">
         </v-select>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="data.version > 1">
+      <v-col cols="12" sm="6" lg="4" v-if="data.version > 1">
         <v-text-field
         :label="$t('types.pw')"
         hide-details

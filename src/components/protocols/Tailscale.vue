@@ -1,10 +1,10 @@
 <template>
   <v-card subtitle="Talescale">
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch color="primary" v-model="data.ephemeral" :label="$t('types.ts.ephemeral')"></v-switch>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch color="primary" v-model="data.accept_routes" :label="$t('types.ts.acceptRoutes')"></v-switch>
       </v-col>
     </v-row>
@@ -24,23 +24,23 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4" v-if="optionHostname">
+      <v-col cols="12" sm="6" lg="4" v-if="optionHostname">
         <v-text-field v-model="data.hostname" :label="$t('types.ts.hostname')"></v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="optionUdpTimeout">
+      <v-col cols="12" sm="6" lg="4" v-if="optionUdpTimeout">
         <v-text-field type="number" v-model.number="udpTimeout" min="1" :suffix="$t('date.s')" :label="$t('types.ts.udpTimeout')"></v-text-field>
       </v-col>
     </v-row>
     <v-row v-if="optionExitNode">
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field v-model="data.exit_node" :label="$t('types.ts.exitNode')"></v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch color="primary" v-model="data.exit_node_allow_lan_access" :label="$t('types.ts.allowLanAccess')"></v-switch>
       </v-col>
     </v-row>
     <v-row v-if="optionRelay">
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field v-model.number="data.relay_server_port" type="number" min="0" :label="$t('types.ts.relayServerPort')" hide-details></v-text-field>
       </v-col>
       <v-col cols="12" sm="8">
@@ -48,13 +48,13 @@
       </v-col>
     </v-row>
     <v-row v-if="optionSysIf">
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch color="primary" v-model="data.system_interface" :label="$t('types.ts.systemInterface')"></v-switch>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="data.system_interface">
+      <v-col cols="12" sm="6" lg="4" v-if="data.system_interface">
         <v-text-field v-model="data.system_interface_name" :label="$t('types.ts.sysIfName')" hide-details></v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="data.system_interface">
+      <v-col cols="12" sm="6" lg="4" v-if="data.system_interface">
         <v-text-field v-model.number="data.system_interface_mtu" type="number" min="0" :label="$t('types.ts.sysIfMtu')" hide-details></v-text-field>
       </v-col>
     </v-row>
@@ -62,7 +62,7 @@
       <v-col cols="12" sm="8">
         <v-text-field v-model="advertise_routes" :label="$t('types.ts.advRoutes') + ' ' + $t('commaSeparated')"></v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch color="primary" v-model="data.advertise_exit_node" :label="$t('types.ts.advExitNode')"></v-switch>
       </v-col>
     </v-row>

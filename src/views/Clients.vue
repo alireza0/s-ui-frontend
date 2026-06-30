@@ -157,7 +157,7 @@
         :mobile="smAndDown"
         mobile-breakpoint="sm"
         width="100%"
-        class="elevation-3 rounded"
+        class="rounded"
         >
         <template v-slot:item.inbounds="{ item }">
           <span>
@@ -332,7 +332,7 @@ const headers = [
   { title: i18n.global.t('client.name'), key: 'name' },
   { title: i18n.global.t('client.desc'), key: 'desc' },
   { title: i18n.global.t('client.group'), key: 'group' },
-  { title: i18n.global.t('pages.inbounds'), key: 'inbounds', width: 10 },
+  { title: i18n.global.t('pages.inbounds'), key: 'inbounds', nowrap: true },
   { title: i18n.global.t('actions.action'), key: 'actions', sortable: false },
   { title: i18n.global.t('stats.volume'), key: 'volume' },
   { title: i18n.global.t('date.expiry'), key: 'expiry' },

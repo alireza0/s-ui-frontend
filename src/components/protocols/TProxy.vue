@@ -1,7 +1,7 @@
 <template>
   <v-card subtitle="TProxy">
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <Network :data="inbound" />
       </v-col>
     </v-row>

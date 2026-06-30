@@ -4,10 +4,10 @@
     <!-- Inbound -->
     <template v-if="direction === 'in'">
       <v-row>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <Network :data="data" />
         </v-col>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-select
             hide-details
             :label="$t('types.naive.quicCongestion')"
@@ -22,14 +22,14 @@
     <!-- Outbound -->
     <template v-if="['out', 'out_json'].includes(direction)">
       <v-row v-if="direction === 'out'">
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-text-field
             :label="$t('types.un')"
             hide-details
             v-model="data.username">
           </v-text-field>
         </v-col>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-text-field
             :label="$t('types.pw')"
             hide-details
@@ -39,7 +39,7 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-text-field
             :label="$t('types.naive.insecureConcurrency')"
             type="number"
@@ -48,15 +48,15 @@
             v-model.number="insecure_concurrency">
           </v-text-field>
         </v-col>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-switch v-model="udpOverTcp" color="primary" :label="$t('types.naive.udpOverTcp')" hide-details></v-switch>
         </v-col>
       </v-row>
       <v-row v-if="direction === 'out'">
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-switch v-model="data.quic" color="primary" :label="$t('types.naive.quic')" hide-details></v-switch>
         </v-col>
-        <v-col cols="12" sm="6" md="4" v-if="data.quic">
+        <v-col cols="12" sm="6" lg="4" v-if="data.quic">
           <v-select
             hide-details
             :label="$t('types.naive.quicCongestion')"

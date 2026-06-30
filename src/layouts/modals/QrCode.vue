@@ -15,7 +15,7 @@
           type="text, image, divider, text, image"
           v-if="loading"
         ></v-skeleton-loader>
-      <v-card-text style="overflow-y: auto; padding: 0" :hidden="loading">
+      <v-card-text class="px-4 pt-4" style="overflow-y: auto;" :hidden="loading">
         <v-tabs
           v-model="tab"
           density="compact"
@@ -25,7 +25,7 @@
           <v-tab value="sub">{{ $t('setting.sub') }}</v-tab>
           <v-tab value="link">{{ $t('client.links') }}</v-tab>
         </v-tabs>
-        <v-window v-model="tab" style="margin-top: 10px;">
+        <v-window v-model="tab">
           <v-window-item value="sub">
             <v-row>
               <v-col style="text-align: center;">

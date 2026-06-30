@@ -1,5 +1,5 @@
 <template>
-  <v-dialog transition="dialog-top-transition" width="800">
+  <v-dialog transition="dialog-top-transition" width="100%" max-width="900">
     <v-card class="rounded-lg">
       <v-card-title>
         <v-row>
@@ -12,7 +12,7 @@
         </v-row>
       </v-card-title>
       <v-divider />
-      <v-card-text style="padding: 0 16px; overflow-y: scroll;">
+      <v-card-text class="px-4 overflow-y-auto">
         <v-tabs v-model="tab" @update:modelValue="tabChanged">
           <v-tab value="text">
             {{ $t('rule.import.pasteUrls') }}
@@ -48,7 +48,7 @@
           </v-window-item>
         </v-window>
         <v-row class="mb-4">
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-select
               hide-details
               :label="$t('ruleset.format')"
@@ -56,7 +56,7 @@
               v-model="importFormat">
             </v-select>
           </v-col>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-select
               hide-details
               :label="$t('objects.outbound')"
@@ -66,14 +66,14 @@
               v-model="importDetour">
             </v-select>
           </v-col>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-text-field v-model.number="importInterval" :suffix="$t('date.d')" type="number" min="0" :label="$t('ruleset.interval')" hide-details></v-text-field>
           </v-col>
         </v-row>
 
         <template v-if="importPreview.length > 0">
           <v-divider class="my-4" />
-          <span class="v-card-subtitle">
+          <span class="text-subtitle-2 text-medium-emphasis">
             {{ $t('rule.import.preview') }}
             <v-badge v-if="importPreview.length > 0" color="success" :content="importPreview.length" inline />
             <v-badge v-if="importSkipped > 0" color="warning" :content="importSkipped" inline v-tooltip:top="$t('rule.import.skipped')" />

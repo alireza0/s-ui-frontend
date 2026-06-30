@@ -1,7 +1,7 @@
 <template>
   <v-card :subtitle="$t('objects.dial')" style="background-color: inherit;">
     <v-row>
-      <v-col cols="12" sm="6" md="4" v-if="optionDetour">
+      <v-col cols="12" sm="6" lg="4" v-if="optionDetour">
         <v-select
           hide-details
           :label="$t('dial.detourText')"
@@ -9,7 +9,7 @@
           v-model="dial.detour">
         </v-select>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="optionBind">
+      <v-col cols="12" sm="6" lg="4" v-if="optionBind">
         <v-text-field
         :label="$t('dial.bindIf')"
         hide-details
@@ -17,24 +17,24 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4" v-if="optionIPV4">
+      <v-col cols="12" sm="6" lg="4" v-if="optionIPV4">
         <v-text-field
         :label="$t('dial.bindIp4')"
         hide-details
         v-model="dial.inet4_bind_address"></v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="optionIPV6">
+      <v-col cols="12" sm="6" lg="4" v-if="optionIPV6">
         <v-text-field
         :label="$t('dial.bindIp6')"
         hide-details
         v-model="dial.inet6_bind_address"></v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="optionBindNoPort">
+      <v-col cols="12" sm="6" lg="4" v-if="optionBindNoPort">
         <v-switch v-model="dial.bind_address_no_port" color="primary" :label="$t('dial.bindNoPort')" hide-details></v-switch>
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4" v-if="optionRM">
+      <v-col cols="12" sm="6" lg="4" v-if="optionRM">
         <v-text-field
         label="Linux Routing Mark"
         hide-details
@@ -42,34 +42,34 @@
         min="0"
         v-model.number="routingMark"></v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="optionRA">
+      <v-col cols="12" sm="6" lg="4" v-if="optionRA">
         <v-switch v-model="dial.reuse_addr" color="primary" :label="$t('dial.reuseAddr')" hide-details></v-switch>
       </v-col>
     </v-row>
     <v-row v-if="optionTCP">
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch v-model="dial.tcp_fast_open" color="primary" label="TCP Fast Open" hide-details></v-switch>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch v-model="dial.tcp_multi_path" color="primary" label="TCP Multi Path" hide-details></v-switch>
       </v-col>
     </v-row>
     <v-row v-if="optionTcpKeepAlive">
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch v-model="dial.disable_tcp_keep_alive" color="primary" :label="$t('dial.disableTcpKeepAlive')" hide-details></v-switch>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field v-model="dial.tcp_keep_alive" :label="$t('dial.tcpKeepAlive')" hide-details></v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field v-model="dial.tcp_keep_alive_interval" :label="$t('dial.tcpKeepAliveInterval')" hide-details></v-text-field>
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4" v-if="optionUDP">
+      <v-col cols="12" sm="6" lg="4" v-if="optionUDP">
         <v-switch v-model="dial.udp_fragment" color="primary" label="UDP Fragment" hide-details></v-switch>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="optionCT">
+      <v-col cols="12" sm="6" lg="4" v-if="optionCT">
         <v-text-field
         :label="$t('dial.connTimeout')"
         hide-details
@@ -80,7 +80,7 @@
       </v-col>
     </v-row>
     <v-row v-if="optionDR">
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-select
           hide-details
           :label="$t('dial.domainResolver')"

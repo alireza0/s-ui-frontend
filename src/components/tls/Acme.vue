@@ -1,7 +1,7 @@
 <template>
-  <v-card subtitle="ACME" style="background-color: inherit;">
+  <v-card subtitle="ACME">
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch color="primary" :label="$t('enable')" v-model="enabled" hide-details></v-switch>
       </v-col>
       <v-col cols="12" md="8" v-if="enabled">
@@ -14,14 +14,14 @@
     </v-row>
     <template v-if="enabled">
       <v-row>
-        <v-col cols="12" sm="6" md="4" v-if="optionDir">
+        <v-col cols="12" sm="6" lg="4" v-if="optionDir">
           <v-text-field
             :label="$t('tls.acme.dataDir')"
             hide-details
             v-model="acme.data_directory">
           </v-text-field>
         </v-col>
-        <v-col cols="12" sm="6" md="4" v-if="optionDefault">
+        <v-col cols="12" sm="6" lg="4" v-if="optionDefault">
           <v-combobox
             v-model="acme.default_server_name"
             :items="acme.domain"
@@ -29,7 +29,7 @@
             hide-details
           ></v-combobox>
         </v-col>
-        <v-col cols="12" sm="6" md="4" v-if="optionEmail">
+        <v-col cols="12" sm="6" lg="4" v-if="optionEmail">
           <v-text-field
             :label="$t('email')"
             hide-details
@@ -38,15 +38,15 @@
         </v-col>
       </v-row>
       <v-row v-if="optionChallenge">
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-switch color="primary" :label="$t('tls.acme.httpChallenge')" v-model="acme.disable_http_challenge" hide-details></v-switch>
         </v-col>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-switch color="primary" :label="$t('tls.acme.tlsChallenge')" v-model="acme.disable_tls_alpn_challenge" hide-details></v-switch>
         </v-col>
       </v-row>
       <v-row v-if="optionPorts">
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-text-field
           :label="$t('tls.acme.altHport')"
           hide-details
@@ -56,7 +56,7 @@
           v-model.number="acme.alternative_http_port">
           </v-text-field>
         </v-col>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-text-field
           :label="$t('tls.acme.altTport')"
           hide-details
@@ -68,7 +68,7 @@
         </v-col>
       </v-row>
       <v-row v-if="optionProvider">
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-select
             v-model="caProvider"
             :items="providerList"
@@ -85,14 +85,14 @@
         </v-col>
       </v-row>
       <v-row v-if="acme.external_account != undefined">
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-text-field
           label="Key ID"
           hide-details
           v-model="acme.external_account.key_id">
           </v-text-field>
         </v-col>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-text-field
           label="MAC Key"
           hide-details
@@ -101,7 +101,7 @@
         </v-col>
       </v-row>
       <v-row v-if="acme.dns01_challenge != undefined">
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-select
           :label="$t('tls.acme.dns01Provider')"
           hide-details
@@ -110,7 +110,7 @@
           v-model="acme.dns01_challenge.provider">
           </v-select>
         </v-col>
-        <v-col cols="12" sm="6" md="4"
+        <v-col cols="12" sm="6" lg="4"
         v-for="item in dnsProviders.filter(d => d.provider == acme.dns01_challenge?.provider)[0]?.params"
         :key="item">
           <v-text-field

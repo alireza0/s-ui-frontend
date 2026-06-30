@@ -39,7 +39,7 @@
           </v-col>
         </v-row>
       </v-card-title>
-      <v-card v-for="clientUrl, index in data.verify_client_url" :key="index" class="border" style="padding: 8px;" rounded="xl">
+      <v-card v-for="clientUrl, index in data.verify_client_url" :key="index" class="border pa-2" rounded="lg">
         <v-row>
           <v-col cols="auto" align-self="center" justify-self="center">
             <v-icon @click="data.verify_client_url.splice(index, 1)" color="error" icon="mdi-delete" />
@@ -64,21 +64,21 @@
           </v-col>
         </v-row>
       </v-card-title>
-      <v-card v-for="mesh, index in data.mesh_with" :key="index" class="border" style="padding: 8px;" rounded="xl">
+      <v-card v-for="mesh, index in data.mesh_with" :key="index" class="border pa-2" rounded="lg">
         <v-row>
           <v-col cols="auto" align-self="center" justify-self="center">
             <v-icon @click="data.mesh_with.splice(index, 1)" color="error" icon="mdi-delete" />
           </v-col>
           <v-col cols="11">
             <v-row>
-              <v-col cols="12" sm="6" md="4">
+              <v-col cols="12" sm="6" lg="4">
                 <v-text-field
                 :label="$t('out.addr')"
                 hide-details
                 v-model="mesh.server">
                 </v-text-field>
               </v-col>
-              <v-col cols="12" sm="6" md="4">
+              <v-col cols="12" sm="6" lg="4">
                 <v-text-field
                 :label="$t('out.port')"
                 hide-details
@@ -86,7 +86,7 @@
                 v-model.number="mesh.server_port">
                 </v-text-field>
               </v-col>
-              <v-col cols="12" sm="6" md="4">
+              <v-col cols="12" sm="6" lg="4">
                 <v-text-field
                 :label="$t('transport.host')"
                 hide-details
@@ -136,7 +136,7 @@
       </v-row>
     </template>
     <template v-if="optionStun">
-      <v-card :title="$t('types.derp.stun')" class="border" style="padding: 8px;" rounded="xl">
+      <v-card :title="$t('types.derp.stun')" class="border pa-2" rounded="lg">
         <Listen :data="data.stun" :inTags="inTags" />
       </v-card>
     </template>

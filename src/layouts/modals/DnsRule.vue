@@ -1,5 +1,5 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" width="800">
+  <v-dialog transition="dialog-bottom-transition" width="100%" max-width="900">
     <v-card class="rounded-lg">
       <v-card-title class="d-flex align-center">
         {{ $t('actions.' + title) + " " + $t('objects.dnsrule') }}
@@ -7,9 +7,9 @@
         <DocLink section="dnsRule" />
       </v-card-title>
       <v-divider></v-divider>
-      <v-card-text style="padding: 0 16px;">
+      <v-card-text class="px-4">
         <v-row>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-switch color="primary" v-model="logical" :label="$t('rule.logical')" hide-details></v-switch>
           </v-col>
           <v-spacer></v-spacer>
@@ -21,7 +21,7 @@
           <v-card-subtitle>{{ $t('objects.rule') + ' ' + (Number(index)+1) }}
             <v-icon @click="ruleData.rules.splice(index,1)" icon="mdi-delete" v-if="ruleData.rules.length>1" />
           </v-card-subtitle>
-          <v-card-text style="padding: 0;">
+          <v-card-text class="pa-0">
             <RuleOptions
               :rule="r"
               :clients="clients"
@@ -36,7 +36,7 @@
           :inTags="inTags"
           :ruleSets="ruleSets" />
         <v-row>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-select
               v-model="ruleData.action"
               :items="actions"
@@ -44,7 +44,7 @@
               hide-details
             ></v-select>
           </v-col>
-          <v-col cols="12" sm="6" md="4" v-if="logical">
+          <v-col cols="12" sm="6" lg="4" v-if="logical">
             <v-combobox
               v-model="ruleData.mode"
               :items="['and', 'or']"
@@ -52,13 +52,13 @@
               hide-details
             ></v-combobox>
           </v-col>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="6" lg="4">
             <v-switch color="primary" v-model="ruleData.invert" :label="$t('rule.invert')" hide-details></v-switch>
           </v-col>
         </v-row>
         <v-card :subtitle="$t('dns.rule.action.route')" v-if="['route', 'route-options'].includes(ruleData.action)">
           <v-row v-if="ruleData.action == 'route'">
-            <v-col cols="12" sm="6" md="4">
+            <v-col cols="12" sm="6" lg="4">
               <v-select
                 v-model="ruleData.server"
                 :items="serverTags"
@@ -66,7 +66,7 @@
                 hide-details
               ></v-select>
             </v-col>
-            <v-col cols="12" sm="6" md="4">
+            <v-col cols="12" sm="6" lg="4">
               <v-select
                 v-model="ruleData.strategy"
                 :items="strategies"
@@ -78,20 +78,20 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="12" sm="6" md="4">
+            <v-col cols="12" sm="6" lg="4">
               <v-switch v-model="ruleData.disable_cache" :label="$t('dns.disableCache')" hide-details></v-switch>
             </v-col>
-            <v-col cols="12" sm="6" md="4">
+            <v-col cols="12" sm="6" lg="4">
               <v-text-field v-model.number="ruleData.rewrite_ttl" type="number" min="0" :label="$t('dns.rule.action.rewriteTtl')" hide-details></v-text-field>
             </v-col>
-            <v-col cols="12" sm="6" md="4">
+            <v-col cols="12" sm="6" lg="4">
               <v-text-field v-model="ruleData.client_subnet" :label="$t('dns.rule.action.clientSubnet')" hide-details></v-text-field>
             </v-col>
           </v-row>
         </v-card>
         <v-card :subtitle="$t('dns.rule.action.reject')" v-if="ruleData.action == 'reject'">
           <v-row>
-            <v-col cols="12" sm="6" md="4">
+            <v-col cols="12" sm="6" lg="4">
               <v-select
                 v-model="ruleData.method"
                 :items="[{ title: 'Default', value: 'default' },{ title: 'Drop', value: 'drop'}]"
@@ -101,14 +101,14 @@
                 hide-details>
             </v-select>
             </v-col>
-            <v-col cols="12" sm="6" md="4">
+            <v-col cols="12" sm="6" lg="4">
               <v-switch v-model="ruleData.no_drop" :label="$t('rule.noDrop')" hide-details></v-switch>
             </v-col>
           </v-row>
         </v-card>
         <v-card :subtitle="$t('dns.rule.action.predefined')" v-if="ruleData.action == 'predefined'">
           <v-row>
-            <v-col cols="12" sm="6" md="4">
+            <v-col cols="12" sm="6" lg="4">
               <v-select
                 v-model="ruleData.rcode"
                 :items="predefinedRcode"

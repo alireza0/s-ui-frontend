@@ -5,7 +5,7 @@
         {{ title }}
       </v-card-title>
       <v-divider></v-divider>
-      <v-card-text style="padding: 0 16px; overflow-y: scroll;">
+      <v-card-text class="px-4 overflow-y-auto">
         <div class="code-editor">
           <div class="line-numbers">
             <span v-for="n in lineCount" :key="n">{{ n }}</span>

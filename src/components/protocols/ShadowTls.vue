@@ -1,7 +1,7 @@
 <template>
   <v-card subtitle="ShadowTls">
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-select
           hide-details
           :items="[1,2,3]"
@@ -10,26 +10,26 @@
           v-model="version">
         </v-select>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="data.password != undefined">
+      <v-col cols="12" sm="6" lg="4" v-if="data.password != undefined">
         <v-text-field
         :label="$t('types.pw')"
         hide-details
         v-model="data.password">
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="Inbound.wildcard_sni != undefined">
+      <v-col cols="12" sm="6" lg="4" v-if="Inbound.wildcard_sni != undefined">
         <v-select label="Wildcard SNI" :items="['off', 'authed', 'all']" clearable v-model="Inbound.wildcard_sni"></v-select>
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
         :label="$t('types.shdwTls.hs')"
         hide-details
         v-model="Inbound.handshake.server">
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
         :label="$t('out.port')"
         type="number"
@@ -41,7 +41,7 @@
     </v-row>
     <Dial :dial="Inbound.handshake" />
     <v-row v-if="Inbound.handshake_for_server_name != undefined">
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
         :label="$t('types.shdwTls.addHS')"
         hide-details
@@ -63,7 +63,7 @@
       v-for="(value, key) in Inbound.handshake_for_server_name"
       border
       density="compact"
-      style="margin: 5px;"
+      class="ma-1"
       color="background">
       <v-card-title>
         <v-row>
@@ -74,14 +74,14 @@
         </v-row>
       </v-card-title>
       <v-row>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-text-field
           :label="$t('types.shdwTls.hs')"
           hide-details
           v-model="value.server">
           </v-text-field>
         </v-col>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-text-field
           :label="$t('out.port')"
           type="number"

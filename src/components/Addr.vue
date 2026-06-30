@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col cols="12" sm="6" md="4">
+    <v-col cols="12" sm="6" lg="4">
       <v-text-field
       :label="$t('out.addr')"
       hide-details
@@ -8,7 +8,7 @@
       v-model="addr.server">
       </v-text-field>
     </v-col>
-    <v-col cols="12" sm="6" md="4">
+    <v-col cols="12" sm="6" lg="4">
       <v-text-field
       :label="$t('out.port')"
       hide-details
@@ -16,7 +16,7 @@
       required
       v-model.number="addr.server_port"></v-text-field>
     </v-col>
-    <v-col cols="12" sm="6" md="4" v-if="optionRemark">
+    <v-col cols="12" sm="6" lg="4" v-if="optionRemark">
       <v-text-field
       :label="$t('in.remark')"
       hide-details

@@ -25,7 +25,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
           :label="$t('in.port')"
           hide-details
@@ -34,7 +34,7 @@
           v-model.number="data.listen_port">
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="data.udp_timeout != undefined">
+      <v-col cols="12" sm="6" lg="4" v-if="data.udp_timeout != undefined">
         <v-text-field
           label="UDP Timeout"
           hide-details
@@ -46,7 +46,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4" v-if="data.workers != undefined">
+      <v-col cols="12" sm="6" lg="4" v-if="data.workers != undefined">
         <v-text-field
         :label="$t('types.wg.worker')"
           hide-details
@@ -55,7 +55,7 @@
           v-model.number="data.workers">
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="data.mtu != undefined">
+      <v-col cols="12" sm="6" lg="4" v-if="data.mtu != undefined">
         <v-text-field
           label="MTU"
           hide-details
@@ -74,10 +74,10 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-switch v-model="data.system" color="primary" :label="$t('types.wg.sysIf')" hide-details></v-switch>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="data.system">
+      <v-col cols="12" sm="6" lg="4" v-if="data.system">
         <v-text-field
           :label="$t('types.wg.ifName')"
           hide-details
@@ -113,7 +113,7 @@
       <v-chip color="primary" density="compact" variant="elevated" @click="addPeer"><v-icon icon="mdi-plus" /></v-chip>
     </v-card-subtitle>
     <template v-for="(p, index) in data.peers">
-      <v-card style="margin-top: 1rem;">
+      <v-card class="mt-2 border" rounded="lg">
         <v-card-subtitle>
           {{ $t('types.wg.peer') + ' ' + (Number(index)+1) }} <v-icon color="error" icon="mdi-delete" @click="delPeer(Number(index))" />
         </v-card-subtitle>

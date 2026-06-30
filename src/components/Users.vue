@@ -1,10 +1,10 @@
 <template>
   <v-card :subtitle="$t('pages.clients')">
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-select v-model="data.model" :items="initUsersModels" @update:model-value="data.values = []" hide-details></v-select>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="data.model == 'group'">
+      <v-col cols="12" sm="6" lg="4" v-if="data.model == 'group'">
         <v-select v-model="data.values" multiple chips :items="groupNames" :label="$t('client.group')" hide-details></v-select>
       </v-col>
       <v-col cols="12" sm="8" v-if="data.model == 'client'">

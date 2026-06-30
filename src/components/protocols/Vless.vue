@@ -4,7 +4,7 @@
       <v-col cols="12" sm="6">
         <v-text-field v-model="data.uuid" label="UUID" hide-details></v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-select
           hide-details
           :label="$t('types.vless.flow')"
@@ -14,7 +14,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-select
           hide-details
           :label="$t('types.vless.udpEnc')"
@@ -22,7 +22,7 @@
           v-model="packet_encoding">
         </v-select>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <Network :data="data" />
       </v-col>
     </v-row>

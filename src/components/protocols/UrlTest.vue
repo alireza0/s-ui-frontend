@@ -18,7 +18,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4" v-if="optionInterval">
+      <v-col cols="12" sm="6" lg="4" v-if="optionInterval">
         <v-text-field
         :label="$t('types.lb.interval')"
         hide-details
@@ -27,7 +27,7 @@
         :suffix="$t('date.s')"
         v-model.number="interval"></v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="optionTolerance">
+      <v-col cols="12" sm="6" lg="4" v-if="optionTolerance">
         <v-text-field
         :label="$t('types.lb.tolerance')"
         hide-details
@@ -36,7 +36,7 @@
         :suffix="$t('date.ms')"
         v-model.number="tolerance"></v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="optionIdle">
+      <v-col cols="12" sm="6" lg="4" v-if="optionIdle">
         <v-text-field
         :label="$t('transport.idleTimeout')"
         hide-details

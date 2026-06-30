@@ -1,5 +1,5 @@
 <template>
-  <v-dialog transition="dialog-top-transition" width="800">
+  <v-dialog transition="dialog-top-transition" width="100%" max-width="900">
     <v-card class="rounded-lg">
       <v-card-title>
         <v-row>
@@ -14,7 +14,7 @@
         </v-row>
       </v-card-title>
       <v-divider></v-divider>
-      <v-card-text style="padding: 0 16px; overflow-y: scroll;">
+      <v-card-text class="px-4 overflow-y-auto">
         <v-tabs v-model="tab" @update:modelValue="tabChanged">
           <v-tab value="json">JSON</v-tab>
           <v-tab value="file">{{ $t('rule.import.uploadFile') }}</v-tab>
@@ -81,7 +81,7 @@
             <v-checkbox v-model="applyFinal" :label="$t('rule.import.applyFinal')" hide-details density="compact" />
           </v-alert>
 
-          <span class="v-card-subtitle">
+          <span class="text-subtitle-2 text-medium-emphasis">
             {{ $t('pages.rules') }}
             <v-badge v-if="parsed.rules?.length > 0" color="success" :content="parsed.rules?.length" inline />
           </span>
@@ -99,7 +99,7 @@
             </tbody>
           </v-table>
 
-          <span class="v-card-subtitle">
+          <span class="text-subtitle-2 text-medium-emphasis">
             {{ $t('rule.ruleset') }}
             <v-badge v-if="parsed.rule_set?.length > 0" color="success" :content="parsed.rule_set?.length" inline />
             <span v-if="skippedRulesets > 0">

@@ -1,5 +1,5 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" width="800">
+  <v-dialog transition="dialog-bottom-transition" width="100%" max-width="900">
     <v-card class="rounded-lg" :loading="loading">
       <v-card-title>
         {{ $t('actions.' + title) + " " + $t('objects.client') }}
@@ -11,8 +11,8 @@
           type="card, text, divider, list-item-two-line"
           v-if="loading"
         ></v-skeleton-loader>
-      <v-card-text style="padding: 0 16px; overflow-y: scroll;">
-        <v-container style="padding: 0;" :hidden="loading">
+      <v-card-text class="px-4" style="overflow-y: auto;">
+        <div :hidden="loading">
           <v-tabs
             v-model="tab"
             align-tabs="center"
@@ -24,49 +24,49 @@
           <v-window v-model="tab">
             <v-window-item value="t1">
               <v-row>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" lg="4">
                   <v-switch color="primary" v-model="client.enable" :label="$t('enable')" hide-details></v-switch>
                 </v-col>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" lg="4">
                   <v-combobox v-model="client.group" :items="groups" :label="$t('client.group')" hide-details></v-combobox>
                 </v-col>
               </v-row>
               <v-row>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" lg="4">
                   <v-text-field v-model="client.name" :label="$t('client.name')" hide-details></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" lg="4">
                   <v-text-field v-model="client.desc" :label="$t('client.desc')" hide-details></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" lg="4">
                   <v-text-field v-model="client.remark" :label="$t('client.remark')" hide-details></v-text-field>
                 </v-col>
               </v-row>
               <v-row>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" lg="4">
                   <v-text-field v-model.number="Volume" type="number" min="0" :label="$t('stats.volume')" suffix="GiB" hide-details></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="4" v-if="!(client.delayStart && !client.autoReset)">
+                <v-col cols="12" sm="6" lg="4" v-if="!(client.delayStart && !client.autoReset)">
                   <DatePick :expiry="expDate" @submit="setDate" />
                 </v-col>
-                <v-col cols="12" sm="6" md="4" v-if="client.autoReset || client.delayStart">
+                <v-col cols="12" sm="6" lg="4" v-if="client.autoReset || client.delayStart">
                   <v-text-field v-model.number="resetDays" type="number" min="1" :label="$t('client.resetDays')" hide-details></v-text-field>
                 </v-col>
               </v-row>
               <v-row>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" lg="4">
                   <v-switch color="primary"
                     :disabled="client.up+client.down>0"
                     v-model="delayStart"
                     :label="$t('client.delayStart')" hide-details>
                   </v-switch>
                 </v-col>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" lg="4">
                   <v-switch color="primary" v-model="autoReset" :label="$t('client.autoReset')" hide-details></v-switch>
                 </v-col>
               </v-row>
               <v-row v-if="id > 0">
-                <v-col cols="12" sm="6" md="4" class="d-flex flex-column">
+                <v-col cols="12" sm="6" lg="4" class="d-flex flex-column">
                   <div class="d-flex justify-space-between align-center">
                     <div>
                       {{ $t('stats.usage') }}: {{ total }}<sup dir="ltr" v-if="percent>0">({{ percent }}%)</sup>
@@ -86,18 +86,18 @@
                   >
                   </v-progress-linear>
                 </v-col>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" lg="4">
                   <v-icon icon="mdi-upload" color="warning" /><span class="text-warning">{{ up }}</span>
                   / 
                   <v-icon icon="mdi-download" color="success" /><span class="text-success">{{ down }}</span>
                 </v-col>
               </v-row>
               <v-row v-if="id >0 && client.autoReset">
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" lg="4">
                   <div class="text-medium-emphasis">{{ $t('client.nextReset') }}</div>
                   <div dir="ltr">{{ nextResetFormatted }}</div>
                 </v-col>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" lg="4">
                   <div class="text-medium-emphasis">{{ $t('main.stats.totalUsage') }}</div>
                   <div>
                     <v-icon icon="mdi-upload" color="warning" /><span class="text-warning">{{ totalUp }}</span>
@@ -125,7 +125,7 @@
             </v-window-item>
             <v-window-item value="t2">
               <v-row>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" lg="4">
                   <v-btn variant="tonal" @click="shuffle()">{{ $t('reset') + ' - ' + $t('all') }}<v-icon icon="mdi-refresh" /></v-btn>
                 </v-col>
               </v-row>
@@ -201,7 +201,7 @@
               </v-row>
             </v-window-item>
           </v-window>
-        </v-container>
+        </div>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>

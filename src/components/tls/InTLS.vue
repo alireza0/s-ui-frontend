@@ -1,7 +1,7 @@
 <template>
   <v-card :subtitle="$t('objects.tls')">
     <v-row>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-select
           hide-details
           :label="$t('template')"

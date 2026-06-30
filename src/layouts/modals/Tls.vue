@@ -1,5 +1,5 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" width="800">
+  <v-dialog transition="dialog-bottom-transition" width="100%" max-width="900">
     <v-card class="rounded-lg">
       <v-card-title class="d-flex align-center">
         {{ $t('actions.' + title) + " " + $t('objects.tls') }}
@@ -7,10 +7,10 @@
         <DocLink section="tls" />
       </v-card-title>
       <v-divider></v-divider>
-      <v-card-text style="padding: 0 16px; overflow-y: scroll;">
+      <v-card-text class="px-4 overflow-y-auto">
         <v-card class="rounded-lg">
           <v-row>
-            <v-col cols="12" sm="6" md="4">
+            <v-col cols="12" sm="6" lg="4">
               <v-text-field
                 :label="$t('client.name')"
                 hide-details
@@ -31,7 +31,7 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="12" sm="6" md="4" v-if="inTls.server_name != undefined">
+            <v-col cols="12" sm="6" lg="4" v-if="inTls.server_name != undefined">
               <v-text-field
                 label="SNI"
                 hide-details
@@ -39,7 +39,7 @@
               </v-text-field>
             </v-col>
             <template v-if="tlsType == 0">
-              <v-col cols="12" sm="6" md="4" v-if="inTls.min_version">
+              <v-col cols="12" sm="6" lg="4" v-if="inTls.min_version">
                 <v-select
                   hide-details
                   :label="$t('tls.minVer')"
@@ -47,7 +47,7 @@
                   v-model="inTls.min_version">
                 </v-select>
               </v-col>
-              <v-col cols="12" sm="6" md="4" v-if="inTls.max_version">
+              <v-col cols="12" sm="6" lg="4" v-if="inTls.max_version">
                 <v-select
                   hide-details
                   :label="$t('tls.maxVer')"
@@ -55,7 +55,7 @@
                   v-model="inTls.max_version">
                 </v-select>
               </v-col>
-              <v-col cols="12" sm="6" md="4" v-if="inTls.alpn">
+              <v-col cols="12" sm="6" lg="4" v-if="inTls.alpn">
                 <v-select
                   hide-details
                   label="ALPN"
@@ -140,24 +140,24 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="12" sm="6" md="4">
+              <v-col cols="12" sm="6" lg="4">
                 <v-switch color="primary" :label="$t('tls.disableSni')" v-model="disableSni" hide-details></v-switch>
               </v-col>
-              <v-col cols="12" sm="6" md="4">
+              <v-col cols="12" sm="6" lg="4">
                 <v-switch color="primary" :label="$t('tls.insecure')" v-model="insecure" hide-details></v-switch>
               </v-col>
             </v-row>
           </template>
           <template v-if="outTls.reality && inTls.reality">
             <v-row>
-              <v-col cols="12" sm="6" md="4">
+              <v-col cols="12" sm="6" lg="4">
                 <v-text-field
                 :label="$t('types.shdwTls.hs')"
                 hide-details
                 v-model="inTls.reality.handshake.server">
                 </v-text-field>
               </v-col>
-              <v-col cols="12" sm="6" md="4">
+              <v-col cols="12" sm="6" lg="4">
                 <v-text-field
                 :label="$t('out.port')"
                 type="number"
@@ -205,7 +205,7 @@
                   v-model="short_id">
                 </v-text-field>
               </v-col>
-              <v-col cols="12" sm="6" md="4" v-if="optionTime">
+              <v-col cols="12" sm="6" lg="4" v-if="optionTime">
                 <v-text-field
                 label="Max Time Diference"
                 type="number"
@@ -218,7 +218,7 @@
             </v-row>
           </template>
           <v-row v-if="optionStore || optionKtls">
-            <v-col cols="12" sm="6" md="4" v-if="optionStore">
+            <v-col cols="12" sm="6" lg="4" v-if="optionStore">
               <v-select
                 hide-details
                 :label="$t('tls.store')"
@@ -227,16 +227,16 @@
               </v-select>
             </v-col>
             <template v-if="optionKtls">
-              <v-col cols="12" sm="6" md="4">
+              <v-col cols="12" sm="6" lg="4">
                 <v-switch color="primary" :label="$t('tls.kernelTx')" v-model="inTls.kernel_tx" hide-details></v-switch>
               </v-col>
-              <v-col cols="12" sm="6" md="4">
+              <v-col cols="12" sm="6" lg="4">
                 <v-switch color="primary" :label="$t('tls.kernelRx')" v-model="inTls.kernel_rx" hide-details></v-switch>
               </v-col>
             </template>
           </v-row>
           <v-row v-if="outTls.utls != undefined">
-            <v-col cols="12" sm="6" md="4">
+            <v-col cols="12" sm="6" lg="4">
               <v-select
                 hide-details
                 label="Fingerprint"

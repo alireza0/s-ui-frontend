@@ -18,17 +18,34 @@ import { createVuetify } from 'vuetify'
 export default createVuetify({
   defaults: {
     VRow: { density: 'compact' },
+    VCard: {
+      elevation: 0,
+      rounded: 'lg',
+    },
     VTextField: {
-      variant: 'solo-filled',
+      variant: 'outlined',
+      density: 'comfortable',
     },
     VSelect: {
-      variant: 'solo-filled',
+      variant: 'outlined',
+      density: 'comfortable',
     },
     VCombobox: {
-      variant: 'solo-filled',
+      variant: 'outlined',
+      density: 'comfortable',
     },
     VTextarea: {
-      variant: 'solo-filled',
+      variant: 'outlined',
+      density: 'comfortable',
+    },
+    VSwitch: {
+      density: 'compact',
+      color: 'primary',
+      inset: true,
+      size: 'small',
+    },
+    VListItem: {
+      density: 'compact',
     },
   },
   theme: {

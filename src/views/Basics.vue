@@ -1,5 +1,5 @@
 <template>
-  <v-row style="margin-bottom: 10px;">
+  <v-row class="mb-2">
     <v-col cols="12" justify="center" align="center">
       <v-btn variant="outlined" color="warning" @click="saveConfig" :loading="loading" :disabled="stateChange">
         {{ $t('actions.save') }}
@@ -91,7 +91,7 @@
       </v-expansion-panel-title>
       <v-expansion-panel-text>
         <v-row>
-          <v-col class="v-card-subtitle">Cache File <DocLink :href="CACHE_FILE_DOC" /></v-col>
+          <v-col class="text-subtitle-2 text-medium-emphasis mt-2">Cache File <DocLink :href="CACHE_FILE_DOC" /></v-col>
         </v-row>
         <v-row>
           <v-col cols="12" sm="6" md="3" lg="2">
@@ -119,7 +119,7 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col class="v-card-subtitle">Clash API <DocLink :href="CLASH_API_DOC" /></v-col>
+          <v-col class="text-subtitle-2 text-medium-emphasis mt-2">Clash API <DocLink :href="CLASH_API_DOC" /></v-col>
         </v-row>
         <v-row>
           <v-col cols="12" sm="6" md="3" lg="2">
@@ -188,7 +188,7 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col class="v-card-subtitle">V2Ray API <DocLink :href="V2RAY_API_DOC" /></v-col>
+          <v-col class="text-subtitle-2 text-medium-emphasis mt-2">V2Ray API <DocLink :href="V2RAY_API_DOC" /></v-col>
         </v-row>
         <v-row>
           <v-col cols="12" sm="6" md="3" lg="2">

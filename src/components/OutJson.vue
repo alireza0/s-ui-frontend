@@ -1,7 +1,7 @@
 <template>
   <v-card :subtitle="$t('pages.basics')">
     <v-row>
-      <v-col cols="12" sm="6" md="4" v-if="type == inTypes.SOCKS">
+      <v-col cols="12" sm="6" lg="4" v-if="type == inTypes.SOCKS">
         <v-select
           hide-details
           :items="['4','4a','5']"
@@ -9,20 +9,20 @@
           v-model="inData.out_json.version">
         </v-select>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="needNetwork">
+      <v-col cols="12" sm="6" lg="4" v-if="needNetwork">
         <Network :data="inData.out_json" />
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="needUot">
+      <v-col cols="12" sm="6" lg="4" v-if="needUot">
         <UoT :data="inData.out_json" />
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="type == inTypes.HTTP">
+      <v-col cols="12" sm="6" lg="4" v-if="type == inTypes.HTTP">
         <v-text-field
         :label="$t('transport.path')"
         hide-details
         v-model="inData.out_json.path">
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="type == inTypes.VMess || type == inTypes.VLESS">
+      <v-col cols="12" sm="6" lg="4" v-if="type == inTypes.VMess || type == inTypes.VLESS">
         <v-select
           hide-details
           :label="$t('types.vless.udpEnc')"
@@ -31,7 +31,7 @@
         </v-select>
       </v-col>
       <template v-if="type == inTypes.VMess">
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-select
             hide-details
             :label="$t('types.vmess.security')"
@@ -39,14 +39,14 @@
             v-model="inData.out_json.security">
           </v-select>
         </v-col>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-switch v-model="inData.out_json.global_padding" color="primary" :label="$t('types.vmess.globalPadding')" hide-details></v-switch>
         </v-col>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-switch v-model="inData.out_json.authenticated_length" color="primary" :label="$t('types.vmess.authLen')" hide-details></v-switch>
         </v-col>
       </template>
-      <v-col cols="12" sm="6" md="4" v-if="type == inTypes.Hysteria">
+      <v-col cols="12" sm="6" lg="4" v-if="type == inTypes.Hysteria">
         <v-text-field
         label="Recv window"
         hide-details
@@ -56,7 +56,7 @@
         </v-text-field>
       </v-col>
       <template v-if="type == inTypes.TUIC">
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-select
             hide-details
             label="UDP Relay Mode"
@@ -66,7 +66,7 @@
             v-model="inData.out_json.udp_relay_mode">
           </v-select>
         </v-col>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" lg="4">
           <v-switch color="primary" label="UDP Over Stream" v-model="inData.out_json.udp_over_stream" hide-details></v-switch>
         </v-col>
       </template>
@@ -78,7 +78,7 @@
           v-model="server_ports">
         </v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col cols="12" sm="6" lg="4">
         <v-text-field
           :label="$t('ruleset.interval')"
           type="number"
