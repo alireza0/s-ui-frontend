@@ -147,12 +147,13 @@
                     v-model="clientConfig[key].uuid"
                     hide-details>
                   </v-text-field>
-                  <v-text-field
+                  <v-select
                     v-if="key == 'vless'"
-                    label="Flow"
+                    :label="$t('types.vless.flow')"
+                    :items="['','xtls-rprx-vision']"
                     v-model="clientConfig[key].flow"
                     hide-details>
-                  </v-text-field>
+                  </v-select>
                   <v-text-field
                     v-if="key == 'hysteria'"
                     label="Auth"
