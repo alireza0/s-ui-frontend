@@ -36,6 +36,14 @@
         </v-text-field>
       </v-col>
     </v-row>
+    <v-row v-if="direction == 'out'">
+      <v-col cols="12" sm="6" md="4">
+        <v-text-field label="Plugin" hide-details v-model="data.plugin" clearable></v-text-field>
+      </v-col>
+      <v-col cols="12" sm="8" v-if="data.plugin">
+        <v-text-field label="Plugin Options" hide-details v-model="data.plugin_opts"></v-text-field>
+      </v-col>
+    </v-row>
   </v-card>
 </template>
 

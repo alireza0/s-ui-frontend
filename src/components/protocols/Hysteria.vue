@@ -45,6 +45,23 @@
         <v-switch v-model="data.disable_mtu_discovery" color="primary" label="Disable MTU discovery" hide-details></v-switch>
       </v-col>
     </v-row>
+    <v-row v-if="direction=='out'">
+      <v-col cols="12" sm="8" v-if="optionMPort">
+        <v-text-field
+          :label="$t('rule.portRange') + ' ' + $t('commaSeparated')"
+          v-model="server_ports">
+        </v-text-field>
+      </v-col>
+      <v-col cols="12" sm="6" md="4" v-if="optionMPort">
+        <v-text-field
+          label="Hop interval"
+          type="number"
+          min="0"
+          :suffix="$t('date.s')"
+          v-model.number="hop_interval">
+        </v-text-field>
+      </v-col>
+    </v-row>
     <v-row>
       <v-col cols="12" sm="6" md="4" v-if="data.recv_window_conn != undefined">
         <v-text-field
@@ -91,6 +108,9 @@
         </template>
         <v-card>
           <v-list>
+            <v-list-item v-if="direction=='out'">
+              <v-switch v-model="optionMPort" color="primary" :label="$t('rule.portRange')" hide-details></v-switch>
+            </v-list-item>
             <v-list-item>
               <v-switch v-model="optionRsvConn" color="primary" label="Recv window conn" hide-details></v-switch>
             </v-list-item>
@@ -124,6 +144,18 @@ export default {
     optionRsvConn: {
       get(): boolean { return this.$props.data.recv_window_conn != undefined },
       set(v:boolean) { this.$props.data.recv_window_conn = v ? 15728640 : undefined }
+    },
+    optionMPort: {
+      get(): boolean { return this.$props.data.server_ports != undefined },
+      set(v:boolean) { this.$props.data.server_ports = v ? [] : undefined }
+    },
+    server_ports: {
+      get() { return this.$props.data.server_ports?.join(',') ?? '' },
+      set(v:string) { this.$props.data.server_ports = v.length > 0 ? v.split(',').map((s:string) => s.trim()) : undefined }
+    },
+    hop_interval: {
+      get() { return this.$props.data.hop_interval ? parseInt(this.$props.data.hop_interval.replace('s','')) : 0 },
+      set(v:number) { this.$props.data.hop_interval = v > 0 ? v + 's' : undefined }
     },
     optionRsvWin: {
       get(): boolean { return this.$props.data.recv_window != undefined },

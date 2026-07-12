@@ -78,6 +78,8 @@ export interface Shadowsocks extends OutboundBasics, Dial {
     version?: number
   }
   multiplex?: oMultiplex
+  plugin?: string
+  plugin_opts?: string
 }
 
 export interface VMESS extends OutboundBasics, Dial {
@@ -121,6 +123,8 @@ export interface Naive extends OutboundBasics, Dial {
 export interface Hysteria extends OutboundBasics, Dial {
   server: string
   server_port: number
+  server_ports?: string[]
+  hop_interval?: string
   up_mbps: number
   down_mbps: number
   obfs?: string
