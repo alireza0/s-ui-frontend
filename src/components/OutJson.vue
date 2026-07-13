@@ -30,6 +30,9 @@
           v-model="packet_encoding">
         </v-select>
       </v-col>
+      <v-col cols="12" sm="6" md="4" v-if="type == inTypes.VLESS">
+        <v-switch v-model="inData.out_json.allow_flow" color="primary" :label="$t('types.vless.flow')" hide-details></v-switch>
+      </v-col>
       <template v-if="type == inTypes.VMess">
         <v-col cols="12" sm="6" md="4">
           <v-select
