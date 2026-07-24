@@ -623,6 +623,7 @@ export default {
     usage: "已用",
     enable: "启用统计",
     graphTitle: "流量图表",
+    autoRefresh: "自动刷新",
     from: "从",
     to: "至",
     B: "B",

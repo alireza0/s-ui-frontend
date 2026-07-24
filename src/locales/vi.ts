@@ -623,6 +623,7 @@ export default {
     usage: "Sử dụng",
     enable: "Kích hoạt thống kê",
     graphTitle: "Biểu đồ lưu lượng",
+    autoRefresh: "Tự động làm mới",
     from: "Từ",
     to: "Đến",
     B: "B",

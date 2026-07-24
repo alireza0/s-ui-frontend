@@ -7,7 +7,20 @@
             {{ $t('stats.graphTitle') }}
           </v-col>
           <v-spacer></v-spacer>
-          <v-col cols="auto"><v-icon icon="mdi-close" @click="$emit('close')"></v-icon></v-col>
+          <v-col cols="auto" class="d-flex align-center ga-3">
+            <v-switch
+              v-model="autoRefresh"
+              color="primary"
+              density="compact"
+              hide-details
+              style="flex: none"
+              :label="$t('stats.autoRefresh')"
+            ></v-switch>
+            <v-icon icon="mdi-refresh" :class="{ 'mdi-spin': loading }" @click="loadData">
+              <v-tooltip activator="parent" location="top">{{ $t('actions.update') }}</v-tooltip>
+            </v-icon>
+            <v-icon icon="mdi-close" @click="$emit('close')"></v-icon>
+          </v-col>
         </v-row>
       </v-card-title>
       <v-card-subtitle style="margin-top: -20px">
@@ -89,6 +102,7 @@ export default {
       loaded: false,
       alert: false,
       intervalId: <any>0,
+      autoRefresh: localStorage.getItem('statsAutoRefresh') === 'true',
       limit: 1,
       rangeStart: 0,
       rangeEnd: 0,
@@ -231,21 +245,29 @@ export default {
       }
       this.loading = false
     },
+    startAutoRefresh() {
+      if (!this.intervalId) {
+        this.intervalId = setInterval(() => { this.loadData() }, 10000)
+      }
+    },
+    stopAutoRefresh() {
+      if (this.intervalId) {
+        clearInterval(this.intervalId)
+        this.intervalId = 0
+      }
+    },
     selectPreset(v:number) {
       if (v === 0) {
-        // Custom range mode: default to the last 24h, stop the live refresh
+        // Custom range mode: default to the last 24h, never live-refresh
         if (!this.rangeStart || !this.rangeEnd) {
           const now = Math.floor(Date.now() / 1000)
           this.rangeEnd = now
           this.rangeStart = now - 86400
         }
-        if (this.intervalId) {
-          clearInterval(this.intervalId)
-          this.intervalId = 0
-        }
-      } else if (!this.intervalId) {
-        // Back to a preset: resume live mode
-        this.intervalId = setInterval(() => { this.loadData() }, 10000)
+        this.stopAutoRefresh()
+      } else if (this.autoRefresh) {
+        // Back to a preset: resume live mode only when the user opted in
+        this.startAutoRefresh()
       }
       this.loadData()
     },
@@ -274,9 +296,7 @@ export default {
         this.rangeStart = 0
         this.rangeEnd = 0
         this.loadData()
-        this.intervalId = setInterval(() => {
-          this.loadData()
-        }, 10000)
+        if (this.autoRefresh) this.startAutoRefresh()
       } else {
         this.loaded = false
         this.alert = false
@@ -285,10 +305,14 @@ export default {
           this.usage.datasets[0].data = []
           this.usage.datasets[1].data = []
         }
-        if (this.intervalId && this.intervalId != 0) {
-          clearInterval(this.intervalId)
-        }
+        this.stopAutoRefresh()
       }
+    },
+    autoRefresh(v) {
+      localStorage.setItem('statsAutoRefresh', v ? 'true' : 'false')
+      // Live refresh only makes sense on presets, not a fixed custom range
+      if (v && this.limit !== 0) this.startAutoRefresh()
+      else this.stopAutoRefresh()
     }
   }
 }

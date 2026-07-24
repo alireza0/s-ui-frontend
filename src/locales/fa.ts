@@ -623,6 +623,7 @@ export default {
     usage: "استفاده",
     enable: "فعال سازی گزارش ترافیک",
     graphTitle: "نمودار ترافیک",
+    autoRefresh: "به‌روزرسانی خودکار",
     from: "از",
     to: "تا",
     B: "ب",

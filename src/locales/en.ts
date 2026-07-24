@@ -625,6 +625,7 @@ export default {
     usage: "Usage",
     enable: "Enable Statistics",
     graphTitle: "Traffic Chart",
+    autoRefresh: "Auto Refresh",
     from: "From",
     to: "To",
     B: "B",

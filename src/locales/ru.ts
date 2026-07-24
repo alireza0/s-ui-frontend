@@ -623,6 +623,7 @@ export default {
     usage: "Использование",
     enable: "Включить статистику",
     graphTitle: "График трафика",
+    autoRefresh: "Автообновление",
     from: "С",
     to: "По",
     B: "Б",
