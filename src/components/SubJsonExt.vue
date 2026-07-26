@@ -11,8 +11,39 @@
     <v-row>
       <v-col cols="12" sm="6" md="3">
         <v-select
+          v-model="selectedDefaultRules"
+          :items="defaultRuleItems"
+          :label="$t('setting.defaultRules')"
+          multiple
+          chips
+          hide-details
+        ></v-select>
+      </v-col>
+      <v-col cols="12" sm="6" md="3" lg="2">
+        <v-select
+          v-model="routeFinal"
+          :items="[{ title: 'Proxy', value: 'proxy' }, { title: 'Direct', value: 'direct' }]"
+          :label="$t('setting.routeFinal')"
+          clearable
+          hide-details
+        ></v-select>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12" sm="6" md="3">
+        <v-select
+          v-model="ruleToProxy"
+          :items="geoOptions"
+          :label="$t('setting.toProxy')"
+          multiple
+          chips
+          hide-details
+        ></v-select>
+      </v-col>
+      <v-col cols="12" sm="6" md="3">
+        <v-select
           v-model="ruleToDirect"
-          :items="geoList"
+          :items="geoOptions"
           :label="$t('setting.toDirect')"
           multiple
           chips
@@ -22,7 +53,7 @@
       <v-col cols="12" sm="6" md="3">
         <v-select
           v-model="ruleToBlock"
-          :items="geoList"
+          :items="geoOptions"
           :label="$t('setting.toBlock')"
           multiple
           chips
@@ -73,7 +104,7 @@
       <v-col cols="12" sm="6" md="3">
         <v-select
           v-model="dnsToDirect"
-          :items="geositeList"
+          :items="geositeOptions"
           :label="$t('setting.toDirectDns')"
           multiple
           chips
@@ -144,9 +175,6 @@
             <v-list-item>
               <v-switch v-model="enableExp" color="primary" label="Experimental" hide-details></v-switch>
             </v-list-item>
-            <v-list-item>
-              <v-switch v-model="enableRules" color="primary" :label="$t('pages.rules')" hide-details></v-switch>
-            </v-list-item>
           </v-list>
         </v-card>
       </v-menu>
@@ -171,6 +199,11 @@ export default {
         { action: "sniff" },
         { clash_mode: "Direct", action: "route", outbound: "direct" },
         { clash_mode: "Global", action: "route", outbound: "proxy" },
+      ],
+      defaultRuleItems: [
+        { title: "Sniff", value: 0 },
+        { title: "Clash Direct", value: 1 },
+        { title: "Clash Global", value: 2 },
       ],
       defaultLog: {
         "level": "info",
@@ -270,6 +303,13 @@ export default {
         { title: "🇮🇷 Iran", value: "geosite-ir" },
         { title: "🇨🇳 China", value: "geosite-cn" },
         { title: "🇻🇳 Vietnam", value: "geosite-vn" },
+        { title: "Google", value: "geosite-google" },
+        { title: "Google Play", value: "geosite-google-play" },
+        { title: "YouTube", value: "geosite-youtube" },
+        { title: "Twitter/X", value: "geosite-twitter" },
+        { title: "Telegram", value: "geosite-telegram" },
+        { title: "Netflix", value: "geosite-netflix" },
+        { title: "OpenAI", value: "geosite-openai" },
       ],
       geoList: [
         { title: "Site-Private", value: "geoip-private" },
@@ -281,6 +321,17 @@ export default {
         { title: "🇨🇳 IP-China", value: "geoip-cn" },
         { title: "🇻🇳 Site-Vietnam", value: "geosite-vn" },
         { title: "🇻🇳 IP-Vietnam", value: "geoip-vn" },
+        { title: "Site-Google", value: "geosite-google" },
+        { title: "IP-Google", value: "geoip-google" },
+        { title: "Site-GooglePlay", value: "geosite-google-play" },
+        { title: "Site-YouTube", value: "geosite-youtube" },
+        { title: "Site-Twitter/X", value: "geosite-twitter" },
+        { title: "IP-Twitter/X", value: "geoip-twitter" },
+        { title: "Site-Telegram", value: "geosite-telegram" },
+        { title: "IP-Telegram", value: "geoip-telegram" },
+        { title: "Site-Netflix", value: "geosite-netflix" },
+        { title: "IP-Netflix", value: "geoip-netflix" },
+        { title: "Site-OpenAI", value: "geosite-openai" },
       ],
       geo: [
         {
@@ -344,6 +395,83 @@ export default {
           type: "remote",
           format: "binary",
           url: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/vn.srs",
+          download_detour: "direct"
+        },
+        {
+          tag: "geosite-google",
+          type: "remote",
+          format: "binary",
+          url: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/google.srs",
+          download_detour: "direct"
+        },
+        {
+          tag: "geoip-google",
+          type: "remote",
+          format: "binary",
+          url: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/google.srs",
+          download_detour: "direct"
+        },
+        {
+          tag: "geosite-google-play",
+          type: "remote",
+          format: "binary",
+          url: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/google-play.srs",
+          download_detour: "direct"
+        },
+        {
+          tag: "geosite-youtube",
+          type: "remote",
+          format: "binary",
+          url: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/youtube.srs",
+          download_detour: "direct"
+        },
+        {
+          tag: "geosite-twitter",
+          type: "remote",
+          format: "binary",
+          url: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/twitter.srs",
+          download_detour: "direct"
+        },
+        {
+          tag: "geoip-twitter",
+          type: "remote",
+          format: "binary",
+          url: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/twitter.srs",
+          download_detour: "direct"
+        },
+        {
+          tag: "geosite-telegram",
+          type: "remote",
+          format: "binary",
+          url: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/telegram.srs",
+          download_detour: "direct"
+        },
+        {
+          tag: "geoip-telegram",
+          type: "remote",
+          format: "binary",
+          url: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/telegram.srs",
+          download_detour: "direct"
+        },
+        {
+          tag: "geosite-netflix",
+          type: "remote",
+          format: "binary",
+          url: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/netflix.srs",
+          download_detour: "direct"
+        },
+        {
+          tag: "geoip-netflix",
+          type: "remote",
+          format: "binary",
+          url: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/netflix.srs",
+          download_detour: "direct"
+        },
+        {
+          tag: "geosite-openai",
+          type: "remote",
+          format: "binary",
+          url: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/openai.srs",
           download_detour: "direct"
         }
       ],
@@ -430,22 +558,52 @@ export default {
       set(v:boolean) { this.subJsonExt.inbounds[0].platform = v ? this.defaultInb[0].platform : undefined }
     },
     rules():any { return this.subJsonExt?.rules?? undefined },
-    enableRules: {
-      get(): boolean {
-        return Array.isArray(this.rules) && this.rules.some((r:any) => JSON.stringify(r) === JSON.stringify(this.defaultRules[2]))
+    selectedDefaultRules: {
+      get(): number[] {
+        return this.defaultRules
+          .map((d:any, i:number) => this.hasDefaultRule(d) ? i : -1)
+          .filter((i:number) => i >= 0)
       },
-      set(v:boolean) {
-        if (v) {
-          if (!Array.isArray(this.subJsonExt.rules)) this.subJsonExt.rules = []
-          this.defaultRules.forEach((d:any) => {
-            if (!this.subJsonExt.rules.some((r:any) => JSON.stringify(r) === JSON.stringify(d))) {
-              this.subJsonExt.rules.push(JSON.parse(JSON.stringify(d)))
-            }
-          })
-        } else if (Array.isArray(this.subJsonExt.rules)) {
-          this.subJsonExt.rules = this.subJsonExt.rules.filter((r:any) => !this.defaultRules.some((d:any) => JSON.stringify(d) === JSON.stringify(r)))
-          if (this.subJsonExt.rules.length === 0) delete this.subJsonExt.rules
+      set(v:number[]) {
+        this.defaultRules.forEach((d:any, i:number) => this.toggleDefaultRule(d, v.includes(i)))
+      }
+    },
+    customRuleSetTags() :string[] {
+      return (this.subJsonExt?.rule_set ?? [])
+        .filter((rs:any) => !this.geo.some((g:any) => g.tag == rs.tag))
+        .map((rs:any) => rs.tag)
+    },
+    geoOptions() :any[] {
+      return [...this.geoList, ...this.customRuleSetTags.map((t:string) => ({ title: t, value: t }))]
+    },
+    geositeOptions() :any[] {
+      return [...this.geositeList, ...this.customRuleSetTags.map((t:string) => ({ title: t, value: t }))]
+    },
+    routeFinal: {
+      get() :string { return this.subJsonExt?.final ?? "" },
+      set(v:string|null) {
+        if (v && v.length > 0) this.subJsonExt.final = v
+        else delete this.subJsonExt.final
+      }
+    },
+    ruleToProxy: {
+      get() :string[] {
+        const ruleIndex = this.rules?.findIndex((r:any) => r.outbound == "proxy" && Object.hasOwn(r,'rule_set'))
+        return ruleIndex >= 0 ? this.rules[ruleIndex].rule_set : []
+      },
+      set(v:string[]) {
+        const ruleIndex = this.rules?.findIndex((r:any) => r.outbound == "proxy" && Object.hasOwn(r,'rule_set'))
+        if (v.length>0) {
+          if (ruleIndex >= 0){
+            this.rules[ruleIndex].rule_set = v
+          } else {
+            if (this.rules == undefined) this.subJsonExt.rules = []
+            this.rules.push({ rule_set: v, action: "route", outbound: "proxy" })
+          }
+        } else {
+          if (ruleIndex != -1) this.rules.splice(ruleIndex,1)
         }
+        this.updateRuleSets()
       }
     },
     ruleToDirect: {
@@ -497,16 +655,47 @@ export default {
         this.subJsonExt = <any>{}
       }
     },
+    hasDefaultRule(rule:any): boolean {
+      return Array.isArray(this.rules) && this.rules.some((r:any) => JSON.stringify(r) === JSON.stringify(rule))
+    },
+    toggleDefaultRule(rule:any, v:boolean) {
+      if (v) {
+        if (!Array.isArray(this.subJsonExt.rules)) this.subJsonExt.rules = []
+        if (!this.subJsonExt.rules.some((r:any) => JSON.stringify(r) === JSON.stringify(rule))) {
+          this.subJsonExt.rules.push(JSON.parse(JSON.stringify(rule)))
+          this.normalizeRulesOrder()
+        }
+      } else if (Array.isArray(this.subJsonExt.rules)) {
+        this.subJsonExt.rules = this.subJsonExt.rules.filter((r:any) => JSON.stringify(r) !== JSON.stringify(rule))
+        if (this.subJsonExt.rules.length === 0) delete this.subJsonExt.rules
+      }
+    },
+    ruleWeight(r:any): number {
+      if (r.protocol == "dns") return 0
+      if (r.action == "sniff") return 1
+      if (r.clash_mode == "Direct") return 2
+      if (r.clash_mode == "Global") return 3
+      return 4
+    },
+    normalizeRulesOrder() {
+      if (Array.isArray(this.subJsonExt?.rules)) {
+        this.subJsonExt.rules.sort((a:any,b:any) => this.ruleWeight(a) - this.ruleWeight(b))
+      }
+    },
     updateRuleSets(){
       let tags = <string[]>[]
       if (this.dns?.rules?.length>0) this.dns.rules.forEach((r:any) => { if (r.rule_set) tags.push(...r.rule_set) })
       if (this.rules?.length>0) this.rules.forEach((r:any) => { if (r.rule_set) tags.push(...r.rule_set) })
-      if (tags.length>0){
-        this.subJsonExt.rule_set = this.geo.filter((g:any) => tags.includes(g.tag))
+      const custom = (this.subJsonExt?.rule_set ?? []).filter((rs:any) => !this.geo.some((g:any) => g.tag == rs.tag))
+      if (tags.length>0 || custom.length>0){
+        this.subJsonExt.rule_set = [
+          ...this.geo.filter((g:any) => tags.includes(g.tag)),
+          ...custom,
+        ]
       } else {
         delete this.subJsonExt.rule_set
       }
-      if (this.rules.length == 0) delete this.subJsonExt.rules
+      if (this.rules?.length == 0) delete this.subJsonExt.rules
     },
     openEditor() {
       this.enableEditor = true
