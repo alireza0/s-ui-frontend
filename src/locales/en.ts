@@ -123,6 +123,7 @@ export default {
     add: "Add",
     addbulk: "Add Bulk",
     editbulk: "Edit Bulk",
+    copyAllClients: "Copy All Clients",
     delbulk: "Delete Bulk",
     resetTraffic: "Reset All Traffic",
     new: "New",

@@ -156,7 +156,7 @@ export default {
       return <ShadowTLS>this.$props.data
     },
     server_port: {
-      get() { return this.Inbound.handshake.server_port ? this.Inbound.handshake.server_port : 443 },
+      get() { return this.Inbound.handshake.server_port =  !this.Inbound.handshake.server_port ? 443 : this.Inbound.handshake.server_port; }
       set(newValue: any) { this.Inbound.handshake.server_port = newValue.length == 0 || newValue == 0 ? 443 : parseInt(newValue) }
     },
   },
