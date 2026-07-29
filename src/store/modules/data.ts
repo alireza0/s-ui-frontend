@@ -20,6 +20,7 @@ const Data = defineStore('Data', {
     endpoints: <any[]>[],
     clients: <any>[],
     tlsConfigs: <any[]>[],
+    nodes: <any[]>[],
   }),
   actions: {
     async loadData() {
@@ -51,6 +52,7 @@ const Data = defineStore('Data', {
       if (Object.hasOwn(data, 'services')) this.services = data.services ?? []
       if (Object.hasOwn(data, 'endpoints')) this.endpoints = data.endpoints ?? []
       if (Object.hasOwn(data, 'tls')) this.tlsConfigs = data.tls ?? []
+      if (Object.hasOwn(data, 'nodes')) this.nodes = data.nodes ?? []
     },
     async loadInbounds(ids: number[]): Promise<Inbound[]> {
       const options = ids.length > 0 ? {id: ids.join(",")} : {}
@@ -138,6 +140,49 @@ const Data = defineStore('Data', {
         return true
       }
       return false
+    },
+    async loadNodes(): Promise<any[]> {
+      const msg = await HttpUtils.get('api/nodes')
+      if (msg.success) {
+        this.nodes = msg.obj ?? []
+        return this.nodes
+      }
+      return []
+    },
+    async saveNode(data: any): Promise<boolean> {
+      const msg = await HttpUtils.post('api/saveNode', { data: JSON.stringify(data) })
+      if (msg.success) {
+        push.success({
+          title: i18n.global.t('success'),
+          duration: 5000,
+          message: i18n.global.t('node.saved')
+        })
+        await this.loadNodes()
+      }
+      return msg.success
+    },
+    async deleteNode(id: number): Promise<boolean> {
+      const msg = await HttpUtils.post('api/deleteNode', { id: id })
+      if (msg.success) {
+        push.success({
+          title: i18n.global.t('success'),
+          duration: 5000,
+          message: i18n.global.t('node.deleted')
+        })
+        await this.loadNodes()
+      }
+      return msg.success
+    },
+    async testNode(data: any): Promise<any> {
+      const msg = await HttpUtils.post('api/testNode', { data: JSON.stringify(data) })
+      return msg
+    },
+    async setNodeEnable(id: number, enable: boolean): Promise<boolean> {
+      const msg = await HttpUtils.post('api/setNodeEnable', { id: id, enable: enable })
+      if (msg.success) {
+        await this.loadNodes()
+      }
+      return msg.success
     },
   }
 })
