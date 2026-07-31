@@ -123,7 +123,6 @@ export default {
     add: "Thêm",
     addbulk: "Thêm Hàng loạt",
     editbulk: "Chỉnh sửa hàng loạt",
-    copyAllClients: "Sao chép tất cả khách hàng",
     delbulk: "Xóa hàng loạt",
     resetTraffic: "Đặt lại toàn bộ lưu lượng",
     new: "Mới",

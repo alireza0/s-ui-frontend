@@ -123,7 +123,6 @@ export default {
     add: "添加",
     addbulk: "批量添加",
     editbulk: "批量编辑",
-    copyAllClients: "复制所有客户端",
     delbulk: "批量删除",
     resetTraffic: "重置所有流量",
     new: "新建",

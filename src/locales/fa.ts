@@ -123,7 +123,6 @@ export default {
     add: "ایجاد",
     addbulk: "ایجاد انبوه",
     editbulk: "ویرایش انبوه",
-    copyAllClients: "کپی همه کلاینت‌ها",
     delbulk: "حذف انبوه",
     resetTraffic: "ریست همه ترافیک‌ها",
     new: "جدید",
