@@ -492,6 +492,8 @@ export default {
   },
   ruleset: {
     add: "ایجاد مجموعه",
+    preset: "مجموعه‌های آماده",
+    routeTo: "مسیریابی به خروجی",
     format: "فرمت داده‌ها",
     interval: "بازه بروزرسانی‌ها",
     remote: "راه دور",

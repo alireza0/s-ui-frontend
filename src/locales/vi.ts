@@ -492,6 +492,8 @@ export default {
   },
   ruleset: {
     add: "Thêm Bộ quy tắc",
+    preset: "Bộ quy tắc có sẵn",
+    routeTo: "Định tuyến tới outbound",
     format: "Định dạng Dữ liệu",
     interval: "Khoảng cách Cập nhật",
     remote: "Xa",

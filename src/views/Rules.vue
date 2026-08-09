@@ -37,6 +37,14 @@
     @save="saveImportRulesets"
     @close="closeImportRulesets"
   />
+  <RulesetPreset
+    v-model="presetRulesetsModal.visible"
+    :visible="presetRulesetsModal.visible"
+    :outTags="outboundTags"
+    :rsTags="rulesetTags"
+    @save="savePresetRulesets"
+    @close="presetRulesetsModal.visible = false"
+  />
   <v-row>
     <v-col cols="12" justify="center" align="center">
       <v-btn color="primary" @click="showRuleModal(-1)" style="margin: 0 5px;">{{ $t('rule.add') }}</v-btn>
@@ -59,6 +67,12 @@
               <v-icon icon="mdi-download-multiple"></v-icon>
             </template>
             <v-list-item-title v-text="$t('rule.import.title')"></v-list-item-title>
+          </v-list-item>
+          <v-list-item link @click="presetRulesetsModal.visible = true; actionMenu = false">
+            <template v-slot:prepend>
+              <v-icon icon="mdi-star-box-multiple"></v-icon>
+            </template>
+            <v-list-item-title v-text="$t('ruleset.preset')"></v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -167,6 +181,7 @@ import { computed, ref, onBeforeMount } from 'vue'
 import RuleVue from '@/layouts/modals/Rule.vue'
 import RulesetVue from '@/layouts/modals/Ruleset.vue'
 import RulesetImport from '@/layouts/modals/RulesetImport.vue'
+import RulesetPreset from '@/layouts/modals/RulesetPreset.vue'
 import RuleImport from '@/layouts/modals/RuleImport.vue'
 import { Config } from '@/types/config'
 import { actionKeys, ruleset } from '@/types/rules'
@@ -315,5 +330,13 @@ function closeImportRulesets() {
 function saveImportRulesets(items: any[]) {
   rulesets.value.push(...items)
   importRulesetsModal.value.visible = false
+}
+
+const presetRulesetsModal = ref({ visible: false })
+
+function savePresetRulesets(items: any[], rule: any) {
+  rulesets.value.push(...items)
+  if (rule) rules.value.push(rule)
+  presetRulesetsModal.value.visible = false
 }
 </script>

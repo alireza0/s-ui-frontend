@@ -492,6 +492,8 @@ export default {
   },
   ruleset: {
     add: "Add Ruleset",
+    preset: "Preset Rulesets",
+    routeTo: "Route to Outbound",
     format: "Data Format",
     interval: "Update Intervals",
     remote: "Remote",

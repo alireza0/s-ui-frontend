@@ -492,6 +492,8 @@ export default {
   },
   ruleset: {
     add: "添加規則集",
+    preset: "預設規則集",
+    routeTo: "路由到出站",
     format: "數據格式",
     interval: "更新間隔",
     remote: "遠端",
