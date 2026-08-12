@@ -43,6 +43,17 @@
             <DatePick :expiry="rangeEnd" :label="$t('stats.to')" inputId="statsTo" @submit="setRangeEnd" />
           </v-col>
         </v-row>
+        <v-row dense justify="center" class="mt-1" v-if="loaded && !loading">
+          <v-col cols="auto">
+            <v-chip size="small" color="warning" label>{{ $t('stats.upload') }}: {{ fmt(totalUp) }}</v-chip>
+          </v-col>
+          <v-col cols="auto">
+            <v-chip size="small" color="success" label>{{ $t('stats.download') }}: {{ fmt(totalDown) }}</v-chip>
+          </v-col>
+          <v-col cols="auto">
+            <v-chip size="small" color="primary" label>{{ $t('main.stats.totalUsage') }}: {{ fmt(totalUp + totalDown) }}</v-chip>
+          </v-col>
+        </v-row>
         <v-container id="container" style="height: 400px;">
           <v-skeleton-loader
             class="mx-auto border"
@@ -103,6 +114,9 @@ export default {
       alert: false,
       intervalId: <any>0,
       autoRefresh: localStorage.getItem('statsAutoRefresh') === 'true',
+      // Sum of the loaded window, shown as chips above the chart (#1219)
+      totalUp: 0,
+      totalDown: 0,
       limit: 1,
       rangeStart: 0,
       rangeEnd: 0,
@@ -207,6 +221,8 @@ export default {
         const labels = <string[]>[]
         const uplinkData = <(number|null)[]>[]
         const downlinkData = <(number|null)[]>[]
+        this.totalUp = 0
+        this.totalDown = 0
         for (let i = 0; i<count; i++) {
           const step = startTime + (i*bucketSpan)
           labels.push(this.genLable(step*1000,l,span))
@@ -216,6 +232,8 @@ export default {
           } else {
             uplinkData.push(stats[i][0])
             downlinkData.push(stats[i][1])
+            this.totalUp += stats[i][0] ?? 0
+            this.totalDown += stats[i][1] ?? 0
           }
         }
         this.usage = {
@@ -278,6 +296,9 @@ export default {
     setRangeEnd(v:number) {
       this.rangeEnd = v
       this.loadData()
+    },
+    fmt(v: number) {
+      return HumanReadable.sizeFormat(v)
     },
     genLable(step:number, locale: string, limit: number) {
       return new Date(step).toLocaleString(locale,{
