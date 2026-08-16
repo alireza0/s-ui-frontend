@@ -52,6 +52,7 @@ interface InboundBasics extends Listen {
   type: InType
   tag: string
   tls_id: number
+  node_id?: number
   addrs?: Addr[]
   out_json?: any
 }

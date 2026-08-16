@@ -28,6 +28,16 @@
             <v-col cols="12" sm="6" md="4">
               <v-text-field v-model="inbound.tag" :label="$t('objects.tag')" hide-details></v-text-field>
             </v-col>
+            <v-col cols="12" sm="6" md="4">
+              <v-select
+                hide-details
+                :label="$t('node.title')"
+                :items="nodeOptions"
+                item-title="title"
+                item-value="value"
+                v-model="inbound.node_id">
+              </v-select>
+            </v-col>
           </v-row>
           <v-tabs
             v-if="HasInData.includes(inbound.type)"
@@ -211,7 +221,7 @@ export default {
       // Tag change only in add inbound
       const tag = this.$props.id > 0 ? this.inbound.tag : this.inbound.type + "-" + this.inbound.listen_port
       // Use previous data
-      const prevConfig = { id: this.inbound.id, tag: tag, listen: this.inbound.listen?? "::", listen_port: this.inbound.listen_port }
+      const prevConfig = { id: this.inbound.id, tag: tag, listen: this.inbound.listen?? "::", listen_port: this.inbound.listen_port, node_id: this.inbound.node_id }
       this.inbound = createInbound(this.inbound.type, this.inbound.type != this.inTypes.Tun ? prevConfig : { tag: tag })
       if (this.HasInData.includes(this.inbound.type)){
         this.inbound.addrs = []
@@ -265,6 +275,14 @@ export default {
     },
     clients() {
       return Data().clients?? []
+    },
+    nodeOptions() {
+      const list = [{ title: "Local (Master)", value: 0 }]
+      const nodes = Data().nodes || []
+      nodes.forEach((n: any) => {
+        list.push({ title: `${n.name} (${n.address})`, value: n.id })
+      })
+      return list
     },
     hasUser() {
       if (this.$props.id > 0) return false
