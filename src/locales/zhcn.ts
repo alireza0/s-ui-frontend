@@ -209,6 +209,7 @@ export default {
     tun: "Tun 入站",
     clashNoDefGrp: "禁用默认分组",
     clashSprtAll: "支持 'all'",
+    clashUdp: "默认启用 UDP",
   },
   client: {
     name: "名称",

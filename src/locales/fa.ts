@@ -209,6 +209,7 @@ export default {
     tun: "ورودی TUN",
     clashNoDefGrp: "غیرفعال‌سازی گروه‌های پیش‌فرض",
     clashSprtAll: "پشتیبانی از 'all'",
+    clashUdp: "فعال‌سازی پیش‌فرض UDP",
   },
   client: {
     name: "نام",

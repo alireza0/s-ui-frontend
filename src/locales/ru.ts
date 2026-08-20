@@ -209,6 +209,7 @@ export default {
     tun: "Tun инбоунд",
     clashNoDefGrp: "Отключить группы по умолчанию",
     clashSprtAll: "Поддержка 'all'",
+    clashUdp: "Включить UDP по умолчанию",
   },
   client: {
     name: "Имя",

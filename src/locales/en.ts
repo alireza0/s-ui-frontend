@@ -209,6 +209,7 @@ export default {
     tun: "Tun Inbound",
     clashNoDefGrp: "Disable Default Groups",
     clashSprtAll: "Support 'all'",
+    clashUdp: "Enable UDP by default",
   },
   client: {
     name: "Name",

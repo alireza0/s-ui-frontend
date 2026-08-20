@@ -209,6 +209,7 @@ export default {
     tun: "Tun đăng ký",
     clashNoDefGrp: "Tắt nhóm mặc định",
     clashSprtAll: "Hỗ trợ 'all'",
+    clashUdp: "Bật UDP theo mặc định",
   },
   client: {
     name: "Tên",

@@ -52,6 +52,9 @@
       <v-col cols="12" sm="6" md="3" lg="2">
         <v-switch color="primary" v-model="subClashSprtAll" :label="$t('setting.clashSprtAll')" hide-details />
       </v-col>
+      <v-col cols="12" sm="6" md="3" lg="2">
+        <v-switch color="primary" v-model="subClashUdp" :label="$t('setting.clashUdp')" hide-details />
+      </v-col>
     </v-row>
     <v-card-actions>
       <v-spacer></v-spacer>
@@ -257,6 +260,10 @@ export default {
     subClashSprtAll: {
       get() { return this.$props.settings.subClashSprtAll == "true" },
       set(v:boolean) { this.$props.settings.subClashSprtAll = v ? "true" : "false" }
+    },
+    subClashUdp: {
+      get() { return this.$props.settings.subClashUdp == "true" },
+      set(v:boolean) { this.$props.settings.subClashUdp = v ? "true" : "false" }
     }
   },
   components: { Editor }
