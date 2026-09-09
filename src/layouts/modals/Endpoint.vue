@@ -32,9 +32,11 @@
           @refreshPeerKey="refreshWgPeerKey" />
         <Warp v-if="endpoint.type == epTypes.Warp && endpoint.ext" :data="endpoint" />
         <TailscaleVue v-if="endpoint.type == epTypes.Tailscale" :data="endpoint" />
-        <EndpointTls v-if="HasTls.includes(endpoint.type)" :endpoint="endpoint" :tlsConfigs="tlsConfigs" />
         <OpenConnect v-if="endpoint.type == epTypes.OpenConnect" :data="endpoint" />
+        <OpenConnectTls v-if="endpoint.type == epTypes.OpenConnect" :data="endpoint" />
         <OpenVpn v-if="isOpenVpn" :data="endpoint" />
+        <!-- static_key mode has no TLS session to configure. -->
+        <OpenVpnTls v-if="isOpenVpn && endpoint.mode == 'tls'" :data="endpoint" />
         <Dial v-if="!NoDial.includes(endpoint.type)" :dial="endpoint" />
       </v-card-text>
       <v-card-actions>
@@ -69,13 +71,14 @@ import Warp from '@/components/protocols/Warp.vue'
 import TailscaleVue from '@/components/protocols/Tailscale.vue'
 import OpenConnect from '@/components/protocols/OpenConnect.vue'
 import OpenVpn from '@/components/protocols/OpenVpn.vue'
-import EndpointTls from '@/components/tls/EndpointTls.vue'
+import OpenVpnTls from '@/components/tls/OpenVpnTls.vue'
+import OpenConnectTls from '@/components/tls/OpenConnectTls.vue'
 import HttpUtils from '@/plugins/httputil'
 import { push } from 'notivue'
 import { i18n } from '@/locales'
 import Data from '@/store/modules/data'
 export default {
-  props: ['visible', 'data', 'id', 'tags', 'tlsConfigs'],
+  props: ['visible', 'data', 'id', 'tags'],
   emits: ['close'],
   data() {
     return {
@@ -84,8 +87,6 @@ export default {
       tab: "t1",
       loading: false,
       epTypes: EpTypes,
-      // Endpoints that terminate or present TLS can reuse a panel TLS config.
-      HasTls: [EpTypes.OpenConnect, EpTypes.OpenVPNClient, EpTypes.OpenVPNServer],
       // openvpn-server listens rather than dials, so it takes no dialer options.
       NoDial: [EpTypes.OpenVPNServer],
     }
@@ -109,9 +110,7 @@ export default {
       // Tag change only in add endpoint
       const tag = this.endpoint.type + "-" + RandomUtil.randomSeq(3)
       
-      // Use previous data. Carry the selected TLS config across only while the
-      // new type can still use one.
-      const keepTls = this.HasTls.includes(this.endpoint.type) ? this.endpoint.tls_id : undefined
+      // Use previous data
       let prevConfig = {}
       switch (this.endpoint.type) {
         case EpTypes.Wireguard:
@@ -150,11 +149,23 @@ export default {
           break
       }
       this.endpoint = createEndpoint(this.endpoint.type, prevConfig)
-      if (keepTls != undefined) this.endpoint.tls_id = keepTls
     },
     closeModal() {
       this.updateData(0) // reset
       this.$emit('close')
+    },
+    // Drops empty strings, empty lists and objects left empty by the above,
+    // one nesting level down (control_wrap).
+    pruneEmpty(target: any) {
+      for (const [key, value] of Object.entries(target)) {
+        if (value != null && typeof value === 'object' && !Array.isArray(value)) {
+          this.pruneEmpty(value)
+        }
+        const isEmpty = value === '' || value == null ||
+          (Array.isArray(value) && value.length == 0) ||
+          (typeof value === 'object' && !Array.isArray(value) && Object.keys(<any>value).length == 0)
+        if (isEmpty) delete target[key]
+      }
     },
     async saveChanges() {
       if (!this.$props.visible) return
@@ -162,6 +173,15 @@ export default {
       // check duplicate tag
       const isDuplicatedTag = Data().checkTag("endpoint",this.endpoint.id, this.endpoint.tag)
       if (isDuplicatedTag) return
+
+      // A field the operator emptied has to leave as a missing key, not as "":
+      // sing-box reads an empty path as one it cannot open. An option switched
+      // on and then left alone drops out the same way, and a TLS form that ends
+      // up with nothing in it at all goes with it.
+      if (this.endpoint.tls) {
+        this.pruneEmpty(this.endpoint.tls)
+        if (Object.keys(this.endpoint.tls).length == 0) delete this.endpoint.tls
+      }
 
       // save data
       this.loading = true
@@ -254,6 +274,6 @@ export default {
       return [EpTypes.OpenVPNClient, EpTypes.OpenVPNServer].includes(this.endpoint.type)
     },
   },
-  components: { DocLink, Dial, Wireguard, Warp, TailscaleVue, OpenConnect, OpenVpn, EndpointTls }
+  components: { DocLink, Dial, Wireguard, Warp, TailscaleVue, OpenConnect, OpenConnectTls, OpenVpn, OpenVpnTls }
 }
 </script>

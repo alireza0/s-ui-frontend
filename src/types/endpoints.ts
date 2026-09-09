@@ -15,9 +15,6 @@ interface EndpointBasics {
   id: number
   type: EpType
   tag: string
-  // References a panel TLS config. Only the endpoint types that use TLS read
-  // it; the panel core projects it into the shape that type accepts.
-  tls_id?: number
 }
 
 export interface WgPeer {
@@ -68,9 +65,51 @@ export interface Tailscale extends EndpointBasics, Dial {
 // Anything not listed is preserved as-is when an endpoint is edited, so a
 // config written by hand keeps working.
 //
-// None of them carry a `tls` block: these protocols each define their own TLS
-// options, so the panel core projects the referenced TLS config (tls_id) into
-// the shape the endpoint accepts instead of the UI writing one.
+// Each of them defines its own TLS options rather than using sing-box's, down
+// to the field names, so they carry their own `tls` block instead of pointing
+// at a panel TLS config.
+export interface OpenConnectTls {
+  insecure?: boolean
+  server_name?: string
+  peer_fingerprint?: string[]
+  system_trust_disabled?: boolean
+  certificate_authority?: string[]
+  certificate_authority_path?: string
+  client_certificate?: string[]
+  client_certificate_path?: string
+  client_key?: string[]
+  client_key_path?: string
+  client_key_password?: string
+}
+
+// Named for what OpenVPN calls them, which is not what the other side calls
+// them: on a server `certificate` is its own and `client_certificate` is the CA
+// that signs clients, on a client it is the other way round.
+export interface OpenVpnTls {
+  certificate?: string[]
+  certificate_path?: string
+  key?: string[]
+  key_path?: string
+  client_certificate?: string[]
+  client_certificate_path?: string
+  client_key?: string[]
+  client_key_path?: string
+  verify_client_certificate?: 'require' | 'optional' | 'none'
+  server_name?: string
+  peer_fingerprint?: string[]
+  crl_path?: string
+  remote_certificate_tls?: 'server' | 'client' | 'none'
+  certificate_profile?: 'legacy' | 'preferred' | 'insecure' | 'suiteb'
+  version_min?: '1.0' | '1.1' | '1.2' | '1.3'
+  version_max?: '1.0' | '1.1' | '1.2' | '1.3'
+  control_wrap?: {
+    type?: 'tls_auth' | 'tls_crypt' | 'tls_crypt_v2'
+    key?: string[]
+    key_path?: string
+    direction?: 'server' | 'client'
+  }
+}
+
 export interface OpenConnect extends EndpointBasics, Dial {
   server: string
   flavor?: 'anyconnect' | 'gp' | 'fortinet' | 'f5' | 'pulse' | 'nc'
@@ -85,6 +124,7 @@ export interface OpenConnect extends EndpointBasics, Dial {
   udp_timeout?: string
   ipv6_disabled?: boolean
   allow_insecure_crypto?: boolean
+  tls?: OpenConnectTls
 }
 
 export interface OpenVPNClient extends EndpointBasics, Dial {
@@ -101,10 +141,14 @@ export interface OpenVPNClient extends EndpointBasics, Dial {
   name?: string
   system?: boolean
   mtu?: number
+  // static_key mode only; a TLS session negotiates out of data_ciphers instead.
   cipher?: string
+  data_ciphers?: string[]
+  data_ciphers_fallback?: string
   auth?: string
   static_key_path?: string
   key_direction?: 'server' | 'client'
+  tls?: OpenVpnTls
 }
 
 export interface OpenVPNServer extends EndpointBasics {
@@ -119,10 +163,14 @@ export interface OpenVPNServer extends EndpointBasics {
   name?: string
   system?: boolean
   mtu?: number
+  // static_key mode only; a TLS session negotiates out of data_ciphers instead.
   cipher?: string
+  data_ciphers?: string[]
+  data_ciphers_fallback?: string
   auth?: string
   static_key_path?: string
   key_direction?: 'server' | 'client'
+  tls?: OpenVpnTls
 }
 
 // Create interfaces dynamically based on EpTypes keys
@@ -141,9 +189,9 @@ const defaultValues: Record<EpType, Endpoint> = {
   wireguard: { type: EpTypes.Wireguard, address: ['10.0.0.2/32','fe80::2/128'], private_key: '', listen_port: 0, ext: { public_key: '', keys: [] } },
   warp: { type: EpTypes.Warp, address: [], private_key: '', listen_port: 0, mtu: 1420, peers: [{ address: '', port: 0, public_key: ''}], ext: {} },
   tailscale: { type: EpTypes.Tailscale, domain_resolver: 'local' },
-  openconnect: { type: EpTypes.OpenConnect, server: '', flavor: 'anyconnect', tls_id: 0 },
-  'openvpn-client': { type: EpTypes.OpenVPNClient, server: '', server_port: 1194, mode: 'tls', network: 'udp', tls_id: 0 },
-  'openvpn-server': { type: EpTypes.OpenVPNServer, mode: 'tls', network: 'udp', address: ['10.8.0.1/24'], tls_id: 0 },
+  openconnect: { type: EpTypes.OpenConnect, server: '', flavor: 'anyconnect' },
+  'openvpn-client': { type: EpTypes.OpenVPNClient, server: '', server_port: 1194, mode: 'tls', network: 'udp' },
+  'openvpn-server': { type: EpTypes.OpenVPNServer, mode: 'tls', network: 'udp', address: ['10.8.0.1/24'] },
 }
 
 export function createEndpoint<T extends Endpoint>(type: string,json?: Partial<T>): Endpoint {

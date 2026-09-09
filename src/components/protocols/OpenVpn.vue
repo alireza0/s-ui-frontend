@@ -149,15 +149,30 @@
       <v-col cols="12" sm="6" md="4">
         <v-text-field label="MTU" type="number" min="0" hide-details v-model.number="mtu"></v-text-field>
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <!-- The two modes negotiate the data cipher differently, and sing-box
+           rejects the option belonging to the other one: `cipher` names the
+           single fixed cipher a static_key tunnel uses, while a TLS session
+           negotiates one out of `data_ciphers`. -->
+      <v-col cols="12" sm="6" md="4" v-if="data.mode == 'static_key'">
         <v-text-field
           :label="$t('types.openvpn.cipher')"
           hide-details
           clearable
-          placeholder="AES-256-GCM"
+          placeholder="AES-256-CBC"
           @click:clear="delete data.cipher"
           v-model="data.cipher">
         </v-text-field>
+      </v-col>
+      <v-col cols="12" sm="6" md="4" v-else>
+        <v-combobox
+          :label="$t('types.openvpn.dataCiphers')"
+          hide-details
+          multiple
+          chips
+          closable-chips
+          placeholder="AES-256-GCM"
+          v-model="dataCiphers">
+        </v-combobox>
       </v-col>
       <v-col cols="12" sm="6" md="4">
         <v-text-field
@@ -167,6 +182,18 @@
           placeholder="SHA256"
           @click:clear="delete data.auth"
           v-model="data.auth">
+        </v-text-field>
+      </v-col>
+    </v-row>
+    <v-row v-if="data.mode != 'static_key'">
+      <v-col cols="12" sm="6" md="4">
+        <v-text-field
+          :label="$t('types.openvpn.dataCiphersFallback')"
+          hide-details
+          clearable
+          placeholder="AES-256-GCM"
+          @click:clear="delete data.data_ciphers_fallback"
+          v-model="data.data_ciphers_fallback">
         </v-text-field>
       </v-col>
     </v-row>
@@ -198,17 +225,30 @@ export default {
     }
   },
   computed: {
-    // static_key mode requires a cipher and it must be a CBC one: GCM relies on
-    // the TLS key exchange for IV uniqueness, so sing-box rejects it here.
+    // Each mode rejects the other's cipher options outright, so switching has
+    // to clear the ones that no longer apply. static_key additionally requires
+    // a CBC cipher: GCM relies on the TLS key exchange for IV uniqueness, so
+    // sing-box will not use it without a TLS session.
     mode: {
       get(): string { return this.$props.data.mode },
       set(v: string) {
         this.$props.data.mode = v
         if (v === 'static_key') {
+          delete this.$props.data.data_ciphers
+          delete this.$props.data.data_ciphers_fallback
           if (!this.$props.data.cipher || this.$props.data.cipher.includes('GCM')) {
             this.$props.data.cipher = 'AES-256-CBC'
           }
+        } else {
+          delete this.$props.data.cipher
         }
+      }
+    },
+    dataCiphers: {
+      get(): string[] { return this.$props.data.data_ciphers ?? [] },
+      set(v: string[]) {
+        if (v?.length) this.$props.data.data_ciphers = v
+        else delete this.$props.data.data_ciphers
       }
     },
     isServer(): boolean {
