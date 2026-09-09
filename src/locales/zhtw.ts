@@ -290,6 +290,7 @@ export default {
         certificateProfile: "憑證設定檔",
         controlWrap: "控制通道封裝",
         controlWrapKey: "控制通道金鑰",
+        controlWrapKeyHint: "這是 OpenVPN 靜態金鑰，不是憑證。在此產生後把同一份金鑰交給對端",
         controlWrapKeyPath: "控制通道金鑰路徑",
       },
     },

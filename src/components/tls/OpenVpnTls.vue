@@ -172,9 +172,26 @@
         <v-col cols="12">
           <v-textarea
             :label="$t('types.openvpn.tls.controlWrapKey')"
-            hide-details
+            :hint="$t('types.openvpn.tls.controlWrapKeyHint')"
+            persistent-hint
             v-model="controlWrapKeyText">
           </v-textarea>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-spacer></v-spacer>
+        <v-col cols="auto">
+          <v-btn
+            variant="tonal"
+            density="compact"
+            icon="mdi-key-star"
+            @click="genStaticKey"
+            :loading="loading">
+            <v-icon />
+            <v-tooltip activator="parent" location="top">
+              {{ $t('actions.generate') }}
+            </v-tooltip>
+          </v-btn>
         </v-col>
       </v-row>
     </template>
@@ -294,6 +311,8 @@ import { i18n } from '@/locales'
 // config.
 const pathFields = ['certificate_path', 'key_path', 'client_certificate_path', 'client_key_path']
 const textFields = ['certificate', 'key', 'client_certificate', 'client_key']
+
+const staticKeyBegin = '-----BEGIN OpenVPN Static key V1-----'
 
 // The keypair endpoint returns the private key and the certificate as one run
 // of lines, so each block is taken from its own BEGIN/END markers.
@@ -514,6 +533,23 @@ export default {
       this.usePath = 1
       this.tls.key = key
       this.tls.certificate = certificate
+    },
+    // tls-auth and tls-crypt take an OpenVPN static key, not a PEM. Both ends
+    // of the tunnel have to carry the same one, so the other side gets a copy
+    // of what this produces.
+    async genStaticKey() {
+      this.loading = true
+      const msg = await HttpUtils.get('api/keypairs', { k: 'openvpn' })
+      this.loading = false
+      if (!msg.success || msg.obj.length == 0 || msg.obj.indexOf(staticKeyBegin) == -1) {
+        push.error({ message: i18n.global.t('error') + ': ' + msg.obj })
+        return
+      }
+      // The generated key only exists here, so the form has to hold it as
+      // text; there is no file on disk to point at.
+      this.clearPaths()
+      this.usePath = 1
+      this.tls.control_wrap.key = msg.obj
     },
   },
 }

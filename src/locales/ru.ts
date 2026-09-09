@@ -290,6 +290,7 @@ export default {
         certificateProfile: "Профиль сертификата",
         controlWrap: "Обёртка управляющего канала",
         controlWrapKey: "Ключ управляющего канала",
+        controlWrapKeyHint: "Статический ключ OpenVPN, а не сертификат. Создайте его здесь и передайте тот же ключ другой стороне",
         controlWrapKeyPath: "Путь к ключу управляющего канала",
       },
     },

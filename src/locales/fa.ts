@@ -290,6 +290,7 @@ export default {
         certificateProfile: "پروفایل گواهی",
         controlWrap: "پوشش کانال کنترل",
         controlWrapKey: "کلید کانال کنترل",
+        controlWrapKeyHint: "یک static key از نوع OpenVPN است، نه گواهی. اینجا بسازید و همان کلید را به سمت مقابل بدهید",
         controlWrapKeyPath: "مسیر کلید کانال کنترل",
       },
     },

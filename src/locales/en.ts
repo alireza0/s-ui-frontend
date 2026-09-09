@@ -290,6 +290,7 @@ export default {
         certificateProfile: "Certificate Profile",
         controlWrap: "Control Channel Wrapping",
         controlWrapKey: "Control Channel Key",
+        controlWrapKeyHint: "An OpenVPN static key, not a certificate. Generate one here and give the same key to the other side",
         controlWrapKeyPath: "Control Channel Key Path",
       },
     },

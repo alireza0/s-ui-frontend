@@ -290,6 +290,7 @@ export default {
         certificateProfile: "Hồ sơ chứng chỉ",
         controlWrap: "Bọc kênh điều khiển",
         controlWrapKey: "Khoá kênh điều khiển",
+        controlWrapKeyHint: "Đây là khoá tĩnh OpenVPN, không phải chứng chỉ. Tạo tại đây và đưa cùng khoá đó cho phía bên kia",
         controlWrapKeyPath: "Đường dẫn khoá kênh điều khiển",
       },
     },
