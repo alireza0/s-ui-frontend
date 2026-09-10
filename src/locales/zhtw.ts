@@ -140,6 +140,8 @@ export default {
     close: "關閉",
     apply: "套用",
     restartApp: "重啟面板",
+    stopCore: "停止核心",
+    startCore: "啟動核心",
     restartSb: "重啟 Singbox",
   },
   login: {
@@ -171,6 +173,11 @@ export default {
     },
   },
   setting: {
+    maintenance: "維護中",
+    maintenanceOnHint: "核心已停止：在重新啟動之前用戶端無法連線",
+    maintenanceConfirm: "停止核心？所有用戶端都會斷線，並且在你重新啟動之前無法連線。",
+    maintenanceOn: "核心已停止",
+    maintenanceOff: "核心已啟動",
     interface: "界面",
     sub: "訂閱",
     addr: "地址",

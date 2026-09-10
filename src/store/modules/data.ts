@@ -12,6 +12,9 @@ const Data = defineStore('Data', {
     subURI: "",
     os: "",
     enableTraffic: false,
+    // The core is stopped on purpose. Polled with the rest so every page can
+    // say so, not just the one that turned it on.
+    maintenance: false,
     onlines: {inbound: <string[]>[], outbound: <string[]>[], user: <string[]>[]},
     config: <any>{},
     inbounds: <any[]>[],
@@ -26,6 +29,7 @@ const Data = defineStore('Data', {
       const msg = await HttpUtils.get('api/load', this.lastLoad >0 ? {lu: this.lastLoad} : {} )
       if(msg.success) {
         this.onlines = msg.obj.onlines
+        this.maintenance = msg.obj.maintenance ?? false
         if (msg.obj.lastLog) {
           push.error({
             title: i18n.global.t('error.core'),

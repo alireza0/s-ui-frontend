@@ -140,6 +140,8 @@ export default {
     close: "关闭",
     apply: "应用",
     restartApp: "重启面板",
+    stopCore: "停止内核",
+    startCore: "启动内核",
     restartSb: "重启 Singbox",
   },
   login: {
@@ -171,6 +173,11 @@ export default {
     },
   },
   setting: {
+    maintenance: "维护中",
+    maintenanceOnHint: "内核已停止：在重新启动之前客户端无法连接",
+    maintenanceConfirm: "停止内核？所有客户端都会断开，并且在你重新启动之前无法连接。",
+    maintenanceOn: "内核已停止",
+    maintenanceOff: "内核已启动",
     interface: "界面",
     sub: "订阅",
     addr: "地址",

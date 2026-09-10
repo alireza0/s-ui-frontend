@@ -140,6 +140,8 @@ export default {
     close: "Đóng",
     apply: "Áp dụng",
     restartApp: "Khởi động lại ứng dụng",
+    stopCore: "Dừng lõi",
+    startCore: "Chạy lõi",
     restartSb: "Khởi động lại Singbox",
   },
   login: {
@@ -171,6 +173,11 @@ export default {
     },
   },
   setting: {
+    maintenance: "Bảo trì",
+    maintenanceOnHint: "Lõi đang dừng: client không thể kết nối cho đến khi chạy lại",
+    maintenanceConfirm: "Dừng lõi? Mọi client sẽ bị ngắt và không thể kết nối lại cho đến khi bạn chạy lại.",
+    maintenanceOn: "Đã dừng lõi",
+    maintenanceOff: "Đã chạy lõi",
     interface: "Giao diện",
     sub: "Đăng ký",
     addr: "Địa chỉ",

@@ -130,6 +130,9 @@
                   <v-col cols="4">{{ $t('main.info.running') }}</v-col>
                   <v-col cols="8">
                     <v-chip density="compact" color="success" variant="flat" v-if="tilesData.sbd?.running">{{ $t('yes') }}</v-chip> 
+                    <!-- A core stopped on purpose reads the same as a crashed
+                         one here, and the operator has to be able to tell. -->
+                    <v-chip density="compact" color="warning" variant="flat" v-else-if="tilesData.sbd?.maintenance">{{ $t('setting.maintenance') }}</v-chip>
                     <v-chip density="compact" color="error" variant="flat" v-else>{{ $t('no') }}</v-chip>
                     <v-chip density="compact" color="transparent" v-if="tilesData.sbd?.running && !loading" style="cursor: pointer;" @click="restartSingbox()">
                       <v-tooltip activator="parent" location="top">

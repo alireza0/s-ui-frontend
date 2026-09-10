@@ -140,6 +140,8 @@ export default {
     close: "Close",
     apply: "Apply",
     restartApp: "Restart App",
+    stopCore: "Stop Core",
+    startCore: "Start Core",
     restartSb: "Restart Singbox",
   },
   login: {
@@ -171,6 +173,11 @@ export default {
     },
   },
   setting: {
+    maintenance: "Maintenance",
+    maintenanceOnHint: "The core is stopped: clients cannot connect until it is started again",
+    maintenanceConfirm: "Stop the core? Every client will be disconnected and cannot reconnect until you start it again.",
+    maintenanceOn: "Core stopped",
+    maintenanceOff: "Core started",
     interface: "Interface",
     sub: "Subscription",
     addr: "Address",

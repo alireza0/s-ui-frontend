@@ -3,6 +3,19 @@
     <v-icon v-if="isMobile" icon="mdi-menu" @click="$emit('toggleDrawer')" />
     <span v-else style="width: 24px"></span>
     <v-app-bar-title :text="$t(<string>route.name)" class="align-center text-center " />
+    <!-- A stopped core is invisible from the panel otherwise, and the flag
+         survives a reboot, so it has to be said on every page. -->
+    <v-chip
+      v-if="maintenance"
+      color="warning"
+      variant="flat"
+      density="comfortable"
+      prepend-icon="mdi-wrench"
+      class="mr-2"
+      v-tooltip="$t('setting.maintenanceOnHint')"
+    >
+      {{ $t('setting.maintenance') }}
+    </v-chip>
     <v-btn
       icon
       variant="text"
@@ -58,6 +71,8 @@ import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { languages } from '@/locales'
 import { useThemeSwitcher } from '@/composables/useThemeSwitcher'
+import { computed } from 'vue'
+import Data from '@/store/modules/data'
 
 defineProps(['isMobile'])
 
@@ -73,4 +88,5 @@ const changeLocale = (l: string) => {
   window.location.reload()
 }
 const isActiveLocale = (l: string) => i18nLocale.value === l
+const maintenance = computed((): boolean => Data().maintenance)
 </script>

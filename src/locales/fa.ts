@@ -140,6 +140,8 @@ export default {
     close: "بستن",
     apply: "اعمال",
     restartApp: "ریستارت پنل",
+    stopCore: "توقف هسته",
+    startCore: "اجرای هسته",
     restartSb: "ریستارت سینگ‌باکس",
   },
   login: {
@@ -171,6 +173,11 @@ export default {
     },
   },
   setting: {
+    maintenance: "حالت تعمیر",
+    maintenanceOnHint: "هسته متوقف است: تا وقتی دوباره اجرا نشود، کلاینت‌ها نمی‌توانند وصل شوند",
+    maintenanceConfirm: "هسته متوقف شود؟ همه‌ی کلاینت‌ها قطع می‌شوند و تا اجرای دوباره نمی‌توانند وصل شوند.",
+    maintenanceOn: "هسته متوقف شد",
+    maintenanceOff: "هسته اجرا شد",
     interface: "نما",
     sub: "سابسکریپشن",
     addr: "آدرس",

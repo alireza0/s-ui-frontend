@@ -23,7 +23,27 @@
           {{ $t('actions.restartApp') }}
         </v-btn>
       </v-col>
+      <!-- The core cannot be held down any other way: a plain stop is undone by
+           the watchdog within five seconds. -->
+      <v-col cols="auto">
+        <v-btn
+          variant="outlined"
+          :color="maintenance ? 'success' : 'error'"
+          @click="toggleMaintenance"
+          :loading="loading"
+          :disabled="stateChange">
+          {{ maintenance ? $t('actions.startCore') : $t('actions.stopCore') }}
+        </v-btn>
+      </v-col>
     </v-row>
+    <v-alert
+      v-if="maintenance"
+      type="warning"
+      variant="tonal"
+      density="compact"
+      class="mb-4"
+      :text="$t('setting.maintenanceOnHint')">
+    </v-alert>
     <v-window v-model="tab">
       <v-window-item value="t1">
         <v-row>
@@ -167,6 +187,7 @@ import { FindDiff } from '@/plugins/utils'
 import SubJsonExtVue from '@/components/SubJsonExt.vue'
 import SubClashExtVue from '@/components/SubClashExt.vue'
 import { push } from 'notivue'
+import Data from '@/store/modules/data'
 const tab = ref("t1")
 const loading:Ref = inject('loading')?? ref(false)
 const oldSettings = ref({})
@@ -231,6 +252,27 @@ const save = async () => {
       message: i18n.global.t('actions.set') + " " + i18n.global.t('pages.settings')
     })
     setData(msg.obj.settings)
+  }
+  loading.value = false
+}
+
+const maintenance = computed((): boolean => Data().maintenance)
+
+// Stopping the core is deliberate downtime for every user, so it is confirmed
+// rather than done on a single click.
+const toggleMaintenance = async () => {
+  const turningOn = !maintenance.value
+  if (turningOn && !confirm(i18n.global.t('setting.maintenanceConfirm'))) return
+
+  loading.value = true
+  const msg = await HttpUtils.post('api/maintenance', { enable: turningOn })
+  if (msg.success) {
+    Data().maintenance = turningOn
+    push.success({
+      title: i18n.global.t('success'),
+      duration: 5000,
+      message: i18n.global.t(turningOn ? 'setting.maintenanceOn' : 'setting.maintenanceOff')
+    })
   }
   loading.value = false
 }
