@@ -716,6 +716,9 @@ export default {
     kernelTx: "TX",
     kernelRx: "RX",
     queryServerName: "ECH Query Server Name",
+    handshakeTimeout: "Handshake Timeout",
+    spoof: "SNI Spoof",
+    spoofMethod: "Spoof Method",
     provider: {
       title: "Certificate Provider",
       none: "No certificate provider defined",

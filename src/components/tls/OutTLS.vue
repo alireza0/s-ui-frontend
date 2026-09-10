@@ -193,6 +193,38 @@
           </v-col>
         </v-row>
       </template>
+      <v-row v-if="tls.handshake_timeout != undefined">
+        <v-col cols="12" sm="6" md="4">
+          <v-text-field
+            :label="$t('tls.handshakeTimeout')"
+            type="number"
+            min="1"
+            :suffix="$t('date.s')"
+            hide-details
+            v-model.number="handshakeTimeout">
+          </v-text-field>
+        </v-col>
+      </v-row>
+      <!-- Refused by reality, so it is offered only for plain TLS. The forged
+           hostname has to differ from the SNI, which must be set. -->
+      <v-row v-if="tls.reality == undefined && tls.spoof != undefined">
+        <v-col cols="12" sm="6" md="4">
+          <v-text-field
+            :label="$t('tls.spoof')"
+            placeholder="allowed.example.com"
+            hide-details
+            v-model="spoof">
+          </v-text-field>
+        </v-col>
+        <v-col cols="12" sm="6" md="4" v-if="tls.spoof">
+          <v-select
+            hide-details
+            :label="$t('tls.spoofMethod')"
+            :items="spoofMethods"
+            v-model="tls.spoof_method">
+          </v-select>
+        </v-col>
+      </v-row>
       <v-row v-if="tls.fragment != undefined">
         <v-col cols="12" sm="6" md="4">
           <v-switch color="primary" :label="$t('tls.fragment')" v-model="tls.fragment" hide-details></v-switch>
@@ -250,6 +282,12 @@
               <v-list-item>
                 <v-switch v-model="optionFragment" color="primary" :label="$t('tls.fragment')" hide-details></v-switch>
               </v-list-item>
+              <v-list-item>
+                <v-switch v-model="optionHandshake" color="primary" :label="$t('tls.handshakeTimeout')" hide-details></v-switch>
+              </v-list-item>
+              <v-list-item v-if="tls.reality == undefined">
+                <v-switch v-model="optionSpoof" color="primary" :label="$t('tls.spoof')" hide-details></v-switch>
+              </v-list-item>
             </v-list>
           </v-card>
         </v-menu>
@@ -259,7 +297,7 @@
 
 <script lang="ts">
 import HttpUtils from '@/plugins/httputil';
-import { oTls, defaultOutTls } from '@/types/tls'
+import { oTls, defaultOutTls, spoofMethods } from '@/types/tls'
 export default {
   props: ['outbound'],
   data() {
@@ -274,6 +312,7 @@ export default {
         { title: "Http/1.1", value: 'http/1.1' },
       ],
       tlsVersions: [ '1.0', '1.1', '1.2', '1.3' ],
+      spoofMethods,
       cipher_suites: [
         { title: "RSA-AES128-CBC-SHA", value: "TLS_RSA_WITH_AES_128_CBC_SHA" },
         { title: "RSA-AES256-CBC-SHA", value: "TLS_RSA_WITH_AES_256_CBC_SHA" },
@@ -382,7 +421,49 @@ export default {
     },
     optionReality: {
       get(): boolean { return this.tls.reality != undefined },
-      set(v:boolean) { this.$props.outbound.tls.reality = v ? defaultOutTls.reality : undefined }
+      set(v:boolean) {
+        this.$props.outbound.tls.reality = v ? defaultOutTls.reality : undefined
+        // reality rejects a spoofed ClientHello, so the two cannot coexist.
+        if (v) this.optionSpoof = false
+      }
+    },
+    handshakeTimeout: {
+      get(): number { return parseInt(this.tls.handshake_timeout?.replace('s', '') ?? '15') || 15 },
+      set(v:number) { this.$props.outbound.tls.handshake_timeout = v > 0 ? `${v}s` : '15s' }
+    },
+    optionHandshake: {
+      get(): boolean { return this.tls.handshake_timeout != undefined },
+      set(v:boolean) {
+        if (v) {
+          this.$props.outbound.tls.handshake_timeout = '15s'
+        } else {
+          delete this.$props.outbound.tls.handshake_timeout
+        }
+      }
+    },
+    // sing-box refuses spoof_method on its own, so the method only exists
+    // while a forged hostname is given.
+    spoof: {
+      get(): string { return this.tls.spoof ?? '' },
+      set(v:string) {
+        this.$props.outbound.tls.spoof = v
+        if (v.length > 0) {
+          this.$props.outbound.tls.spoof_method = this.tls.spoof_method ?? 'wrong-sequence'
+        } else {
+          delete this.$props.outbound.tls.spoof_method
+        }
+      }
+    },
+    optionSpoof: {
+      get(): boolean { return this.tls.spoof != undefined },
+      set(v:boolean) {
+        if (v) {
+          this.$props.outbound.tls.spoof = ''
+        } else {
+          delete this.$props.outbound.tls.spoof
+          delete this.$props.outbound.tls.spoof_method
+        }
+      }
     },
     optionEch: {
       get(): boolean { return this.tls.ech != undefined },

@@ -705,6 +705,9 @@ export default {
     kernelTx: "TX",
     kernelRx: "RX",
     queryServerName: "Tên máy chủ truy vấn ECH",
+    handshakeTimeout: "Thời gian chờ bắt tay",
+    spoof: "Giả mạo SNI",
+    spoofMethod: "Phương thức giả mạo",
     provider: {
       title: "Nhà cung cấp chứng chỉ",
       none: "Chưa có nhà cung cấp chứng chỉ nào",

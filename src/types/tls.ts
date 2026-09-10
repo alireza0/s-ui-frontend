@@ -30,6 +30,7 @@ export interface iTls {
   store?: 'mozilla' | 'chrome'
   kernel_tx?: boolean
   kernel_rx?: boolean
+  handshake_timeout?: string
 }
 
 // Certificate providers issue and renew the certificates a TLS config serves.
@@ -153,6 +154,11 @@ export interface oTls {
   fragment?: boolean
   fragment_fallback_delay?: string
   record_fragment?: boolean
+  handshake_timeout?: string
+  // Sends a forged ClientHello carrying this SNI ahead of the real one, so an
+  // SNI filter sees a permitted hostname. Client only, and rejected by reality.
+  spoof?: string
+  spoof_method?: spoofMethod
   ech?: {
     enabled: boolean
     config?: string[]
@@ -169,6 +175,19 @@ export interface oTls {
     short_id: string
   }
 }
+
+export type spoofMethod = 'wrong-sequence' | 'wrong-checksum' | 'wrong-ack' | 'wrong-md5' | 'wrong-timestamp'
+
+// How the real server is made to drop the forged segment. sing-box falls back
+// to wrong-sequence when spoof_method is empty, and wrong-timestamp is not
+// supported on macOS.
+export const spoofMethods: { title: string, value: spoofMethod }[] = [
+  { title: "Wrong Sequence", value: 'wrong-sequence' },
+  { title: "Wrong Checksum", value: 'wrong-checksum' },
+  { title: "Wrong ACK", value: 'wrong-ack' },
+  { title: "Wrong MD5 Signature", value: 'wrong-md5' },
+  { title: "Wrong Timestamp", value: 'wrong-timestamp' },
+]
 
 export const defaultOutTls: oTls = {
   alpn: ['h3', 'h2', 'http/1.1'],

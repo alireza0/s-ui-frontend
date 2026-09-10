@@ -705,6 +705,9 @@ export default {
     kernelTx: "发送",
     kernelRx: "接收",
     queryServerName: "ECH 查询服务器名称",
+    handshakeTimeout: "握手超时",
+    spoof: "SNI 伪造",
+    spoofMethod: "伪造方式",
     provider: {
       title: "证书提供者",
       none: "尚未定义证书提供者",

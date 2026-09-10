@@ -705,6 +705,9 @@ export default {
     kernelTx: "發送",
     kernelRx: "接收",
     queryServerName: "ECH 查詢伺服器名稱",
+    handshakeTimeout: "握手逾時",
+    spoof: "SNI 偽造",
+    spoofMethod: "偽造方式",
     provider: {
       title: "憑證提供者",
       none: "尚未定義憑證提供者",

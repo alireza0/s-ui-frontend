@@ -233,6 +233,18 @@
               </v-col>
             </v-row>
           </template>
+          <v-row v-if="optionHandshake">
+            <v-col cols="12" sm="6" md="4">
+              <v-text-field
+                :label="$t('tls.handshakeTimeout')"
+                type="number"
+                min="1"
+                :suffix="$t('date.s')"
+                hide-details
+                v-model.number="handshakeTimeout">
+              </v-text-field>
+            </v-col>
+          </v-row>
           <v-row v-if="optionStore || optionKtls">
             <v-col cols="12" sm="6" md="4" v-if="optionStore">
               <v-select
@@ -372,6 +384,27 @@
               </v-select>
             </v-col>
           </v-row>
+          <!-- Client side only, and refused by reality, so it is offered for
+               plain TLS alone. The forged hostname has to differ from the SNI
+               above for sing-box to accept it. -->
+          <v-row v-if="tlsType == 0 && outTls.spoof != undefined">
+            <v-col cols="12" sm="6" md="4">
+              <v-text-field
+                hide-details
+                :label="$t('tls.spoof')"
+                placeholder="allowed.example.com"
+                v-model="spoof">
+              </v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6" md="4" v-if="outTls.spoof">
+              <v-select
+                hide-details
+                :label="$t('tls.spoofMethod')"
+                :items="spoofMethods"
+                v-model="outTls.spoof_method">
+              </v-select>
+            </v-col>
+          </v-row>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-menu v-model="menu" :close-on-content-click="false" location="start">
@@ -408,12 +441,18 @@
                     <v-list-item>
                       <v-switch v-model="optionKtls" color="primary" :label="$t('tls.ktls')" hide-details></v-switch>
                     </v-list-item>
+                    <v-list-item>
+                      <v-switch v-model="optionSpoof" color="primary" :label="$t('tls.spoof')" hide-details></v-switch>
+                    </v-list-item>
                   </template>
                   <template v-else>
                     <v-list-item>
                       <v-switch v-model="optionTime" color="primary" label="Max Time Difference" hide-details></v-switch>
                     </v-list-item>
                   </template>
+                  <v-list-item>
+                    <v-switch v-model="optionHandshake" color="primary" :label="$t('tls.handshakeTimeout')" hide-details></v-switch>
+                  </v-list-item>
                 </v-list>
               </v-card>
             </v-menu>
@@ -444,7 +483,7 @@
 </template>
 
 <script lang="ts">
-import { tls, iTls, defaultInTls, oTls, defaultOutTls } from '@/types/tls'
+import { tls, iTls, defaultInTls, oTls, defaultOutTls, spoofMethods } from '@/types/tls'
 import DocLink from '@/components/DocLink.vue'
 import EchVue from '@/components/tls/Ech.vue'
 import HttpUtils from '@/plugins/httputil'
@@ -499,6 +538,7 @@ export default {
         { title: "Verify If Given", value: "verify-if-given" },
         { title: "Require And Verify", value: "require-and-verify" },
       ],
+      spoofMethods,
       fingerprints: [
         { title: "Chrome", value: "chrome" },
         { title: "Firefox", value: "firefox" },
@@ -759,6 +799,36 @@ export default {
     optionFP: {
       get(): boolean { return this.outTls.utls != undefined },
       set(v:boolean) { this.outTls.utls = v ? defaultOutTls.utls : undefined }
+    },
+    // Written on the server side alone; out_json hands the same value to the
+    // client, as it does for the versions and cipher suites.
+    handshakeTimeout: {
+      get(): number { return parseInt(this.inTls.handshake_timeout?.replace('s', '') ?? '15') || 15 },
+      set(v: number) { this.inTls.handshake_timeout = v > 0 ? `${v}s` : '15s' }
+    },
+    optionHandshake: {
+      get(): boolean { return this.inTls.handshake_timeout != undefined },
+      set(v: boolean) { this.inTls.handshake_timeout = v ? '15s' : undefined }
+    },
+    // sing-box refuses spoof_method on its own, so the method only exists
+    // while a forged hostname is given.
+    spoof: {
+      get(): string { return this.outTls.spoof ?? '' },
+      set(v: string) {
+        this.outTls.spoof = v
+        this.outTls.spoof_method = v.length > 0 ? (this.outTls.spoof_method ?? 'wrong-sequence') : undefined
+      }
+    },
+    optionSpoof: {
+      get(): boolean { return this.outTls.spoof != undefined },
+      set(v: boolean) {
+        if (v) {
+          this.outTls.spoof = ''
+        } else {
+          this.outTls.spoof = undefined
+          this.outTls.spoof_method = undefined
+        }
+      }
     },
     optionStore: {
       get(): boolean { return this.inTls.store != undefined },

@@ -714,6 +714,9 @@ export default {
     kernelTx: "ارسال",
     kernelRx: "دریافت",
     queryServerName: "نام سرور ECH برای جستجو",
+    handshakeTimeout: "مهلت دست‌دادن",
+    spoof: "جعل SNI",
+    spoofMethod: "روش جعل",
     provider: {
       title: "صادرکننده گواهی",
       none: "هیچ صادرکننده‌ای تعریف نشده",

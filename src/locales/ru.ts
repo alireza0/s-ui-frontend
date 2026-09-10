@@ -714,6 +714,9 @@ export default {
     kernelTx: "TX",
     kernelRx: "RX",
     queryServerName: "ECH имя сервера для запроса",
+    handshakeTimeout: "Тайм-аут рукопожатия",
+    spoof: "Подмена SNI",
+    spoofMethod: "Метод подмены",
     provider: {
       title: "Поставщик сертификатов",
       none: "Поставщик сертификатов не задан",
