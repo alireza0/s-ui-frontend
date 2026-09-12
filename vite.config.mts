@@ -31,7 +31,7 @@ export default defineConfig({
   build: {
     manifest: false,
     outDir: 'dist',
-    chunkSizeWarningLimit: 2000,
+    chunkSizeWarningLimit: 2500,
     rollupOptions: {
       output: {
         codeSplitting: false,
