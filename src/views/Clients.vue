@@ -428,8 +428,12 @@ const doFilter = () => {
     filteredClients = filteredClients.filter(c => c.group == filterSettings.value.group)
   }
   if (filterSettings.value.text.length>0) {
-    const txt = filterSettings.value.text
-    filteredClients = filteredClients.filter(c => c.name.search(txt) != -1 || c.desc.search(txt) != -1)
+    // includes, not search: String.search compiles its argument as a regular
+    // expression, so typing "a.b" matched anything with a character between a
+    // and b, and an unbalanced "(" threw out of the filter entirely.
+    const txt = filterSettings.value.text.toLowerCase()
+    filteredClients = filteredClients.filter(c =>
+      (c.name ?? '').toLowerCase().includes(txt) || (c.desc ?? '').toLowerCase().includes(txt))
   }
   switch (filterSettings.value.state) {
     case "disable":

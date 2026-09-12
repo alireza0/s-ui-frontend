@@ -26,12 +26,12 @@
                 </v-row>
               </v-card-title>
               <v-divider></v-divider>
-              <v-row v-for="items in menuItems" density="compact">
+              <v-row v-for="(items, mi) in menuItems" :key="mi" density="compact">
                 <v-col cols="12">
                   <v-card :subtitle="items.title" variant="flat">
                     <v-card-text>
                       <v-row density="compact">
-                        <v-col cols="12" md="6" lg="3" v-for="item in items.value">
+                        <v-col cols="12" md="6" lg="3" v-for="item in items.value" :key="item.title ?? item">
                           <v-switch
                           density="compact"
                           v-model="reloadItems"
@@ -101,13 +101,13 @@
                   <v-col cols="9">
                     <v-chip density="compact" color="primary" variant="flat" v-if="tilesData.sys?.ipv4?.length>0">
                       <v-tooltip activator="parent" location="top" style="direction: ltr;">
-                        <span v-html="tilesData.sys?.ipv4?.join('<br />')"></span>
+                        <span style="white-space: pre-line">{{ (tilesData.sys?.ipv4 ?? []).join('\n') }}</span>
                       </v-tooltip>
                       IPv4
                     </v-chip>
                     <v-chip density="compact" color="primary" variant="flat" v-if="tilesData.sys?.ipv6?.length>0">
                       <v-tooltip activator="parent" location="top" style="direction: ltr;">
-                        <span v-html="tilesData.sys?.ipv6?.join('<br />')"></span>
+                        <span style="white-space: pre-line">{{ (tilesData.sys?.ipv6 ?? []).join('\n') }}</span>
                       </v-tooltip>
                       IPv6
                     </v-chip>
@@ -161,21 +161,21 @@
                       <v-chip density="compact" color="primary" variant="flat" v-if="Data().onlines.user">
                         <v-tooltip activator="parent" location="top" overflow="auto">
                           <span v-text="$t('pages.clients')" style="font-weight: bold;"></span><br/>
-                          <span v-for="user in Data().onlines.user">{{ user }}<br /></span>
+                          <span v-for="user in Data().onlines.user" :key="user">{{ user }}<br /></span>
                         </v-tooltip>
                         {{ Data().onlines.user?.length }}
                       </v-chip>
                       <v-chip density="compact" color="success" variant="flat" v-if="Data().onlines.inbound">
                         <v-tooltip activator="parent" location="top" :text="$t('pages.inbounds')">
                           <span v-text="$t('pages.inbounds')" style="font-weight: bold;"></span><br/>
-                          <span v-for="i in Data().onlines.inbound">{{ i }}<br /></span>
+                          <span v-for="i in Data().onlines.inbound" :key="i">{{ i }}<br /></span>
                         </v-tooltip>
                         {{ Data().onlines.inbound?.length }}
                       </v-chip>
                       <v-chip density="compact" color="info" variant="flat" v-if="Data().onlines.outbound">
                         <v-tooltip activator="parent" location="top" :text="$t('pages.outbounds')">
                           <span v-text="$t('pages.outbounds')" style="font-weight: bold;"></span><br/>
-                          <span v-for="o in Data().onlines.outbound">{{ o }}<br /></span>
+                          <span v-for="o in Data().onlines.outbound" :key="o">{{ o }}<br /></span>
                         </v-tooltip>
                         {{ Data().onlines.outbound?.length }}
                       </v-chip>

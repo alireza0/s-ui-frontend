@@ -7,7 +7,7 @@
         <v-icon icon="mdi-plus" />
         </v-chip>
       </v-card-subtitle>
-      <v-row v-for="(header, index) in hdrs">
+      <v-row v-for="(header, index) in hdrs" :key="index">
         <v-col cols="12" sm="6" md="4">
           <v-text-field
             :label="$t('objects.key')"

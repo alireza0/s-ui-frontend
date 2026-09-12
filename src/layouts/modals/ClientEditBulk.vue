@@ -145,7 +145,11 @@ export default {
     },
     async saveChanges() {
       this.loading = true
-      const targetClients = this.getTargetClients()
+      // Deep copies. getTargetClients returns the store's own objects, so the
+      // edits below were applied to the live list the moment they were typed:
+      // a cancelled dialog, or a save that failed, left the table showing
+      // values that were never written.
+      const targetClients: Client[] = JSON.parse(JSON.stringify(this.getTargetClients()))
       switch (this.actionMode) {
         case 'change_limits':
           targetClients.forEach((c: Client) => {

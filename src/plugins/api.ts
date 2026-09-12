@@ -1,12 +1,23 @@
 import axios from 'axios'
 
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
-axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
+// Everything below is configured on the instance this module exports. It used
+// to be set on the global axios default and the exported instance was created
+// separately, so both interceptors were dead code: no request was ever
+// de-duplicated and no response ever cleared the pending map.
+//
+// X-Requested-With matters beyond convention now -- the server treats it as
+// the marker that tells its own XHR apart from a cross-site form post.
+const api = axios.create({
+    baseURL: "./",
+    headers: {
+        common: { 'X-Requested-With': 'XMLHttpRequest' },
+        post: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+    },
+})
 
-axios.defaults.baseURL = "./"
 const pendingRequests = new Map()
 
-axios.interceptors.request.use(
+api.interceptors.request.use(
     (config) => {
         // Generate a unique key for the request
         const requestKey = `${config.method}:${config.url}`
@@ -32,7 +43,7 @@ axios.interceptors.request.use(
     (error) => Promise.reject(error),
 )
 
-axios.interceptors.response.use(
+api.interceptors.response.use(
     (response) => {
         // Remove the request from the pending requests map
         const requestKey = `${response.config.method}:${response.config.url}`
@@ -51,7 +62,5 @@ axios.interceptors.response.use(
         return Promise.reject(error)
     }
 )
-
-const api = axios.create()
 
 export default api

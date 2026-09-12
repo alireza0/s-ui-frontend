@@ -88,10 +88,14 @@
         >
           {{ $t('actions.close') }}
         </v-btn>
+        <!-- validate has been a computed property all along with no caller, so
+             an inbound with no tag or a port outside 1-65535 was saved and the
+             failure only surfaced when sing-box refused to start. -->
         <v-btn
           color="primary"
           variant="tonal"
           :loading="loading"
+          :disabled="!validate"
           @click="saveChanges"
         >
           {{ $t('actions.save') }}

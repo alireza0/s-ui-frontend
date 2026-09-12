@@ -2,6 +2,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '@/views/Login.vue'
 import Data from '@/store/modules/data'
+import { isAuthenticated } from '@/plugins/auth'
 
 const routes = [
   {
@@ -88,15 +89,14 @@ let intervalId:any
 
 // Navigation guard to check authentication state
 router.beforeEach((to) => {
-  // Check the session cookie
-  const sessionCookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('s-ui='))
-  const isAuthenticated = !!sessionCookie
+  // The session cookie is HttpOnly, so this is a flag the panel keeps itself.
+  const authenticated = isAuthenticated()
 
   // If the route requires authentication and the user is not authenticated, redirect to /login
-  if (to.meta.requiresAuth && !isAuthenticated) {
+  if (to.meta.requiresAuth && !authenticated) {
     return '/login'
   }
-  if (to.path === '/login' && isAuthenticated) {
+  if (to.path === '/login' && authenticated) {
     // If already authenticated and visiting /login, redirect to '/'
     return '/'
   }

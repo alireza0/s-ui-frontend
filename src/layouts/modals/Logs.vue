@@ -41,7 +41,13 @@
             </v-btn>
           </v-col>
         </v-row>
-        <v-card style="margin-top: .5rem;" color="background" dir="ltr" v-html="lines.join('<br />')"></v-card>
+        <!-- Text, not v-html. These are sing-box log lines, and they quote
+             values that come from whoever connected: a hostname, an SNI, a
+             URL. Rendering them as markup let anyone who could reach a proxy
+             port put script into the operator's browser. -->
+        <v-card style="margin-top: .5rem;" color="background" dir="ltr">
+          <pre class="log-lines">{{ lines.join('\n') }}</pre>
+        </v-card>
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -88,3 +94,14 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.log-lines {
+  margin: 0;
+  padding: .5rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: monospace;
+  font-size: .8rem;
+}
+</style>

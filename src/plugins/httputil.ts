@@ -2,6 +2,8 @@ import api from './api'
 import { i18n } from '@/locales'
 import router from '@/router'
 import { push } from 'notivue'
+import { clearAuthenticated } from './auth'
+import Data from '@/store/modules/data'
 
 export interface Msg {
   success: boolean
@@ -9,12 +11,19 @@ export interface Msg {
   obj: any | null
 }
 
+// sessionExpired reports whether a failed request means the session is gone.
+// The status code is the authority; the string match is kept so a frontend
+// newer than its backend still recognises the old 200-with-a-message answer.
+function _sessionExpired(status: number | undefined, msg: string): boolean {
+  return status === 401 || status === 403 || msg === "Invalid login"
+}
+
 function _handleMsg(msg: any): void {
   if (!isMsg(msg)) {
     return
   }
   if(msg.msg){
-    if (!msg.success && msg.msg == "Invalid login") {
+    if (!msg.success && _sessionExpired(undefined, msg.msg)) {
       push.error({
         title: i18n.global.t('invalidLogin'),
       })
@@ -35,8 +44,17 @@ function _handleMsg(msg: any): void {
 }
 
 export const logout = async () => {
-  const response = await HttpUtils.get('api/logout')
-  if(response.success){
+  try {
+    await HttpUtils.get('api/logout')
+  } catch {
+    // The session is unusable either way; there is nothing to recover.
+  } finally {
+    // Always, whatever the server said. Leaving the flag set would bounce the
+    // user straight back into a panel that cannot load anything, and leaving
+    // the store populated would show the next account the previous one's data
+    // for a moment.
+    clearAuthenticated()
+    Data().$reset()
     router.push('/login')
   }
 }
@@ -67,6 +85,11 @@ const HttpUtils = {
         const resp = await api.get(url, { params: data, ...options })
         msg = _respToMsg(resp)
     } catch (e: any) {
+        if (_sessionExpired(e?.response?.status, e?.response?.data?.msg)) {
+            push.error({ title: i18n.global.t('invalidLogin') })
+            logout()
+            return { success: false, msg: "Invalid login", obj: null }
+        }
         msg = { success: false, msg: e.toString(), obj: null }
     }
     _handleMsg(msg)
@@ -78,6 +101,11 @@ const HttpUtils = {
         const resp = await api.post(url, data, options)
         msg = _respToMsg(resp)
     } catch (e: any) {
+        if (_sessionExpired(e?.response?.status, e?.response?.data?.msg)) {
+            push.error({ title: i18n.global.t('invalidLogin') })
+            logout()
+            return { success: false, msg: "Invalid login", obj: null }
+        }
         msg = { success: false, msg: e.toString(), obj: null }
     }
     _handleMsg(msg)

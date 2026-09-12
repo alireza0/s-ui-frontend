@@ -70,7 +70,7 @@
           </v-col>
           <v-col cols="12" sm="6" md="3" lg="2" v-if="appConfig.ntp?.enabled">
             <v-text-field
-              v-model="appConfig.ntp.server_port"
+              v-model.number="appConfig.ntp.server_port"
               hide-details
               type="number"
               clearable
@@ -426,8 +426,12 @@ const origin = computed({
   get() { return appConfig.value.experimental.clash_api?.access_control_allow_origin &&
     appConfig.value.experimental.clash_api.access_control_allow_origin.length>0 ? appConfig.value.experimental.clash_api.access_control_allow_origin.join(',') : '' },
   set(v:string) {
-    if (appConfig.value.experimental.clash_api?.access_control_allow_origin)
-      appConfig.value.experimental.clash_api.access_control_allow_origin = v.length> 0 ? v.split(',') : undefined
-    }
+    // Guarded on clash_api, not on the field itself. The old test required the
+    // list to already exist, so the input silently discarded everything typed
+    // into it until one was set some other way.
+    if (!appConfig.value.experimental.clash_api) return
+    appConfig.value.experimental.clash_api.access_control_allow_origin =
+      v.length > 0 ? v.split(',').map(o => o.trim()).filter(o => o.length > 0) : undefined
+  }
 })
 </script>

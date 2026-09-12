@@ -52,6 +52,7 @@ import { useLocale } from 'vuetify'
 import { i18n, languages } from '@/locales'
 import { useRouter } from 'vue-router'
 import HttpUtil from '@/plugins/httputil'
+import { setAuthenticated } from '@/plugins/auth'
 import { useThemeSwitcher } from '@/composables/useThemeSwitcher'
 
 
@@ -82,6 +83,7 @@ const login = async () => {
   loading.value=true
   const response = await HttpUtil.post('api/login',{user: username.value, pass: password.value})
   if(response.success){
+    setAuthenticated()
     setTimeout(() => {
       loading.value=false
       router.push('/')

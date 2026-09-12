@@ -47,7 +47,10 @@ const Data = defineStore('Data', {
       this.lastLoad = Math.floor((new Date()).getTime()/1000)
       if (data.subURI) this.subURI = data.subURI
       if (data.os) this.os = data.os
-      if (data.enableTraffic) this.enableTraffic = data.enableTraffic
+      // hasOwn, not truthiness: turning traffic accounting off sends false,
+      // which the old test discarded, so the panel kept showing it as on until
+      // the page was reloaded.
+      if (Object.hasOwn(data, 'enableTraffic')) this.enableTraffic = data.enableTraffic ?? false
       if (data.config) this.config = data.config
       if (Object.hasOwn(data, 'clients')) this.clients = data.clients ?? []
       if (Object.hasOwn(data, 'inbounds')) this.inbounds = data.inbounds ?? []
