@@ -288,8 +288,8 @@
                   variant="outlined"
                   shaped
                   mandatory>
-                  <v-btn @click="clearClientText">{{ $t('tls.usePath') }}</v-btn>
-                  <v-btn @click="clearClientPaths">{{ $t('tls.useText') }}</v-btn>
+                  <v-btn @click="switchClientTls(true)">{{ $t('tls.usePath') }}</v-btn>
+                  <v-btn @click="switchClientTls(false)">{{ $t('tls.useText') }}</v-btn>
                 </v-btn-toggle>
               </v-col>
             </v-row>
@@ -554,17 +554,22 @@ export default {
     }
   },
   methods: {
-    // Paths and inline text are two ways of giving the same material, so
-    // switching between them drops whichever one is being left behind.
-    clearClientText() {
-      this.inTls.client_certificate = undefined
-      this.outTls.client_certificate = undefined
-      this.outTls.client_key = undefined
-    },
-    clearClientPaths() {
-      this.inTls.client_certificate_path = undefined
-      this.outTls.client_certificate_path = undefined
-      this.outTls.client_key_path = undefined
+    switchClientTls(isPath: boolean) {
+      if (isPath) {
+        this.inTls.client_certificate = undefined
+        this.outTls.client_certificate = undefined
+        this.outTls.client_key = undefined
+        this.inTls.client_certificate_path = []
+        this.outTls.client_certificate_path = ''
+        this.outTls.client_key_path = ''
+      } else {
+        this.inTls.client_certificate_path = undefined
+        this.outTls.client_certificate_path = undefined
+        this.outTls.client_key_path = undefined
+        this.inTls.client_certificate = []
+        this.outTls.client_certificate = []
+        this.outTls.client_key = []
+      }
     },
     updateData(id: number) {
       if (id > 0) {
@@ -743,27 +748,14 @@ export default {
         }
       }
     },
-    // Mutual TLS spans both sides: the server side verifies the peer, the
-    // client side presents the credentials. The toggle is on when either
-    // half is configured.
     optionClientAuth: {
       get(): boolean {
-        return this.inTls.client_authentication != undefined
-          || this.inTls.client_certificate_path != undefined
+        return this.inTls.client_certificate_path != undefined
           || this.inTls.client_certificate != undefined
-          || this.inTls.client_certificate_public_key_sha256 != undefined
-          || this.outTls.client_certificate_path != undefined
-          || this.outTls.client_key_path != undefined
-          || this.outTls.client_certificate != undefined
-          || this.outTls.client_key != undefined
       },
       set(v: boolean) {
         if (v) {
-          if (this.useClientPath == 0) {
-            if (this.inTls.client_certificate_path == undefined) this.inTls.client_certificate_path = []
-            if (this.outTls.client_certificate_path == undefined) this.outTls.client_certificate_path = ''
-            if (this.outTls.client_key_path == undefined) this.outTls.client_key_path = ''
-          }
+          this.switchClientTls(true)
         } else {
           this.inTls.client_authentication = undefined
           this.inTls.client_certificate_path = undefined
