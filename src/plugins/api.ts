@@ -17,10 +17,19 @@ const api = axios.create({
 
 const pendingRequests = new Map()
 
+function _requestKey(config: any): string {
+    const params = config.params ?? {}
+    const query = Object.keys(params)
+        .sort()
+        .map((k) => `${k}=${params[k]}`)
+        .join('&')
+    return `${config.method}:${config.url}${query ? '?' + query : ''}`
+}
+
 api.interceptors.request.use(
     (config) => {
         // Generate a unique key for the request
-        const requestKey = `${config.method}:${config.url}`
+        const requestKey = _requestKey(config)
         
         // Check if there is already a pending request with the same key
         if (pendingRequests.has(requestKey)) {
@@ -46,8 +55,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (response) => {
         // Remove the request from the pending requests map
-        const requestKey = `${response.config.method}:${response.config.url}`
-        pendingRequests.delete(requestKey)
+        pendingRequests.delete(_requestKey(response.config))
         return response
     },
     (error) => {
@@ -56,8 +64,7 @@ api.interceptors.response.use(
             console.warn(error.message)
         } else {
             // Remove the request from the pending requests map on error
-            const requestKey = `${error.config.method}:${error.config.url}`
-            pendingRequests.delete(requestKey)
+            pendingRequests.delete(_requestKey(error.config))
         }
         return Promise.reject(error)
     }
