@@ -159,6 +159,12 @@
                     v-model="clientConfig[key].auth_str"
                     hide-details>
                   </v-text-field>
+                  <v-text-field
+                    v-if="key == 'snell'"
+                    label="User Key"
+                    v-model="clientConfig[key].userkey"
+                    hide-details>
+                  </v-text-field>
                 </v-col>
               </v-row>
             </v-window-item>

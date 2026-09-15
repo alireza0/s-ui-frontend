@@ -100,6 +100,9 @@ export function shuffleConfigs(configs: Config, key?: string) {
       case "hysteria":
         configs[k].auth_str = RandomUtil.randomSeq(10)
         break
+      case "snell":
+        configs[k].userkey = RandomUtil.randomSeq(32)
+        break
       case "tuic":
         configs[k].password = RandomUtil.randomSeq(10)
         configs[k].uuid = RandomUtil.randomUUID()
@@ -167,6 +170,10 @@ export function randomConfigs(user: string): Config {
     hysteria: {
       name: user,
       auth_str: mixedPassword,
+    },
+    snell: {
+      name: user,
+      userkey: RandomUtil.randomSeq(32),
     },
     tuic: {
       name: user,
