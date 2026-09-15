@@ -14,6 +14,13 @@
     :tag="stats.tag"
     @close="closeStats"
   />
+  <Sessions
+    v-model="sessions.visible"
+    :visible="sessions.visible"
+    resource="inbound"
+    :tag="sessions.tag"
+    @close="closeSessions"
+  />
   <v-row>
     <v-col cols="12" justify="center" align="center">
       <v-btn color="primary" @click="showModal(0)">{{ $t('actions.add') }}</v-btn>
@@ -62,7 +69,11 @@
             <v-col>{{ $t('online') }}</v-col>
             <v-col>
               <template v-if="onlines.includes(item.tag)">
-                <v-chip density="comfortable" size="small" color="success" variant="flat">{{ $t('online') }}</v-chip>
+                <v-chip density="comfortable" size="small" color="success" variant="flat"
+                  link @click="showSessions(item.tag)">
+                  {{ $t('online') }}
+                  <v-tooltip activator="parent" location="top" :text="$t('sessions.title')"></v-tooltip>
+                </v-chip>
               </template>
               <template v-else>-</template>
             </v-col>
@@ -110,6 +121,7 @@
 import Data from '@/store/modules/data'
 import InboundVue from '@/layouts/modals/Inbound.vue'
 import Stats from '@/layouts/modals/Stats.vue'
+import Sessions from '@/layouts/modals/Sessions.vue'
 import { Config } from '@/types/config'
 import { computed, ref } from 'vue'
 import { createInbound, Inbound } from '@/types/inbounds'
@@ -186,5 +198,18 @@ const showStats = (tag: string) => {
 }
 const closeStats = () => {
   stats.value.visible = false
+}
+
+const sessions = ref({
+  visible: false,
+  tag: "",
+})
+
+const showSessions = (tag: string) => {
+  sessions.value.tag = tag
+  sessions.value.visible = true
+}
+const closeSessions = () => {
+  sessions.value.visible = false
 }
 </script>

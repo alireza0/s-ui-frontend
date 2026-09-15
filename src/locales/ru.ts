@@ -142,6 +142,7 @@ export default {
     stopCore: "Остановить ядро",
     startCore: "Запустить ядро",
     restartSb: "Перезапустить Singbox",
+    closeSessions: "Отключить пользователя",
     apply: "Применить",
   },
   login: {
@@ -762,6 +763,14 @@ export default {
         server_url: "URL сервера",
       },
     },
+  },
+  sessions: {
+    title: "Активные соединения",
+    source: "Источник",
+    destination: "Назначение",
+    duration: "Длительность",
+    closeAll: "Отключить",
+    empty: "Нет активных соединений",
   },
   stats: {
     upload: "Загрузка",

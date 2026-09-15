@@ -143,6 +143,7 @@ export default {
     stopCore: "توقف هسته",
     startCore: "اجرای هسته",
     restartSb: "ریستارت سینگ‌باکس",
+    closeSessions: "قطع اتصال کاربر",
   },
   login: {
     title: "ورود",
@@ -762,6 +763,14 @@ export default {
         server_url: "آدرس سرور",
       },
     },
+  },
+  sessions: {
+    title: "اتصال‌های زنده",
+    source: "مبدا",
+    destination: "مقصد",
+    duration: "مدت",
+    closeAll: "قطع اتصال",
+    empty: "اتصال زنده‌ای وجود ندارد",
   },
   stats: {
     upload: "آپلود",

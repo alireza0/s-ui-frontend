@@ -35,6 +35,13 @@
     :tag="stats.tag"
     @close="closeStats"
   />
+  <Sessions
+    v-model="sessions.visible"
+    :visible="sessions.visible"
+    resource="user"
+    :tag="sessions.tag"
+    @close="closeSessions"
+  />
   <v-dialog v-model="resetTrafficModal" width="auto">
     <v-card rounded="lg" :title="$t('actions.resetTraffic')">
       <v-divider></v-divider>
@@ -207,7 +214,11 @@
         <template v-slot:item.online="{ item }">
           <div class="text-start">
             <template v-if="isOnline(item.name).value">
-              <v-chip density="comfortable" size="small" color="success" variant="flat">{{ $t('online') }}</v-chip>
+              <v-chip density="comfortable" size="small" color="success" variant="flat"
+                link @click="showSessions(item.name)">
+                {{ $t('online') }}
+                <v-tooltip activator="parent" location="top" :text="$t('sessions.title')"></v-tooltip>
+              </v-chip>
             </template>
             <template v-else>-</template>
           </div>
@@ -290,6 +301,7 @@ import ClientAddBulk from '@/layouts/modals/ClientAddBulk.vue'
 import ClientEditBulk from '@/layouts/modals/ClientEditBulk.vue'
 import QrCode from '@/layouts/modals/QrCode.vue'
 import Stats from '@/layouts/modals/Stats.vue'
+import Sessions from '@/layouts/modals/Sessions.vue'
 import { Client } from '@/types/clients'
 import { computed, ref } from 'vue'
 import { HumanReadable } from '@/plugins/utils'
@@ -420,6 +432,19 @@ const showStats = (tag: string) => {
 }
 const closeStats = () => {
   stats.value.visible = false
+}
+
+const sessions = ref({
+  visible: false,
+  tag: "",
+})
+
+const showSessions = (tag: string) => {
+  sessions.value.tag = tag
+  sessions.value.visible = true
+}
+const closeSessions = () => {
+  sessions.value.visible = false
 }
 
 const doFilter = () => {

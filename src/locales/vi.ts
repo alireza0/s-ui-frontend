@@ -143,6 +143,7 @@ export default {
     stopCore: "Dừng lõi",
     startCore: "Chạy lõi",
     restartSb: "Khởi động lại Singbox",
+    closeSessions: "Ngắt kết nối người dùng",
   },
   login: {
     title: "Đăng nhập",
@@ -762,6 +763,14 @@ export default {
         server_url: "URL Máy chủ",
       },
     },
+  },
+  sessions: {
+    title: "Kết nối trực tiếp",
+    source: "Nguồn",
+    destination: "Đích",
+    duration: "Thời lượng",
+    closeAll: "Ngắt kết nối",
+    empty: "Không có kết nối nào",
   },
   stats: {
     upload: "Tải lên",

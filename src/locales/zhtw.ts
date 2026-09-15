@@ -143,6 +143,7 @@ export default {
     stopCore: "停止核心",
     startCore: "啟動核心",
     restartSb: "重啟 Singbox",
+    closeSessions: "斷開該使用者",
   },
   login: {
     title: "登錄",
@@ -762,6 +763,14 @@ export default {
         server_url: "伺服器 URL",
       },
     },
+  },
+  sessions: {
+    title: "即時連線",
+    source: "來源",
+    destination: "目標",
+    duration: "時長",
+    closeAll: "斷開連線",
+    empty: "沒有即時連線",
   },
   stats: {
     upload: "上傳",

@@ -143,6 +143,7 @@ export default {
     stopCore: "停止内核",
     startCore: "启动内核",
     restartSb: "重启 Singbox",
+    closeSessions: "断开该用户",
   },
   login: {
     title: "登录",
@@ -762,6 +763,14 @@ export default {
         server_url: "服务器 URL",
       },
     },
+  },
+  sessions: {
+    title: "实时连接",
+    source: "来源",
+    destination: "目标",
+    duration: "时长",
+    closeAll: "断开连接",
+    empty: "没有实时连接",
   },
   stats: {
     upload: "上传",

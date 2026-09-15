@@ -143,6 +143,7 @@ export default {
     stopCore: "Stop Core",
     startCore: "Start Core",
     restartSb: "Restart Singbox",
+    closeSessions: "Disconnect User",
   },
   login: {
     title: "Login",
@@ -764,6 +765,14 @@ export default {
         server_url: "Server URL",
       },
     },
+  },
+  sessions: {
+    title: "Live Connections",
+    source: "Source",
+    destination: "Destination",
+    duration: "Duration",
+    closeAll: "Disconnect",
+    empty: "No live connection",
   },
   stats: {
     upload: "Upload",
