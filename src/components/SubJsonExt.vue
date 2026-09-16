@@ -761,10 +761,12 @@ export default {
       let tags = <string[]>[]
       if (this.dns?.rules?.length>0) this.dns.rules.forEach((r) => { if (r.rule_set) tags.push(...r.rule_set) })
       if (this.rules?.length>0) this.rules.forEach((r) => { if (r.rule_set) tags.push(...r.rule_set) })
-      const custom = (this.subJsonExt?.rule_set ?? []).filter((rs) => !this.geo.some((g) => g.tag == rs.tag))
+      const existing = <SbRuleSet[]>(this.subJsonExt?.rule_set ?? [])
+      const byTag = new Map(existing.map((rs) => [rs.tag, rs]))
+      const custom = existing.filter((rs) => !this.geo.some((g) => g.tag == rs.tag))
       if (tags.length>0 || custom.length>0){
         this.subJsonExt.rule_set = [
-          ...this.geo.filter((g) => tags.includes(g.tag)),
+          ...this.geo.filter((g) => tags.includes(g.tag)).map((g) => byTag.get(g.tag) ?? g),
           ...custom,
         ]
       } else {
