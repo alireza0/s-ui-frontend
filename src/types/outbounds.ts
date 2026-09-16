@@ -70,6 +70,19 @@ export interface HTTP extends OutboundBasics, Dial {
   tls?: oTls
 }
 
+// Snell picks its extra options from the version: v4 carries obfs, v6 a mode.
+export interface Snell extends OutboundBasics, Dial {
+  server: string
+  server_port: number
+  version: 4 | 6
+  psk: string
+  userkey?: string
+  obfs_mode?: 'none' | 'http' | 'tls'
+  obfs_host?: string
+  mode?: 'default' | 'unshaped' | 'unsafe-raw'
+  reuse?: boolean
+}
+
 export interface Shadowsocks extends OutboundBasics, Dial {
   server: string
   server_port: number
@@ -240,7 +253,15 @@ export interface URLTest extends OutboundBasics {
 type InterfaceMap = {
   [Key in keyof typeof OutTypes]: {
     type: string
-    [otherProperties: string]: any // You can add other properties as needed
+  // NOTE: deliberate `any`, and the one piece of type debt left in this file.
+  // The per-protocol interfaces declared above are NOT wired into this map, so
+  // every Outbound collapses to an open bag. Closing it is a design change, not a
+  // rename: switching the index signature to `unknown` costs ~51 errors across
+  // 13 consumer files, and declaring the shared fields costs more, because the
+  // defaults table below holds partial objects. Wire the interfaces in and give
+  // the defaults a Partial type to fix this properly.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [otherProperties: string]: any
   }
 }
 
@@ -271,6 +292,10 @@ const defaultValues: Record<OutType, Outbound> = {
 }
 
 export function createOutbound<T extends Outbound>(type: string,json?: Partial<T>): Outbound {
-  const defaultObject: Outbound = { ...defaultValues[type], ...(json || {}) }
+  // structuredClone, not a spread: the defaults table is module state, and a
+  // spread copies only the top level, so every instance would share the nested
+  // objects and arrays inside it. Editing one form then leaked into the table
+  // and into every object created afterwards.
+  const defaultObject: Outbound = { ...structuredClone(defaultValues[type]), ...(json || {}) }
   return defaultObject
 }

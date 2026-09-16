@@ -1,182 +1,364 @@
 <template>
   <v-card :loading="loading">
     <v-tabs
-    v-model="tab"
-    color="primary"
-    align-tabs="center"
-    show-arrows
-  >
-    <v-tab value="t1">{{ $t('setting.interface') }}</v-tab>
-    <v-tab value="t2">{{ $t('setting.sub') }}</v-tab>
-    <v-tab value="t3">{{ $t('setting.jsonSub') }}</v-tab>
-    <v-tab value="t4">{{ $t('setting.clashSub') }}</v-tab>
-  </v-tabs>
-  <v-card-text>
-    <v-row align="center" justify="center" style="margin-bottom: 10px;">
-      <v-col cols="auto">
-        <v-btn color="primary" @click="save" :loading="loading" :disabled="!stateChange">
-          {{ $t('actions.save') }}
-        </v-btn>
-      </v-col>
-      <v-col cols="auto">
-        <v-btn variant="outlined" color="warning" @click="restartApp" :loading="loading" :disabled="stateChange">
-          {{ $t('actions.restartApp') }}
-        </v-btn>
-      </v-col>
-      <!-- The core cannot be held down any other way: a plain stop is undone by
+      v-model="tab"
+      color="primary"
+      align-tabs="center"
+      show-arrows
+    >
+      <v-tab value="t1">
+        {{ $t('setting.interface') }}
+      </v-tab>
+      <v-tab value="t2">
+        {{ $t('setting.sub') }}
+      </v-tab>
+      <v-tab value="t3">
+        {{ $t('setting.jsonSub') }}
+      </v-tab>
+      <v-tab value="t4">
+        {{ $t('setting.clashSub') }}
+      </v-tab>
+    </v-tabs>
+    <v-card-text>
+      <v-row
+        align="center"
+        justify="center"
+        style="margin-bottom: 10px;"
+      >
+        <v-col cols="auto">
+          <v-btn
+            color="primary"
+            :loading="loading"
+            :disabled="!stateChange"
+            @click="save"
+          >
+            {{ $t('actions.save') }}
+          </v-btn>
+        </v-col>
+        <v-col cols="auto">
+          <v-btn
+            variant="outlined"
+            color="warning"
+            :loading="loading"
+            :disabled="stateChange"
+            @click="restartApp"
+          >
+            {{ $t('actions.restartApp') }}
+          </v-btn>
+        </v-col>
+        <!-- The core cannot be held down any other way: a plain stop is undone by
            the watchdog within five seconds. -->
-      <v-col cols="auto">
-        <v-btn
-          variant="outlined"
-          :color="maintenance ? 'success' : 'error'"
-          @click="toggleMaintenance"
-          :loading="loading"
-          :disabled="stateChange">
-          {{ maintenance ? $t('actions.startCore') : $t('actions.stopCore') }}
-        </v-btn>
-      </v-col>
-    </v-row>
-    <v-alert
-      v-if="maintenance"
-      type="warning"
-      variant="tonal"
-      density="compact"
-      class="mb-4"
-      :text="$t('setting.maintenanceOnHint')">
-    </v-alert>
-    <v-window v-model="tab">
-      <v-window-item value="t1">
-        <v-row>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field v-model="settings.webListen" :label="$t('setting.addr')" hide-details></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field v-model.number="webPort" min="1" type="number" :label="$t('setting.port')" hide-details></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field v-model="settings.webPath" :label="$t('setting.webPath')" hide-details></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field v-model="settings.webDomain" :label="$t('setting.domain')" hide-details></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field v-model="settings.webKeyFile" :label="$t('setting.sslKey')" hide-details></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field v-model="settings.webCertFile" :label="$t('setting.sslCert')" hide-details></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field v-model="settings.webURI" :label="$t('setting.webUri')" hide-details></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field
-              type="number"
-              v-model.number="sessionMaxAge"
-              min="0"
-              :label="$t('setting.sessionAge')"
-              :suffix="$t('date.m')"
-              hide-details
-              ></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field
-              type="number"
-              v-model.number="trafficAge"
-              min="0"
-              :label="$t('setting.trafficAge')"
-              :suffix="$t('date.d')"
-              hide-details
-              ></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field
-              type="number"
-              v-model.number="statsBucketSeconds"
-              min="1"
-              :label="$t('setting.statsBucketSeconds')"
-              :suffix="$t('date.s')"
-              v-tooltip:top="$t('setting.statsBucketSecondsHint')"
-              hide-details
-              ></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field v-model="settings.timeLocation" :label="$t('setting.timeLoc')" hide-details></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field
-              v-model="settings.globalReset"
-              :label="$t('setting.globalReset')"
-              v-tooltip:top="$t('setting.globalResetHint')"
-              hide-details
-              placeholder="0 0 1 * *"></v-text-field>
-          </v-col>
-        </v-row>
-      </v-window-item>
+        <v-col cols="auto">
+          <v-btn
+            variant="outlined"
+            :color="maintenance ? 'success' : 'error'"
+            :loading="loading"
+            :disabled="stateChange"
+            @click="toggleMaintenance"
+          >
+            {{ maintenance ? $t('actions.startCore') : $t('actions.stopCore') }}
+          </v-btn>
+        </v-col>
+      </v-row>
+      <v-alert
+        v-if="maintenance"
+        type="warning"
+        variant="tonal"
+        density="compact"
+        class="mb-4"
+        :text="$t('setting.maintenanceOnHint')"
+      />
+      <v-window v-model="tab">
+        <v-window-item value="t1">
+          <v-row>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model="settings.webListen"
+                :label="$t('setting.addr')"
+                hide-details
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model.number="webPort"
+                min="1"
+                type="number"
+                :label="$t('setting.port')"
+                hide-details
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model="settings.webPath"
+                :label="$t('setting.webPath')"
+                hide-details
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model="settings.webDomain"
+                :label="$t('setting.domain')"
+                hide-details
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model="settings.webKeyFile"
+                :label="$t('setting.sslKey')"
+                hide-details
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model="settings.webCertFile"
+                :label="$t('setting.sslCert')"
+                hide-details
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model="settings.webURI"
+                :label="$t('setting.webUri')"
+                hide-details
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model.number="sessionMaxAge"
+                type="number"
+                min="0"
+                :label="$t('setting.sessionAge')"
+                :suffix="$t('date.m')"
+                hide-details
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model.number="trafficAge"
+                type="number"
+                min="0"
+                :label="$t('setting.trafficAge')"
+                :suffix="$t('date.d')"
+                hide-details
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model.number="statsBucketSeconds"
+                v-tooltip:top="$t('setting.statsBucketSecondsHint')"
+                type="number"
+                min="1"
+                :label="$t('setting.statsBucketSeconds')"
+                :suffix="$t('date.s')"
+                hide-details
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model="settings.timeLocation"
+                :label="$t('setting.timeLoc')"
+                hide-details
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model="settings.globalReset"
+                v-tooltip:top="$t('setting.globalResetHint')"
+                :label="$t('setting.globalReset')"
+                hide-details
+                placeholder="0 0 1 * *"
+              />
+            </v-col>
+          </v-row>
+        </v-window-item>
 
-      <v-window-item value="t2">
-        <v-row>
-          <v-col cols="12" sm="6" md="4">
-            <v-switch color="primary" v-model="subEncode" :label="$t('setting.subEncode')" hide-details />
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-switch color="primary" v-model="subShowInfo" :label="$t('setting.subInfo')" hide-details />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field v-model="settings.subListen" :label="$t('setting.addr')" hide-details></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field
-              type="number"
-              v-model.number="subPort"
-              min="1"
-              :label="$t('setting.port')"
-              hide-details></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field v-model="settings.subKeyFile" :label="$t('setting.sslKey')" hide-details></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field v-model="settings.subCertFile" :label="$t('setting.sslCert')" hide-details></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field v-model="settings.subDomain" :label="$t('setting.domain')" hide-details></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field v-model="settings.subPath" :label="$t('setting.path')" hide-details></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field
-              type="number"
-              v-model.number="subUpdates"
-              min="0"
-              :label="$t('setting.update')"
-              hide-details
-              ></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field v-model="settings.subURI" :label="$t('setting.subUri')" hide-details></v-text-field>
-          </v-col>
-        </v-row>
-      </v-window-item>
+        <v-window-item value="t2">
+          <v-row>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-switch
+                v-model="subEncode"
+                color="primary"
+                :label="$t('setting.subEncode')"
+                hide-details
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-switch
+                v-model="subShowInfo"
+                color="primary"
+                :label="$t('setting.subInfo')"
+                hide-details
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model="settings.subListen"
+                :label="$t('setting.addr')"
+                hide-details
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model.number="subPort"
+                type="number"
+                min="1"
+                :label="$t('setting.port')"
+                hide-details
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model="settings.subKeyFile"
+                :label="$t('setting.sslKey')"
+                hide-details
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model="settings.subCertFile"
+                :label="$t('setting.sslCert')"
+                hide-details
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model="settings.subDomain"
+                :label="$t('setting.domain')"
+                hide-details
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model="settings.subPath"
+                :label="$t('setting.path')"
+                hide-details
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model.number="subUpdates"
+                type="number"
+                min="0"
+                :label="$t('setting.update')"
+                hide-details
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model="settings.subURI"
+                :label="$t('setting.subUri')"
+                hide-details
+              />
+            </v-col>
+          </v-row>
+        </v-window-item>
 
-      <v-window-item value="t3">
-        <SubJsonExtVue :settings="settings" />
-      </v-window-item>
+        <v-window-item value="t3">
+          <SubJsonExtVue :settings="settings" />
+        </v-window-item>
 
-      <v-window-item value="t4">
-        <SubClashExtVue :settings="settings" />
-      </v-window-item>
-    </v-window>
-  </v-card-text>
-</v-card>
+        <v-window-item value="t4">
+          <SubClashExtVue :settings="settings" />
+        </v-window-item>
+      </v-window>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script lang="ts" setup>
@@ -190,7 +372,7 @@ import { push } from 'notivue'
 import Data from '@/store/modules/data'
 const tab = ref("t1")
 const loading:Ref = inject('loading')?? ref(false)
-const oldSettings = ref({})
+const oldSettings = ref<Record<string, string>>({})
 
 const settings = ref({
 	webListen: "",
@@ -222,6 +404,9 @@ const settings = ref({
   globalReset: "",
 })
 
+// The panel settings, exactly as the block above spells them out.
+type PanelSettings = typeof settings.value
+
 onMounted(async () => {
   loading.value = true
   await loadData()
@@ -230,21 +415,21 @@ onMounted(async () => {
 
 const loadData = async () => {
   loading.value = true
-  const msg = await HttpUtils.get('api/settings')
+  const msg = await HttpUtils.get<PanelSettings>('api/settings')
   loading.value = false
   if (msg.success) {
     setData(msg.obj)
   }
 }
 
-const setData = (data: any) => {
+const setData = (data: PanelSettings) => {
   settings.value = data
   oldSettings.value = { ...data }
 }
 
 const save = async () => {
   loading.value = true
-  const msg = await HttpUtils.post('api/save', { object: 'settings', action: 'set', data: JSON.stringify(settings.value) })
+  const msg = await HttpUtils.post<{ settings: PanelSettings }>('api/save', { object: 'settings', action: 'set', data: JSON.stringify(settings.value) })
   if (msg.success) {
     push.success({
       title: i18n.global.t('success'),

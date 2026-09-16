@@ -1,8 +1,8 @@
 <template>
   <EndpointVue 
+    :id="modal.id"
     v-model="modal.visible"
     :visible="modal.visible"
-    :id="modal.id"
     :data="modal.data"
     :tags="endpointTags"
     @close="closeModal"
@@ -27,9 +27,17 @@
     :data="qrcode.data"
     @close="closeQrCode"
   />
-  <v-row justify="center" align="center">
+  <v-row
+    justify="center"
+    align="center"
+  >
     <v-col cols="auto">
-      <v-btn color="primary" @click="showModal(0)">{{ $t('actions.add') }}</v-btn>
+      <v-btn
+        color="primary"
+        @click="showModal(0)"
+      >
+        {{ $t('actions.add') }}
+      </v-btn>
     </v-col>
     <v-col cols="auto">
       <v-btn
@@ -45,8 +53,20 @@
     </v-col>
   </v-row>
   <v-row>
-    <v-col cols="12" sm="4" md="3" lg="2" v-for="(item, index) in <any[]>endpoints" :key="item.tag">
-      <v-card rounded="xl" elevation="5" min-width="200" :title="item.tag">
+    <v-col
+      v-for="(item, index) in <any[]>endpoints"
+      :key="item.tag"
+      cols="12"
+      sm="4"
+      md="3"
+      lg="2"
+    >
+      <v-card
+        rounded="xl"
+        elevation="5"
+        min-width="200"
+        :title="item.tag"
+      >
         <v-card-subtitle style="margin-top: -15px;">
           <v-row>
             <v-col>{{ item.type }}</v-col>
@@ -68,20 +88,32 @@
           <v-row>
             <v-col>{{ $t('types.wg.peers') }}</v-col>
             <v-col>
-              {{ item.peers?.length?? '-'  }}
+              {{ item.peers?.length?? '-' }}
             </v-col>
           </v-row>
           <v-row>
             <v-col>{{ $t('online') }}</v-col>
             <v-col>
               <template v-if="onlines.includes(item.tag)">
-                <v-chip density="comfortable" size="small" color="success" variant="flat"
-                  link @click="showSessions(item.tag)">
+                <v-chip
+                  density="comfortable"
+                  size="small"
+                  color="success"
+                  variant="flat"
+                  link
+                  @click="showSessions(item.tag)"
+                >
                   {{ $t('online') }}
-                  <v-tooltip activator="parent" location="top" :text="$t('sessions.title')"></v-tooltip>
+                  <v-tooltip
+                    activator="parent"
+                    location="top"
+                    :text="$t('sessions.title')"
+                  />
                 </v-chip>
               </template>
-              <template v-else>-</template>
+              <template v-else>
+                -
+              </template>
             </v-col>
           </v-row>
           <v-row>
@@ -93,11 +125,15 @@
                 size="20"
               />
               <v-icon
-                icon="mdi-speedometer"
                 v-else
+                icon="mdi-speedometer"
                 @click="checkEndpoint(item.tag)"
               >
-                <v-tooltip activator="parent" location="top" :text="$t('actions.test')"></v-tooltip>
+                <v-tooltip
+                  activator="parent"
+                  location="top"
+                  :text="$t('actions.test')"
+                />
               </v-icon>
               <template v-if="checkResults[item.tag]?.loading == false">
                 <template v-if="checkResults[item.tag]">
@@ -110,9 +146,18 @@
                   >
                     {{ checkResults[item.tag].data?.Delay + $t('date.ms') }}
                   </v-chip>
-                  <v-tooltip v-else location="top" :text="checkResults[item.tag].errorMessage || $t('failed')">
-                    <template v-slot:activator="{ props }">
-                      <v-icon v-bind="props" size="small" color="error" icon="mdi-close-circle" />
+                  <v-tooltip
+                    v-else
+                    location="top"
+                    :text="checkResults[item.tag].errorMessage || $t('failed')"
+                  >
+                    <template #activator="{ props }">
+                      <v-icon
+                        v-bind="props"
+                        size="small"
+                        color="error"
+                        icon="mdi-close-circle"
+                      />
                     </template>
                   </v-tooltip>
                 </template>
@@ -120,40 +165,79 @@
             </v-col>
           </v-row>
         </v-card-text>
-        <v-divider></v-divider>
+        <v-divider />
         <v-card-actions style="padding: 0;">
-          <v-btn icon="mdi-file-edit" @click="showModal(item.id)">
+          <v-btn
+            icon="mdi-file-edit"
+            @click="showModal(item.id)"
+          >
             <v-icon />
-            <v-tooltip activator="parent" location="top" :text="$t('actions.edit')"></v-tooltip>
+            <v-tooltip
+              activator="parent"
+              location="top"
+              :text="$t('actions.edit')"
+            />
           </v-btn>
-          <v-btn icon="mdi-file-remove" style="margin-inline-start:0;" color="warning" @click="delOverlay[index] = true">
+          <v-btn
+            icon="mdi-file-remove"
+            style="margin-inline-start:0;"
+            color="warning"
+            @click="delOverlay[index] = true"
+          >
             <v-icon />
-            <v-tooltip activator="parent" location="top" :text="$t('actions.del')"></v-tooltip>
+            <v-tooltip
+              activator="parent"
+              location="top"
+              :text="$t('actions.del')"
+            />
           </v-btn>
           <v-overlay
             v-model="delOverlay[index]"
             contained
             class="align-center justify-center"
           >
-            <v-card :title="$t('actions.del')" rounded="lg">
-              <v-divider></v-divider>
+            <v-card
+              :title="$t('actions.del')"
+              rounded="lg"
+            >
+              <v-divider />
               <v-card-text>{{ $t('confirm') }}</v-card-text>
               <v-card-actions>
-                <v-btn color="error" variant="outlined" @click="delEndpoint(item.tag)">{{ $t('yes') }}</v-btn>
-                <v-btn color="success" variant="outlined" @click="delOverlay[index] = false">{{ $t('no') }}</v-btn>
+                <v-btn
+                  color="error"
+                  variant="outlined"
+                  @click="delEndpoint(item.tag)"
+                >
+                  {{ $t('yes') }}
+                </v-btn>
+                <v-btn
+                  color="success"
+                  variant="outlined"
+                  @click="delOverlay[index] = false"
+                >
+                  {{ $t('no') }}
+                </v-btn>
               </v-card-actions>
             </v-card>
           </v-overlay>
           <v-icon
-          class="me-2"
-          v-if="item.type == 'wireguard' && item.peers?.length>0"
-          @click="showQrCode(item.id)"
-        >
-          mdi-qrcode
-        </v-icon>
-          <v-btn icon="mdi-chart-line" @click="showStats(item.tag)" v-if="Data().enableTraffic">
+            v-if="item.type == 'wireguard' && item.peers?.length>0"
+            class="me-2"
+            @click="showQrCode(item.id)"
+          >
+            mdi-qrcode
+          </v-icon>
+          <v-btn
+            v-if="Data().enableTraffic"
+            icon="mdi-chart-line"
+            @click="showStats(item.tag)"
+          >
             <v-icon />
-            <v-tooltip activator="parent" location="top" :text="$t('stats.graphTitle')"></v-tooltip>
+            <v-tooltip
+              activator="parent"
+              location="top"
+              :text="$t('stats.graphTitle')"
+            />
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -171,10 +255,17 @@ import QrCode from '@/layouts/modals/WgQrCode.vue'
 import { Endpoint } from '@/types/endpoints'
 import { computed, ref } from 'vue'
 
+// What api/checkOutbound answers with.
+interface CheckReply {
+  OK: boolean
+  Delay?: number
+  Error?: string
+}
+
 interface CheckResult {
   loading?: boolean
   success: boolean
-  data?: { OK?: boolean; Delay?: number; Error?: string } | null
+  data?: CheckReply | null
   errorMessage?: string
 }
 
@@ -184,7 +275,7 @@ const checkResults = ref<Record<string, CheckResult>>({})
 // the same api/checkOutbound latency test used on the Outbounds page works here.
 const checkEndpoint = async (tag: string) => {
   checkResults.value = { ...checkResults.value, [tag]: { loading: true, success: false } }
-  const msg = await HttpUtils.get('api/checkOutbound', { tag })
+  const msg = await HttpUtils.get<CheckReply>('api/checkOutbound', { tag })
   const success = msg.success && msg.obj?.OK
   const errorMessage = success ? undefined : (msg.obj?.Error ?? msg.msg ?? '')
   checkResults.value = {
@@ -210,7 +301,7 @@ const endpoints = computed((): Endpoint[] => {
   return <Endpoint[]> Data().endpoints
 })
 
-const endpointTags = computed((): any[] => {
+const endpointTags = computed((): string[] => {
   return endpoints.value?.map((o:Endpoint) => o.tag)
 })
 
@@ -272,11 +363,11 @@ const closeSessions = () => {
 
 const qrcode = ref({
   visible: false,
-  data: <any>{},
+  data: <Endpoint>{},
 })
 
 const showQrCode = (id: number) => {
-  qrcode.value.data = endpoints.value.findLast(o => o.id == id)
+  qrcode.value.data = <Endpoint>endpoints.value.findLast(o => o.id == id)
   qrcode.value.visible = true
 }
 const closeQrCode = () => {

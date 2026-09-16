@@ -31,6 +31,14 @@ export type DnsType = typeof DnsTypes[keyof typeof DnsTypes]
 type InterfaceMap = {
   [Key in keyof typeof DnsTypes]: {
     type: string
+  // NOTE: deliberate `any`, and the one piece of type debt left in this file.
+  // The per-protocol interfaces declared above are NOT wired into this map, so
+  // every DnsServer collapses to an open bag. Closing it is a design change, not a
+  // rename: switching the index signature to `unknown` costs ~51 errors across
+  // 13 consumer files, and declaring the shared fields costs more, because the
+  // defaults table below holds partial objects. Wire the interfaces in and give
+  // the defaults a Partial type to fix this properly.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [otherProperties: string]: any
   }
 }
@@ -54,7 +62,11 @@ const defaultValues: Record<DnsType, DnsServer> = {
   resolved: { type: 'resolved' },
 }
 export function createDnsServer<T extends DnsServer>(type: string, json?: Partial<T>): DnsServer {
-  const defaultObject: DnsServer = { ...defaultValues[type], ...(json || {}) }
+  // structuredClone, not a spread: the defaults table is module state, and a
+  // spread copies only the top level, so every instance would share the nested
+  // objects and arrays inside it. Editing one form then leaked into the table
+  // and into every object created afterwards.
+  const defaultObject: DnsServer = { ...structuredClone(defaultValues[type]), ...(json || {}) }
   return defaultObject
 }
 

@@ -1,13 +1,22 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" width="800">
-    <v-card class="rounded-lg" :loading="loading">
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="800"
+  >
+    <v-card
+      class="rounded-lg"
+      :loading="loading"
+    >
       <v-card-title>
         <v-row>
           <v-col cols="auto">
             {{ $t('stats.graphTitle') }}
           </v-col>
-          <v-spacer></v-spacer>
-          <v-col cols="auto" class="d-flex align-center ga-3">
+          <v-spacer />
+          <v-col
+            cols="auto"
+            class="d-flex align-center ga-3"
+          >
             <v-switch
               v-model="autoRefresh"
               color="primary"
@@ -15,54 +24,142 @@
               hide-details
               style="flex: none"
               :label="$t('stats.autoRefresh')"
-            ></v-switch>
-            <v-icon icon="mdi-refresh" :class="{ 'mdi-spin': loading }" @click="loadData">
-              <v-tooltip activator="parent" location="top">{{ $t('actions.update') }}</v-tooltip>
+            />
+            <v-icon
+              icon="mdi-refresh"
+              :class="{ 'mdi-spin': loading }"
+              @click="loadData"
+            >
+              <v-tooltip
+                activator="parent"
+                location="top"
+              >
+                {{ $t('actions.update') }}
+              </v-tooltip>
             </v-icon>
-            <v-icon icon="mdi-close" @click="$emit('close')"></v-icon>
+            <v-icon
+              icon="mdi-close"
+              @click="$emit('close')"
+            />
           </v-col>
         </v-row>
       </v-card-title>
       <v-card-subtitle style="margin-top: -20px">
         {{ $t('objects.' + resource) + " : " + tag }}
       </v-card-subtitle>
-      <v-card-text class="text-center" style="padding: 0">
-        <v-btn-toggle v-model="limit"
-          @update:model-value="selectPreset" density="compact"
-          color="primary" :loading="loading"
-          border mandatory group
-          inline hide-details>
-          <v-btn v-for="p in periods" :value="p.value">{{ p.title }}</v-btn>
-          <v-btn :value="0"><v-icon icon="mdi-calendar-range" /></v-btn>
+      <v-card-text
+        class="text-center"
+        style="padding: 0"
+      >
+        <v-btn-toggle
+          v-model="limit"
+          density="compact"
+          color="primary"
+          :loading="loading"
+          border
+          mandatory
+          group
+          inline
+          hide-details
+          @update:model-value="selectPreset"
+        >
+          <v-btn
+            v-for="p in periods"
+            :key="p.value"
+            :value="p.value"
+          >
+            {{ p.title }}
+          </v-btn>
+          <v-btn :value="0">
+            <v-icon icon="mdi-calendar-range" />
+          </v-btn>
         </v-btn-toggle>
-        <v-row dense align="center" justify="center" class="mt-2 mb-1 px-2" v-if="limit === 0">
-          <v-col cols="12" sm="5">
-            <DatePick :expiry="rangeStart" :label="$t('stats.from')" inputId="statsFrom" @submit="setRangeStart" />
+        <v-row
+          v-if="limit === 0"
+          dense
+          align="center"
+          justify="center"
+          class="mt-2 mb-1 px-2"
+        >
+          <v-col
+            cols="12"
+            sm="5"
+          >
+            <DatePick
+              :expiry="rangeStart"
+              :label="$t('stats.from')"
+              input-id="statsFrom"
+              @submit="setRangeStart"
+            />
           </v-col>
-          <v-col cols="12" sm="5">
-            <DatePick :expiry="rangeEnd" :label="$t('stats.to')" inputId="statsTo" @submit="setRangeEnd" />
+          <v-col
+            cols="12"
+            sm="5"
+          >
+            <DatePick
+              :expiry="rangeEnd"
+              :label="$t('stats.to')"
+              input-id="statsTo"
+              @submit="setRangeEnd"
+            />
           </v-col>
         </v-row>
-        <v-row dense justify="center" class="mt-1" v-if="loaded && !loading">
+        <v-row
+          v-if="loaded && !loading"
+          dense
+          justify="center"
+          class="mt-1"
+        >
           <v-col cols="auto">
-            <v-chip size="small" color="warning" label>{{ $t('stats.upload') }}: {{ fmt(totalUp) }}</v-chip>
+            <v-chip
+              size="small"
+              color="warning"
+              label
+            >
+              {{ $t('stats.upload') }}: {{ fmt(totalUp) }}
+            </v-chip>
           </v-col>
           <v-col cols="auto">
-            <v-chip size="small" color="success" label>{{ $t('stats.download') }}: {{ fmt(totalDown) }}</v-chip>
+            <v-chip
+              size="small"
+              color="success"
+              label
+            >
+              {{ $t('stats.download') }}: {{ fmt(totalDown) }}
+            </v-chip>
           </v-col>
           <v-col cols="auto">
-            <v-chip size="small" color="primary" label>{{ $t('main.stats.totalUsage') }}: {{ fmt(totalUp + totalDown) }}</v-chip>
+            <v-chip
+              size="small"
+              color="primary"
+              label
+            >
+              {{ $t('main.stats.totalUsage') }}: {{ fmt(totalUp + totalDown) }}
+            </v-chip>
           </v-col>
         </v-row>
-        <v-container id="container" style="height: 400px;">
+        <v-container
+          id="container"
+          style="height: 400px;"
+        >
           <v-skeleton-loader
+            v-if="loading"
             class="mx-auto border"
             type="image"
-            v-if="loading"
-          ></v-skeleton-loader>
+          />
           <template v-else>
-            <v-alert :text="$t('noData')" type="warning" variant="outlined" v-if="alert"></v-alert>
-            <Line v-if="loaded" :data="usage" :options="<any>options" :key="theme.global.name" />
+            <v-alert
+              v-if="alert"
+              :text="$t('noData')"
+              type="warning"
+              variant="outlined"
+            />
+            <LineChart
+              v-if="loaded"
+              :key="theme.global.name"
+              :data="usage"
+              :options="<any>options"
+            />
           </template>
         </v-container>
       </v-card-text>
@@ -85,6 +182,7 @@ import {
   Legend,
   Filler,
 } from 'chart.js'
+import type { ChartData } from 'chart.js'
 import { ref } from 'vue'
 import { useTheme } from 'vuetify'
 import { Line } from 'vue-chartjs'
@@ -100,19 +198,44 @@ ChartJS.register(
   Filler
 )
 ChartJS.defaults.font.family = 'Vazirmatn'
+
+// api/stats answers with the window it covers and a sparse map of bucket index
+// to [upload, download]; buckets with no traffic are simply absent.
+interface StatsResponse {
+  stats: Record<string, [number, number]>
+  startTime: number
+  bucketSpan: number
+  numBuckets?: number
+}
+
+// The query api/stats takes: the resource to chart, plus either a preset span
+// or an explicit range.
+interface StatsParams {
+  resource: string
+  tag: string
+  limit?: number
+  start?: number
+  end?: number
+}
+
 export default {
   components: {
-    Line,
+    LineChart: Line,
     DatePick
   },
-  props: ['visible','resource','tag'],
+  props: {
+    visible: { type: Boolean, required: true },
+    resource: { type: String, required: true },
+    tag: { type: String, required: true },
+  },
+  emits: ['close'],
   data() {
     return {
       theme: useTheme(),
       loading: false,
       loaded: false,
       alert: false,
-      intervalId: <any>0,
+      intervalId: <ReturnType<typeof setInterval> | 0>0,
       autoRefresh: localStorage.getItem('statsAutoRefresh') === 'true',
       // Sum of the loaded window, shown as chips above the chart (#1219)
       totalUp: 0,
@@ -144,8 +267,8 @@ export default {
         plugins: {
           tooltip: {
             callbacks: {
-              footer: (items:any[]) => {
-                return HumanReadable.sizeFormat(items.reduce((acc, c) => acc + c.raw, 0))
+              footer: (items: { raw: number | null }[]) => {
+                return HumanReadable.sizeFormat(items.reduce((acc, c) => acc + (c.raw ?? 0), 0))
               }
             }
           }
@@ -157,15 +280,15 @@ export default {
             },
             beginAtZero: true,
             ticks: {
-              callback: function(label:any, index: number) {
-                return label == 0 ? 0 : HumanReadable.sizeFormat(label,0)
+              callback: function(label: string | number) {
+                return label == 0 ? 0 : HumanReadable.sizeFormat(Number(label),0)
               },
               count: 10
             }
           }
         }
       },
-      usage: ref(<any>{}),
+      usage: ref(<ChartData<'line'>>{}),
     }
   },
   computed: {
@@ -195,10 +318,36 @@ export default {
       }
     },
   },
+  watch: {
+    visible(v) {
+      if (v) {
+        this.limit = 1
+        this.rangeStart = 0
+        this.rangeEnd = 0
+        this.loadData()
+        if (this.autoRefresh) this.startAutoRefresh()
+      } else {
+        this.loaded = false
+        this.alert = false
+        this.usage.labels = []
+        if (this.usage.datasets) {
+          this.usage.datasets[0].data = []
+          this.usage.datasets[1].data = []
+        }
+        this.stopAutoRefresh()
+      }
+    },
+    autoRefresh(v) {
+      localStorage.setItem('statsAutoRefresh', v ? 'true' : 'false')
+      // Live refresh only makes sense on presets, not a fixed custom range
+      if (v && this.limit !== 0) this.startAutoRefresh()
+      else this.stopAutoRefresh()
+    }
+  },
   methods: {
     async loadData() {
       this.loading = true
-      let params: any = { resource: this.resource, tag: this.tag }
+      let params: StatsParams = { resource: this.resource, tag: this.tag }
       let span = this.limit
       if (this.limit === 0) {
         if (!this.rangeStart || !this.rangeEnd || this.rangeEnd <= this.rangeStart) {
@@ -213,7 +362,7 @@ export default {
       } else {
         params.limit = this.limit
       }
-      const data = await HttpUtils.get('api/stats', params)
+      const data = await HttpUtils.get<StatsResponse>('api/stats', params)
       if (data.success && data.obj.stats) {
         const {stats, bucketSpan, startTime} = data.obj
         const count = data.obj.numBuckets ?? 360
@@ -309,32 +458,6 @@ export default {
         hour12: false,
       })
     },
-  },
-  watch: {
-    visible(v) {
-      if (v) {
-        this.limit = 1
-        this.rangeStart = 0
-        this.rangeEnd = 0
-        this.loadData()
-        if (this.autoRefresh) this.startAutoRefresh()
-      } else {
-        this.loaded = false
-        this.alert = false
-        this.usage.labels = []
-        if (this.usage.datasets) {
-          this.usage.datasets[0].data = []
-          this.usage.datasets[1].data = []
-        }
-        this.stopAutoRefresh()
-      }
-    },
-    autoRefresh(v) {
-      localStorage.setItem('statsAutoRefresh', v ? 'true' : 'false')
-      // Live refresh only makes sense on presets, not a fixed custom range
-      if (v && this.limit !== 0) this.startAutoRefresh()
-      else this.stopAutoRefresh()
-    }
   }
 }
 </script>

@@ -1,9 +1,14 @@
 <template>
-  <Line v-if="loaded" :data="data" :options="<any>options" :key="theme.global.name" />
+  <LineChart
+    v-if="loaded"
+    :key="theme.global.name"
+    :data="data"
+    :options="<any>options"
+  />
 </template>
 
 <script lang="ts">
-import { ref } from 'vue'
+import { PropType, ref } from 'vue'
 import { useTheme } from 'vuetify'
 import { Line } from 'vue-chartjs'
 import {
@@ -25,18 +30,102 @@ ChartJS.register(
   Filler
 )
 ChartJS.defaults.font.family = 'Vazirmatn'
+
+// One resource reading. Memory reports a pair, cpu is a percent, and the
+// network and disk counters are totals a delta is taken from.
+interface Usage {
+  current: number
+  total: number
+}
+
+interface NetUsage {
+  recv: number
+  sent: number
+  precv: number
+  psent: number
+}
+
+interface DiskIo {
+  read: number
+  write: number
+}
+
+// The reading a chart draws. Only the section its own type needs is read, and
+// every reading carries that section whole.
+interface TilesData {
+  cpu: number
+  mem: Usage
+  net: NetUsage
+  dio: DiskIo
+}
+
+// The scales below are linear, so chart.js hands each tick its numeric value.
+type TickCallback = (label: number) => string
+
+// Only the chart.js options these two presets actually set. The chart itself
+// takes the far wider shape chart.js defines, which is why it is cast on the
+// way in.
+interface AxisOptions {
+  min?: number
+  max?: number
+  grid: { color: string }
+  beginAtZero?: boolean
+  ticks: {
+    beginAtZero?: boolean
+    steps?: number
+    stepValue?: number
+    max?: number
+    count?: number
+    color?: string
+    callback?: TickCallback
+  }
+}
+
+interface LineChartOptions {
+  animation: boolean
+  responsive: boolean
+  maintainAspectRatio: boolean
+  interaction: { intersect: boolean, mode: string }
+  elements: {
+    point: { pointStyle: boolean }
+    line: { tension: number, borderWidth: number }
+  }
+  plugins: {
+    tooltip: { enabled: boolean }
+    legend: { display: boolean }
+  }
+  scales: { y: AxisOptions, x?: AxisOptions }
+}
+
+// The series the chart draws, built fresh on every reading.
+interface LineChartData {
+  labels: string[]
+  datasets: {
+    label: string
+    backgroundColor: string
+    borderColor: string
+    fill: boolean
+    data: number[]
+  }[]
+}
+
 export default {
   components: {
-    Line
+    LineChart: Line
   },
-  props: ['tilesData','type'],
+  props: {
+    tilesData: { type: Object as PropType<TilesData>, required: true },
+    type: { type: String, required: true }
+  },
   data() {
     return {
       theme: useTheme(),
       loaded: false,
       labels: new Array(20).fill(''),
-      oldValues: <any>{net: {}, dio: {}},
-      options1: {
+      // Empty until the first reading arrives; the checks below skip that one,
+      // since a delta needs two.
+      oldValues: { net: <NetUsage>{}, dio: <DiskIo>{} },
+      options1: <LineChartOptions>{
         animation: false,
         responsive: true,
         maintainAspectRatio: false,
@@ -73,7 +162,7 @@ export default {
           }
         }
       },
-      optionsNet: {
+      optionsNet: <LineChartOptions>{
         animation: false,
         responsive: true,
         maintainAspectRatio: false,
@@ -100,18 +189,20 @@ export default {
             },
             beginAtZero: true,
             ticks: {
-              callback: (label:any, index: number) => { return parseInt(label).toString() },
+              callback: (label:number) => { return parseInt(String(label)).toString() },
               count: 10
             }
           }
         }
       },
-      data: ref(<any>{})
+      data: ref(<LineChartData>{})
     }
   },
   computed: {
     chartColors() {
-      const onSurface = this.theme.current.colors['on-surface']
+      // Vuetify types a theme colour as a string or one of its object forms;
+      // the palette this app defines holds CSS colour strings throughout.
+      const onSurface = <string>this.theme.current.colors['on-surface']
       const dark = this.theme.current.dark
       return {
         text: onSurface,
@@ -121,30 +212,64 @@ export default {
     },
     options() {
       const { text, gridY, gridX } = this.chartColors
-      const applyTheme = (o:any) => {
-        o.scales.y.grid.color = gridY
-        o.scales.y.ticks.color = text
-        o.scales.x = { grid: { color: gridX }, ticks: { color: text } }
-        return o
-      }
+      // Build a new options object instead of mutating component state from a computed
+      const applyTheme = (o:LineChartOptions, callback?: TickCallback): LineChartOptions => ({
+        ...o,
+        scales: {
+          ...o.scales,
+          y: {
+            ...o.scales.y,
+            grid: { ...o.scales.y.grid, color: gridY },
+            ticks: { ...o.scales.y.ticks, color: text, ...(callback ? { callback } : {}) },
+          },
+          x: { grid: { color: gridX }, ticks: { color: text } },
+        },
+      })
       switch (this.$props.type){
         case "h-net":
-          this.optionsNet.scales.y.ticks.callback = (label:any, index: number) => {
-            return label == 0 ? "0" : HumanReadable.sizeFormat(label,0)
-          }
-          return applyTheme(this.optionsNet)
+          return applyTheme(this.optionsNet, (label:number) => label == 0 ? "0" : HumanReadable.sizeFormat(label,0))
         case "hp-net":
-          this.optionsNet.scales.y.ticks.callback = (label:any, index: number) => {
-            return label == 0 ? "0" : HumanReadable.packetFormat(label,0)
-          }
-          return applyTheme(this.optionsNet)
+          return applyTheme(this.optionsNet, (label:number) => label == 0 ? "0" : HumanReadable.packetFormat(label,0))
         case "h-dio":
-          this.optionsNet.scales.y.ticks.callback = (label:any, index: number) => {
-            return label == 0 ? "0" : HumanReadable.sizeFormat(label,0)
-          }
-          return applyTheme(this.optionsNet)
+          return applyTheme(this.optionsNet, (label:number) => label == 0 ? "0" : HumanReadable.sizeFormat(label,0))
       }
       return applyTheme(this.options1)
+    }
+  },
+  watch: {
+    tilesData(v:TilesData) {
+      switch (this.$props.type) {
+        case 'h-cpu':
+          this.updateData1(v.cpu)
+          break
+        case 'h-mem':
+          this.updateData1(v.mem.current*100/v.mem.total)
+          break
+        case 'h-net':
+          if (this.oldValues.net.sent) {
+            const downSpeed = (v.net.recv-this.oldValues.net.recv)/2  // Each 2 sec
+            const upSpeed = (v.net.sent-this.oldValues.net.sent)/2  // Each 2 sec
+            this.updateData2(upSpeed,downSpeed)
+          }
+          this.oldValues.net = v.net
+          break
+        case 'hp-net':
+          if (this.oldValues.net.psent) {
+            const downSpeed = (v.net.precv-this.oldValues.net.precv)/2  // Each 2 sec
+            const upSpeed = (v.net.psent-this.oldValues.net.psent)/2  // Each 2 sec
+            this.updateData2(upSpeed,downSpeed)
+          }
+          this.oldValues.net = v.net
+          break
+        case 'h-dio':
+          if (this.oldValues.dio.read) {
+            const downSpeed = (v.dio.read-this.oldValues.dio.read)/2  // Each 2 sec
+            const upSpeed = (v.dio.write-this.oldValues.dio.write)/2  // Each 2 sec
+            this.updateData2(upSpeed,downSpeed)
+          }
+          this.oldValues.dio = v.dio
+          break
+      }
     }
   },
   methods: {
@@ -197,42 +322,6 @@ export default {
         ],
       }
       this.loaded = true
-    }
-  },
-  watch: {
-    tilesData(v:any) {
-      switch (this.$props.type) {
-        case 'h-cpu':
-          this.updateData1(v.cpu)
-          break
-        case 'h-mem':
-          this.updateData1(v.mem.current*100/v.mem.total)
-          break
-        case 'h-net':
-          if (this.oldValues.net.sent) {
-            const downSpeed = (v.net.recv-this.oldValues.net.recv)/2  // Each 2 sec
-            const upSpeed = (v.net.sent-this.oldValues.net.sent)/2  // Each 2 sec
-            this.updateData2(upSpeed,downSpeed)
-          }
-          this.oldValues.net = v.net
-          break
-        case 'hp-net':
-          if (this.oldValues.net.psent) {
-            const downSpeed = (v.net.precv-this.oldValues.net.precv)/2  // Each 2 sec
-            const upSpeed = (v.net.psent-this.oldValues.net.psent)/2  // Each 2 sec
-            this.updateData2(upSpeed,downSpeed)
-          }
-          this.oldValues.net = v.net
-          break
-        case 'h-dio':
-          if (this.oldValues.dio.read) {
-            const downSpeed = (v.dio.read-this.oldValues.dio.read)/2  // Each 2 sec
-            const upSpeed = (v.dio.write-this.oldValues.dio.write)/2  // Each 2 sec
-            this.updateData2(upSpeed,downSpeed)
-          }
-          this.oldValues.dio = v.dio
-          break
-      }
     }
   }
 }

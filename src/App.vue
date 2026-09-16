@@ -8,8 +8,8 @@
     <v-progress-circular
       indeterminate
       size="64"
-    ></v-progress-circular>
-    <br />
+    />
+    <br>
     {{ $t('loading') }}
   </v-overlay>
   <Message />

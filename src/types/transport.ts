@@ -18,7 +18,7 @@ export interface HTTP extends TransportBasics {
   host?: string[]
   path?: string
   method?: string
-  headers?: {}
+  headers?: Record<string, string | string[]>
   idle_timeout?: string
   ping_timeout?: string
 }
@@ -32,7 +32,7 @@ export interface WebSocket extends TransportBasics {
   early_data_header_name?: string
 }
 
-export interface QUIC extends TransportBasics {}
+export type QUIC = TransportBasics
 
 export interface gRPC extends TransportBasics {
   service_name?: string
@@ -44,5 +44,5 @@ export interface gRPC extends TransportBasics {
 export interface HTTPUpgrade extends TransportBasics {
   host?: string
   path?: string
-  headers?: {}
+  headers?: Record<string, string | string[]>
 }

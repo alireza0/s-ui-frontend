@@ -6,10 +6,14 @@
     :title="$t('editor') + ' - ' + $t('setting.jsonSub')"
     @close="enableEditor = false"
     @save="saveEditor"
-    />
+  />
   <v-card>
     <v-row>
-      <v-col cols="12" sm="6" md="3">
+      <v-col
+        cols="12"
+        sm="6"
+        md="3"
+      >
         <v-select
           v-model="selectedDefaultRules"
           :items="defaultRuleItems"
@@ -17,20 +21,29 @@
           multiple
           chips
           hide-details
-        ></v-select>
+        />
       </v-col>
-      <v-col cols="12" sm="6" md="3" lg="2">
+      <v-col
+        cols="12"
+        sm="6"
+        md="3"
+        lg="2"
+      >
         <v-select
           v-model="routeFinal"
           :items="[{ title: 'Proxy', value: 'proxy' }, { title: 'Direct', value: 'direct' }]"
           :label="$t('setting.routeFinal')"
           clearable
           hide-details
-        ></v-select>
+        />
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="3">
+      <v-col
+        cols="12"
+        sm="6"
+        md="3"
+      >
         <v-select
           v-model="ruleToProxy"
           :items="geoOptions"
@@ -38,9 +51,13 @@
           multiple
           chips
           hide-details
-        ></v-select>
+        />
       </v-col>
-      <v-col cols="12" sm="6" md="3">
+      <v-col
+        cols="12"
+        sm="6"
+        md="3"
+      >
         <v-select
           v-model="ruleToDirect"
           :items="geoOptions"
@@ -48,9 +65,13 @@
           multiple
           chips
           hide-details
-        ></v-select>
+        />
       </v-col>
-      <v-col cols="12" sm="6" md="3">
+      <v-col
+        cols="12"
+        sm="6"
+        md="3"
+      >
         <v-select
           v-model="ruleToBlock"
           :items="geoOptions"
@@ -58,50 +79,95 @@
           multiple
           chips
           hide-details
-        ></v-select>
+        />
       </v-col>
     </v-row>
-    <v-row  v-if="enableLog">
-      <v-col cols="12" sm="6" md="3" lg="2">
+    <v-row v-if="enableLog">
+      <v-col
+        cols="12"
+        sm="6"
+        md="3"
+        lg="2"
+      >
         <v-select
+          v-model="subJsonExt.log!.level"
           hide-details
           :label="$t('basic.log.level')"
           :items="levels"
-          v-model="subJsonExt.log.level">
-        </v-select>
+        />
       </v-col>
-      <v-col cols="12" sm="6" md="3" lg="2">
-        <v-switch v-model="subJsonExt.log.timestamp" color="primary" :label="$t('setting.timestamp')" hide-details />
+      <v-col
+        cols="12"
+        sm="6"
+        md="3"
+        lg="2"
+      >
+        <v-switch
+          v-model="subJsonExt.log!.timestamp"
+          color="primary"
+          :label="$t('setting.timestamp')"
+          hide-details
+        />
       </v-col>
     </v-row>
     <v-row v-if="enableDns">
-      <v-col cols="12" sm="6" md="3" lg="2">
+      <v-col
+        cols="12"
+        sm="6"
+        md="3"
+        lg="2"
+      >
         <v-select
+          v-model="subJsonExt.dns!.final"
           hide-details
           :label="$t('dns.final')"
           :items="dnsTags"
-          v-model="subJsonExt.dns.final">
-        </v-select>
+        />
       </v-col>
-      <v-col cols="12" sm="6" md="3" lg="2">
-        <SimpleDNS :data="proxyDns" :label="$t('setting.globalDns')" />
+      <v-col
+        cols="12"
+        sm="6"
+        md="3"
+        lg="2"
+      >
+        <SimpleDNS
+          :data="proxyDns"
+          :label="$t('setting.globalDns')"
+        />
       </v-col>
-      <v-col cols="12" sm="6" md="3" lg="2">
-        <SimpleDNS :data="directDns" :label="$t('setting.directDns')" />
+      <v-col
+        cols="12"
+        sm="6"
+        md="3"
+        lg="2"
+      >
+        <SimpleDNS
+          :data="directDns"
+          :label="$t('setting.directDns')"
+        />
       </v-col>
     </v-row>
     <v-row v-if="enableDns">
-      <v-col cols="12" sm="6" md="3" lg="2">
+      <v-col
+        cols="12"
+        sm="6"
+        md="3"
+        lg="2"
+      >
         <v-select
+          v-model="subJsonExt.default_domain_resolver"
           hide-details
           :label="$t('basic.routing.defaultDns')"
           :items="dnsTags"
           clearable
           @click:clear="delete subJsonExt.default_domain_resolver"
-          v-model="subJsonExt.default_domain_resolver">
-        </v-select>
+        />
       </v-col>
-      <v-col cols="12" sm="6" md="3">
+      <v-col
+        cols="12"
+        sm="6"
+        md="3"
+      >
         <v-select
           v-model="dnsToDirect"
           :items="geositeOptions"
@@ -109,12 +175,16 @@
           multiple
           chips
           hide-details
-        ></v-select>
+        />
       </v-col>
     </v-row>
     <template v-if="enableInb">
       <v-row>
-        <v-col cols="12" sm="6" md="3">
+        <v-col
+          cols="12"
+          sm="6"
+          md="3"
+        >
           <v-combobox
             v-model="inbounds[0].address"
             :items="defaultInb[0].address"
@@ -122,19 +192,28 @@
             multiple
             hide-details
             :label="$t('in.addr')"
-          ></v-combobox>
+          />
         </v-col>
-        <v-col cols="12" sm="6" md="3" lg="2">
+        <v-col
+          cols="12"
+          sm="6"
+          md="3"
+          lg="2"
+        >
           <v-text-field
-            type="number"
             v-model.number="inbounds[0].mtu"
+            type="number"
             hide-details
             label="MTU"
-          ></v-text-field>
+          />
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" sm="6" md="3">
+        <v-col
+          cols="12"
+          sm="6"
+          md="3"
+        >
           <v-combobox
             v-model="inbounds[0].exclude_package"
             :items="['ir.mci.ecareapp','com.myirancell']"
@@ -142,38 +221,79 @@
             multiple
             hide-details
             :label="$t('setting.excludePkg')"
-          ></v-combobox>
+          />
         </v-col>
-        <v-col cols="12" sm="6" md="3" lg="2">
+        <v-col
+          cols="12"
+          sm="6"
+          md="3"
+          lg="2"
+        >
           <v-switch
             v-model="platformProxy"
             hide-details
             color="primary"
             label="Platform HTTP proxy"
-          ></v-switch>
+          />
         </v-col>
       </v-row>
     </template>
     <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn @click="openEditor" variant="outlined" hide-details>{{ $t('editor') }}</v-btn>
-      <v-menu v-model="menu" :close-on-content-click="false" location="start">
-        <template v-slot:activator="{ props }">
-          <v-btn v-bind="props" hide-details variant="tonal">{{ $t('setting.jsonSubOptions') }}</v-btn>
+      <v-spacer />
+      <v-btn
+        variant="outlined"
+        hide-details
+        @click="openEditor"
+      >
+        {{ $t('editor') }}
+      </v-btn>
+      <v-menu
+        v-model="menu"
+        :close-on-content-click="false"
+        location="start"
+      >
+        <template #activator="{ props }">
+          <v-btn
+            v-bind="props"
+            hide-details
+            variant="tonal"
+          >
+            {{ $t('setting.jsonSubOptions') }}
+          </v-btn>
         </template>
         <v-card>
           <v-list>
             <v-list-item>
-              <v-switch v-model="enableLog" color="primary" :label="$t('basic.log.title')" hide-details></v-switch>
+              <v-switch
+                v-model="enableLog"
+                color="primary"
+                :label="$t('basic.log.title')"
+                hide-details
+              />
             </v-list-item>
             <v-list-item>
-              <v-switch v-model="enableDns" color="primary" label="DNS" hide-details></v-switch>
+              <v-switch
+                v-model="enableDns"
+                color="primary"
+                label="DNS"
+                hide-details
+              />
             </v-list-item>
             <v-list-item>
-              <v-switch v-model="enableInb" color="primary" :label="$t('objects.inbound')" hide-details></v-switch>
+              <v-switch
+                v-model="enableInb"
+                color="primary"
+                :label="$t('objects.inbound')"
+                hide-details
+              />
             </v-list-item>
             <v-list-item>
-              <v-switch v-model="enableExp" color="primary" label="Experimental" hide-details></v-switch>
+              <v-switch
+                v-model="enableExp"
+                color="primary"
+                label="Experimental"
+                hide-details
+              />
             </v-list-item>
           </v-list>
         </v-card>
@@ -183,18 +303,122 @@
 </template>
 
 <script lang="ts">
+import { PropType } from 'vue'
 import Editor from './Editor.vue'
 import SimpleDNS from './SimpleDNS.vue'
 import { push } from 'notivue'
 import { i18n } from '@/locales'
 import { geoCatalog, geoList, geositeList } from '@/plugins/rulesetCatalog'
+
+// The one setting this form reads and writes, as a string of sing-box JSON.
+interface Settings {
+  subJsonExt: string
+}
+
+// The config below is user-supplied sing-box JSON and carries far more than the
+// panel touches. Each shape names only what the form reads or writes; anything
+// else the user wrote is parsed, kept and written back untouched.
+interface SbRule {
+  action?: string
+  outbound?: string
+  protocol?: string
+  clash_mode?: string
+  rule_set?: string[]
+}
+
+interface SbDnsServer {
+  type?: string
+  tag?: string
+  server?: string
+  server_port?: number
+  detour?: string
+  domain_resolver?: string
+}
+
+interface SbDnsRule {
+  action?: string
+  server?: string
+  clash_mode?: string
+  source_ip_cidr?: string[]
+  rule_set?: string[]
+}
+
+interface SbDns {
+  servers: SbDnsServer[]
+  rules: SbDnsRule[]
+  final?: string
+  strategy?: string
+}
+
+// A rule-set entry is matched against the catalog by tag; the rest of it is
+// whatever the catalog or the user put there.
+interface SbRuleSet {
+  tag: string
+}
+
+interface SbInbound {
+  type: string
+  address?: string[]
+  mtu?: number
+  auto_route?: boolean
+  strict_route?: boolean
+  stack?: string
+  exclude_package?: string[]
+  listen?: string
+  listen_port?: number
+  users?: string[]
+  platform?: {
+    http_proxy: {
+      enabled: boolean
+      server: string
+      server_port: number
+    }
+  }
+}
+
+interface SbLog {
+  level: string
+  timestamp: boolean
+}
+
+interface SbExperimental {
+  clash_api: {
+    external_controller: string
+    external_ui: string
+    secret: string
+    external_ui_download_url: string
+    external_ui_download_detour: string
+    default_mode: string
+  }
+  cache_file: {
+    enabled: boolean
+    store_fakeip: boolean
+  }
+}
+
+// Every section is optional: the switches in the options menu add and remove
+// them, and an empty config is written back as an empty string.
+interface SubJson {
+  log?: SbLog
+  dns?: SbDns
+  inbounds?: SbInbound[]
+  experimental?: SbExperimental
+  rules?: SbRule[]
+  rule_set?: SbRuleSet[]
+  final?: string
+  default_domain_resolver?: string
+}
+
 export default {
-  props: ['settings'],
+  components: { Editor, SimpleDNS },
+  props: {
+    settings: { type: Object as PropType<Settings>, required: true }
+  },
   data() {
     return {
       menu: false,
       enableEditor: false,
-      subJsonExt: <any>{},
+      subJsonExt: <SubJson>{},
       levels: ["trace", "debug", "info", "warn", "error", "fatal", "panic"],
       defaultRules: [
         { action: "sniff" },
@@ -305,7 +529,10 @@ export default {
   computed: {
     enableLog: {
       get() :boolean { return this.subJsonExt?.log != undefined },
-      set(v:boolean) { v ? this.subJsonExt.log = this.defaultLog : delete this.subJsonExt.log }
+      set(v:boolean) {
+        if (v) this.subJsonExt.log = this.defaultLog
+        else delete this.subJsonExt.log
+      }
     },
     enableDns: {
       get() :boolean { return this.subJsonExt?.dns != undefined },
@@ -313,10 +540,10 @@ export default {
         if (v) {
           this.subJsonExt.dns = this.defaultDns
           if (this.rules == undefined) this.subJsonExt.rules = [{ action: 'sniff' }]
-          this.subJsonExt.rules.unshift({ protocol: "dns", action: "hijack-dns" })
+          this.subJsonExt.rules!.unshift({ protocol: "dns", action: "hijack-dns" })
         } else {
           delete this.subJsonExt.dns
-          const rules = this.subJsonExt?.rules?.filter((r:any) => r.protocol != "dns") ?? []
+          const rules = this.subJsonExt?.rules?.filter((r) => r.protocol != "dns") ?? []
           if (rules.length >= 0) this.subJsonExt.rules = rules
           if (this.rules.length == 0) delete this.subJsonExt.rules
         }
@@ -324,17 +551,25 @@ export default {
     },
     enableInb: {
       get() :boolean { return this.subJsonExt?.inbounds != undefined },
-      set(v:boolean) { v ? this.subJsonExt.inbounds = this.defaultInb.slice() : delete this.subJsonExt.inbounds }
+      set(v:boolean) {
+        if (v) this.subJsonExt.inbounds = this.defaultInb.slice()
+        else delete this.subJsonExt.inbounds
+      }
     },
     enableExp: {
       get() :boolean { return this.subJsonExt?.experimental != undefined },
-      set(v:boolean) { v ? this.subJsonExt.experimental = this.defaultExp : delete this.subJsonExt.experimental }
+      set(v:boolean) {
+        if (v) this.subJsonExt.experimental = this.defaultExp
+        else delete this.subJsonExt.experimental
+      }
     },
-    dns():any { return this.subJsonExt?.dns?? undefined },
+    // Absent until the DNS switch is turned on; every reader guards with ?.
+    // before it reaches in.
+    dns():SbDns { return <SbDns>this.subJsonExt?.dns?? undefined },
     proxyDns: {
-      get() :any { return this.dns?.servers?.findLast((d:any) => d.tag == "proxy-dns")?? {} },
-      set(v:any) { 
-        let sIndex = this.dns.servers.findIndex((d:any) => d.tag == "proxy-dns")
+      get() :SbDnsServer { return this.dns?.servers?.findLast((d) => d.tag == "proxy-dns")?? {} },
+      set(v:SbDnsServer) { 
+        let sIndex = this.dns.servers.findIndex((d) => d.tag == "proxy-dns")
         if (sIndex === -1 || sIndex == undefined) {
           this.dns.servers.push({ ...this.defaultDns.servers[0], ...v })
         } else {
@@ -343,9 +578,9 @@ export default {
       }
     },
     directDns: {
-      get() :any { return this.dns?.servers?.findLast((d:any) => d.tag == "direct-dns")?? {} },
-      set(v:any) {
-        const sIndex = this.dns.servers.findIndex((d:any) => d.tag == "direct-dns")
+      get() :SbDnsServer { return this.dns?.servers?.findLast((d) => d.tag == "direct-dns")?? {} },
+      set(v:SbDnsServer) {
+        const sIndex = this.dns.servers.findIndex((d) => d.tag == "direct-dns")
         if (sIndex === -1 || sIndex == undefined) {
           this.dns.servers.push({ ...this.defaultDns.servers[1], ...v })
         } else {
@@ -353,18 +588,18 @@ export default {
         }
       },
     },
-    dnsTags() { return this.dns?.servers?.map((d:any) => d.tag) ?? [] },
+    dnsTags() { return this.dns?.servers?.map((d) => d.tag) ?? [] },
     final: {
       get() :string { return this.dns.final?? "" },
       set(v:string) { this.dns.final = v.length>0 ? v : undefined }
     },
     dnsToDirect: {
       get() :string[] {
-        const ruleIndex = this.dns?.rules?.findIndex((r:any) => r.server == "direct-dns" && Object.hasOwn(r,'rule_set'))
-        return ruleIndex >= 0 ? this.dns.rules[ruleIndex].rule_set : []
+        const ruleIndex = this.dns?.rules?.findIndex((r) => r.server == "direct-dns" && Object.hasOwn(r,'rule_set'))
+        return ruleIndex >= 0 ? <string[]>this.dns.rules[ruleIndex].rule_set : []
       },
       set(v:string[]) {
-        const ruleIndex = this.dns?.rules?.findIndex((r:any) => r.server == "direct-dns" && Object.hasOwn(r,'rule_set'))
+        const ruleIndex = this.dns?.rules?.findIndex((r) => r.server == "direct-dns" && Object.hasOwn(r,'rule_set'))
         if (v.length>0) {
           if (ruleIndex >= 0){
             this.dns.rules[ruleIndex].rule_set = v
@@ -377,31 +612,35 @@ export default {
         this.updateRuleSets()
       }
     },
-    inbounds():any[] { return this.subJsonExt?.inbounds?? undefined },
+    // Absent until the inbound switch is turned on; every reader guards with ?.
+    // before it reaches in.
+    inbounds():SbInbound[] { return <SbInbound[]>this.subJsonExt?.inbounds?? undefined },
     platformProxy: {
       get() :boolean { return this.inbounds[0]?.platform != undefined },
-      set(v:boolean) { this.subJsonExt.inbounds[0].platform = v ? this.defaultInb[0].platform : undefined }
+      set(v:boolean) { this.subJsonExt.inbounds![0].platform = v ? this.defaultInb[0].platform : undefined }
     },
-    rules():any { return this.subJsonExt?.rules?? undefined },
+    // Absent until a rule is added; every reader guards with ?. before it
+    // reaches in.
+    rules():SbRule[] { return <SbRule[]>this.subJsonExt?.rules?? undefined },
     selectedDefaultRules: {
       get(): number[] {
         return this.defaultRules
-          .map((d:any, i:number) => this.hasDefaultRule(d) ? i : -1)
+          .map((d, i:number) => this.hasDefaultRule(d) ? i : -1)
           .filter((i:number) => i >= 0)
       },
       set(v:number[]) {
-        this.defaultRules.forEach((d:any, i:number) => this.toggleDefaultRule(d, v.includes(i)))
+        this.defaultRules.forEach((d, i:number) => this.toggleDefaultRule(d, v.includes(i)))
       }
     },
     customRuleSetTags() :string[] {
       return (this.subJsonExt?.rule_set ?? [])
-        .filter((rs:any) => !this.geo.some((g:any) => g.tag == rs.tag))
-        .map((rs:any) => rs.tag)
+        .filter((rs) => !this.geo.some((g) => g.tag == rs.tag))
+        .map((rs) => rs.tag)
     },
-    geoOptions() :any[] {
+    geoOptions() :{ title: string, value: string }[] {
       return [...this.geoList, ...this.customRuleSetTags.map((t:string) => ({ title: t, value: t }))]
     },
-    geositeOptions() :any[] {
+    geositeOptions() :{ title: string, value: string }[] {
       return [...this.geositeList, ...this.customRuleSetTags.map((t:string) => ({ title: t, value: t }))]
     },
     routeFinal: {
@@ -413,11 +652,11 @@ export default {
     },
     ruleToProxy: {
       get() :string[] {
-        const ruleIndex = this.rules?.findIndex((r:any) => r.outbound == "proxy" && Object.hasOwn(r,'rule_set'))
-        return ruleIndex >= 0 ? this.rules[ruleIndex].rule_set : []
+        const ruleIndex = this.rules?.findIndex((r) => r.outbound == "proxy" && Object.hasOwn(r,'rule_set'))
+        return ruleIndex >= 0 ? <string[]>this.rules[ruleIndex].rule_set : []
       },
       set(v:string[]) {
-        const ruleIndex = this.rules?.findIndex((r:any) => r.outbound == "proxy" && Object.hasOwn(r,'rule_set'))
+        const ruleIndex = this.rules?.findIndex((r) => r.outbound == "proxy" && Object.hasOwn(r,'rule_set'))
         if (v.length>0) {
           if (ruleIndex >= 0){
             this.rules[ruleIndex].rule_set = v
@@ -433,11 +672,11 @@ export default {
     },
     ruleToDirect: {
       get() :string[] {
-        const ruleIndex = this.rules?.findIndex((r:any) => r.outbound == "direct" && Object.hasOwn(r,'rule_set'))
-        return ruleIndex >= 0 ? this.rules[ruleIndex].rule_set : []
+        const ruleIndex = this.rules?.findIndex((r) => r.outbound == "direct" && Object.hasOwn(r,'rule_set'))
+        return ruleIndex >= 0 ? <string[]>this.rules[ruleIndex].rule_set : []
       },
       set(v:string[]) {
-        const ruleIndex = this.rules?.findIndex((r:any) => r.outbound == "direct" && Object.hasOwn(r,'rule_set'))
+        const ruleIndex = this.rules?.findIndex((r) => r.outbound == "direct" && Object.hasOwn(r,'rule_set'))
         if (v.length>0) {
           if (ruleIndex >= 0){
             this.rules[ruleIndex].rule_set = v
@@ -453,11 +692,11 @@ export default {
     },
     ruleToBlock: {
       get() :string[] {
-        const ruleIndex = this.rules?.findIndex((r:any) => r.action == "reject" && Object.hasOwn(r,'rule_set'))
-        return ruleIndex >= 0 ? this.rules[ruleIndex].rule_set : []
+        const ruleIndex = this.rules?.findIndex((r) => r.action == "reject" && Object.hasOwn(r,'rule_set'))
+        return ruleIndex >= 0 ? <string[]>this.rules[ruleIndex].rule_set : []
       },
       set(v:string[]) {
-        const ruleIndex = this.rules?.findIndex((r:any) => r.action == "reject" && Object.hasOwn(r,'rule_set'))
+        const ruleIndex = this.rules?.findIndex((r) => r.action == "reject" && Object.hasOwn(r,'rule_set'))
         if (v.length>0) {
           if (ruleIndex >= 0){
             this.rules[ruleIndex].rule_set = v
@@ -472,30 +711,41 @@ export default {
       }
     }
   },
+  watch:{
+    subJsonExt:{
+      handler(v:SubJson) {
+        this.$props.settings.subJsonExt = Object.keys(v).length>0 ? JSON.stringify(v, null, 2) : ""
+      },
+      deep: true
+    },
+  },
+  mounted(){
+    this.loadData()
+  },
   methods: {
     loadData() {
       if (this.$props.settings?.subJsonExt?.length>0){
         this.subJsonExt = JSON.parse(this.$props.settings.subJsonExt)
       } else {
-        this.subJsonExt = <any>{}
+        this.subJsonExt = <SubJson>{}
       }
     },
-    hasDefaultRule(rule:any): boolean {
-      return Array.isArray(this.rules) && this.rules.some((r:any) => JSON.stringify(r) === JSON.stringify(rule))
+    hasDefaultRule(rule:SbRule): boolean {
+      return Array.isArray(this.rules) && this.rules.some((r) => JSON.stringify(r) === JSON.stringify(rule))
     },
-    toggleDefaultRule(rule:any, v:boolean) {
+    toggleDefaultRule(rule:SbRule, v:boolean) {
       if (v) {
         if (!Array.isArray(this.subJsonExt.rules)) this.subJsonExt.rules = []
-        if (!this.subJsonExt.rules.some((r:any) => JSON.stringify(r) === JSON.stringify(rule))) {
+        if (!this.subJsonExt.rules.some((r) => JSON.stringify(r) === JSON.stringify(rule))) {
           this.subJsonExt.rules.push(JSON.parse(JSON.stringify(rule)))
           this.normalizeRulesOrder()
         }
       } else if (Array.isArray(this.subJsonExt.rules)) {
-        this.subJsonExt.rules = this.subJsonExt.rules.filter((r:any) => JSON.stringify(r) !== JSON.stringify(rule))
+        this.subJsonExt.rules = this.subJsonExt.rules.filter((r) => JSON.stringify(r) !== JSON.stringify(rule))
         if (this.subJsonExt.rules.length === 0) delete this.subJsonExt.rules
       }
     },
-    ruleWeight(r:any): number {
+    ruleWeight(r:SbRule): number {
       if (r.protocol == "dns") return 0
       if (r.action == "sniff") return 1
       if (r.clash_mode == "Direct") return 2
@@ -504,17 +754,17 @@ export default {
     },
     normalizeRulesOrder() {
       if (Array.isArray(this.subJsonExt?.rules)) {
-        this.subJsonExt.rules.sort((a:any,b:any) => this.ruleWeight(a) - this.ruleWeight(b))
+        this.subJsonExt.rules.sort((a,b) => this.ruleWeight(a) - this.ruleWeight(b))
       }
     },
     updateRuleSets(){
       let tags = <string[]>[]
-      if (this.dns?.rules?.length>0) this.dns.rules.forEach((r:any) => { if (r.rule_set) tags.push(...r.rule_set) })
-      if (this.rules?.length>0) this.rules.forEach((r:any) => { if (r.rule_set) tags.push(...r.rule_set) })
-      const custom = (this.subJsonExt?.rule_set ?? []).filter((rs:any) => !this.geo.some((g:any) => g.tag == rs.tag))
+      if (this.dns?.rules?.length>0) this.dns.rules.forEach((r) => { if (r.rule_set) tags.push(...r.rule_set) })
+      if (this.rules?.length>0) this.rules.forEach((r) => { if (r.rule_set) tags.push(...r.rule_set) })
+      const custom = (this.subJsonExt?.rule_set ?? []).filter((rs) => !this.geo.some((g) => g.tag == rs.tag))
       if (tags.length>0 || custom.length>0){
         this.subJsonExt.rule_set = [
-          ...this.geo.filter((g:any) => tags.includes(g.tag)),
+          ...this.geo.filter((g) => tags.includes(g.tag)),
           ...custom,
         ]
       } else {
@@ -528,7 +778,7 @@ export default {
     saveEditor(data:string) {
       try {
         this.subJsonExt = JSON.parse(data)
-      } catch (e) {
+      } catch {
         push.error({
           message: i18n.global.t('failed') + ": " + i18n.global.t('error.invalidData'),
           duration: 5000,
@@ -537,18 +787,6 @@ export default {
       }
       this.enableEditor = false
     }
-  },
-  mounted(){
-    this.loadData()
-  },
-  watch:{
-    subJsonExt:{
-      handler(v) {
-        this.$props.settings.subJsonExt = Object.keys(v).length>0 ? JSON.stringify(v, null, 2) : ""
-      },
-      deep: true
-    },
-  },
-  components: { Editor, SimpleDNS }
+  }
 }
 </script>

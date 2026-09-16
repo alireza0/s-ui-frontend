@@ -1,7 +1,19 @@
 <template>
-  <a :href="url" target="_blank" rel="noopener noreferrer" class="text-decoration-none">
-    <v-icon icon="mdi-information-outline" color="primary" size="small">
-      <v-tooltip activator="parent" location="top">{{ $t('docs') }}</v-tooltip>
+  <a
+    :href="url"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="text-decoration-none"
+  >
+    <v-icon
+      icon="mdi-information-outline"
+      color="primary"
+      size="small"
+    >
+      <v-tooltip
+        activator="parent"
+        location="top"
+      >{{ $t('docs') }}</v-tooltip>
     </v-icon>
   </a>
 </template>

@@ -6,7 +6,7 @@
         :theme="theme"
         :dir="direction"
         :icons="outlinedIcons"
-        :hideClose="true"
+        :hide-close="true"
         @click="item.clear"
       />
     </NotivueSwipe>

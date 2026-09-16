@@ -1,168 +1,295 @@
 <template>
-  <v-card subtitle="ACME" style="background-color: inherit;">
+  <v-card
+    subtitle="ACME"
+    style="background-color: inherit;"
+  >
     <v-row>
       <v-col cols="12">
         <v-text-field
+          v-model="domains"
           :label="$t('rule.domain') + ' ' + $t('commaSeparated')"
           hide-details
-          v-model="domains">
-        </v-text-field>
+        />
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4" v-if="optionDir">
+      <v-col
+        v-if="optionDir"
+        cols="12"
+        sm="6"
+        md="4"
+      >
         <v-text-field
+          v-model="acme.data_directory"
           :label="$t('tls.acme.dataDir')"
           hide-details
-          v-model="acme.data_directory">
-        </v-text-field>
+        />
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="optionDefault">
+      <v-col
+        v-if="optionDefault"
+        cols="12"
+        sm="6"
+        md="4"
+      >
         <v-combobox
           v-model="acme.default_server_name"
           :items="acme.domain"
           :label="$t('tls.acme.defaultDomain')"
           hide-details
-        ></v-combobox>
+        />
       </v-col>
-      <v-col cols="12" sm="6" md="4" v-if="optionEmail">
+      <v-col
+        v-if="optionEmail"
+        cols="12"
+        sm="6"
+        md="4"
+      >
         <v-text-field
+          v-model="acme.email"
           :label="$t('email')"
           hide-details
-          v-model="acme.email">
-        </v-text-field>
+        />
       </v-col>
     </v-row>
     <v-row v-if="optionChallenge">
-      <v-col cols="12" sm="6" md="4">
-        <v-switch color="primary" :label="$t('tls.acme.httpChallenge')" v-model="acme.disable_http_challenge" hide-details></v-switch>
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+      >
+        <v-switch
+          v-model="acme.disable_http_challenge"
+          color="primary"
+          :label="$t('tls.acme.httpChallenge')"
+          hide-details
+        />
       </v-col>
-      <v-col cols="12" sm="6" md="4">
-        <v-switch color="primary" :label="$t('tls.acme.tlsChallenge')" v-model="acme.disable_tls_alpn_challenge" hide-details></v-switch>
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+      >
+        <v-switch
+          v-model="acme.disable_tls_alpn_challenge"
+          color="primary"
+          :label="$t('tls.acme.tlsChallenge')"
+          hide-details
+        />
       </v-col>
     </v-row>
     <v-row v-if="optionPorts">
-      <v-col cols="12" sm="6" md="4">
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+      >
         <v-text-field
-        :label="$t('tls.acme.altHport')"
-        hide-details
-        type="number"
-        min=1
-        max="65532"
-        v-model.number="acme.alternative_http_port">
-        </v-text-field>
+          v-model.number="acme.alternative_http_port"
+          :label="$t('tls.acme.altHport')"
+          hide-details
+          type="number"
+          min="1"
+          max="65532"
+        />
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+      >
         <v-text-field
-        :label="$t('tls.acme.altTport')"
-        hide-details
-        type="number"
-        min=1
-        max="65532"
-        v-model.number="acme.alternative_tls_port">
-        </v-text-field>
+          v-model.number="acme.alternative_tls_port"
+          :label="$t('tls.acme.altTport')"
+          hide-details
+          type="number"
+          min="1"
+          max="65532"
+        />
       </v-col>
     </v-row>
     <v-row v-if="optionProvider">
-      <v-col cols="12" sm="6" md="4">
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+      >
         <v-select
           v-model="caProvider"
           :items="providerList"
           :label="$t('tls.acme.caProvider')"
           hide-details
-        ></v-select>
+        />
       </v-col>
-      <v-col cols="12" md="8" v-if="caProvider == ''">
+      <v-col
+        v-if="caProvider == ''"
+        cols="12"
+        md="8"
+      >
         <v-text-field
+          v-model="acme.provider"
           :label="$t('tls.acme.customCa')"
           hide-details
-          v-model="acme.provider">
-        </v-text-field>
+        />
       </v-col>
     </v-row>
     <v-row v-if="acme.external_account != undefined">
-      <v-col cols="12" sm="6" md="4">
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+      >
         <v-text-field
-        label="Key ID"
-        hide-details
-        v-model="acme.external_account.key_id">
-        </v-text-field>
+          v-model="acme.external_account.key_id"
+          label="Key ID"
+          hide-details
+        />
       </v-col>
-      <v-col cols="12" sm="6" md="4">
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+      >
         <v-text-field
-        label="MAC Key"
-        hide-details
-        v-model="acme.external_account.mac_key">
-        </v-text-field>
+          v-model="acme.external_account.mac_key"
+          label="MAC Key"
+          hide-details
+        />
       </v-col>
     </v-row>
     <v-row v-if="optionHttpClient">
-      <v-col cols="12" sm="6" md="4">
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+      >
         <v-select
+          v-model="acme.http_client"
           :label="$t('basic.httpClient.title')"
           :items="httpClients"
           :no-data-text="$t('basic.httpClient.none')"
           hide-details
           clearable
           @click:clear="acme.http_client = undefined"
-          v-model="acme.http_client">
-        </v-select>
+        />
       </v-col>
     </v-row>
     <v-row v-if="acme.dns01_challenge != undefined">
-      <v-col cols="12" sm="6" md="4">
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+      >
         <v-select
-        :label="$t('tls.acme.dns01Provider')"
-        hide-details
-        :items="dnsProviders.map(d => d.provider)"
-        @update:model-value="acme.dns01_challenge = { provider: $event }"
-        v-model="acme.dns01_challenge.provider">
-        </v-select>
+          v-model="acme.dns01_challenge.provider"
+          :label="$t('tls.acme.dns01Provider')"
+          hide-details
+          :items="dnsProviders.map(d => d.provider)"
+          @update:model-value="acme.dns01_challenge = { provider: $event }"
+        />
       </v-col>
-      <v-col cols="12" sm="6" md="4"
-      v-for="item in dnsProviders.filter(d => d.provider == acme.dns01_challenge?.provider)[0]?.params"
-      :key="item">
+      <v-col
+        v-for="item in dnsProviders.filter(d => d.provider == acme.dns01_challenge?.provider)[0]?.params"
+        :key="item"
+        cols="12"
+        sm="6"
+        md="4"
+      >
         <v-text-field
-        :label="$t('tls.acme.dns01Params.' + item)"
-        hide-details
-        v-model="acme.dns01_challenge[item]">
-        </v-text-field>
+          v-model="acme.dns01_challenge[item]"
+          :label="$t('tls.acme.dns01Params.' + item)"
+          hide-details
+        />
       </v-col>
     </v-row>
     <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-menu v-model="menu" :close-on-content-click="false" location="start">
-        <template v-slot:activator="{ props }">
-          <v-btn v-bind="props" hide-details variant="tonal">{{ $t('tls.acme.options') }}</v-btn>
+      <v-spacer />
+      <v-menu
+        v-model="menu"
+        :close-on-content-click="false"
+        location="start"
+      >
+        <template #activator="{ props }">
+          <v-btn
+            v-bind="props"
+            hide-details
+            variant="tonal"
+          >
+            {{ $t('tls.acme.options') }}
+          </v-btn>
         </template>
         <v-card>
           <v-list>
             <v-list-item>
-              <v-switch v-model="optionDir" color="primary" :label="$t('tls.acme.dataDir')" hide-details></v-switch>
+              <v-switch
+                v-model="optionDir"
+                color="primary"
+                :label="$t('tls.acme.dataDir')"
+                hide-details
+              />
             </v-list-item>
             <v-list-item>
-              <v-switch v-model="optionDefault" color="primary" :label="$t('tls.acme.defaultDomain')" hide-details></v-switch>
+              <v-switch
+                v-model="optionDefault"
+                color="primary"
+                :label="$t('tls.acme.defaultDomain')"
+                hide-details
+              />
             </v-list-item>
             <v-list-item>
-              <v-switch v-model="optionEmail" color="primary" :label="$t('email')" hide-details></v-switch>
+              <v-switch
+                v-model="optionEmail"
+                color="primary"
+                :label="$t('email')"
+                hide-details
+              />
             </v-list-item>
             <v-list-item>
-              <v-switch v-model="optionChallenge" color="primary" :label="$t('tls.acme.disableChallenges')" hide-details></v-switch>
+              <v-switch
+                v-model="optionChallenge"
+                color="primary"
+                :label="$t('tls.acme.disableChallenges')"
+                hide-details
+              />
             </v-list-item>
             <v-list-item>
-              <v-switch v-model="optionPorts" color="primary" :label="$t('tls.acme.altPorts')" hide-details></v-switch>
+              <v-switch
+                v-model="optionPorts"
+                color="primary"
+                :label="$t('tls.acme.altPorts')"
+                hide-details
+              />
             </v-list-item>
             <v-list-item>
-              <v-switch v-model="optionProvider" color="primary" :label="$t('tls.acme.caProvider')" hide-details></v-switch>
+              <v-switch
+                v-model="optionProvider"
+                color="primary"
+                :label="$t('tls.acme.caProvider')"
+                hide-details
+              />
             </v-list-item>
             <v-list-item>
-              <v-switch v-model="optionExt" color="primary" :label="$t('tls.acme.extAcc')" hide-details></v-switch>
+              <v-switch
+                v-model="optionExt"
+                color="primary"
+                :label="$t('tls.acme.extAcc')"
+                hide-details
+              />
             </v-list-item>
             <v-list-item>
-              <v-switch v-model="optionDns01" color="primary" :label="$t('tls.acme.dns01')" hide-details></v-switch>
+              <v-switch
+                v-model="optionDns01"
+                color="primary"
+                :label="$t('tls.acme.dns01')"
+                hide-details
+              />
             </v-list-item>
             <v-list-item>
-              <v-switch v-model="optionHttpClient" color="primary" :label="$t('basic.httpClient.title')" hide-details></v-switch>
+              <v-switch
+                v-model="optionHttpClient"
+                color="primary"
+                :label="$t('basic.httpClient.title')"
+                hide-details
+              />
             </v-list-item>
           </v-list>
         </v-card>
@@ -172,13 +299,19 @@
 </template>
 
 <script lang="ts">
-import { acme } from '@/types/tls'
+import { PropType } from 'vue'
+import { acme, certProvider } from '@/types/tls'
 import { httpClientTags } from '@/plugins/httpClient'
 
 // Edits one ACME entry of the config's certificate_providers list. The tag and
 // the type live in the modal around it, since every provider type carries them.
 export default {
-  props: ['data'],
+  props: {
+    // The modal holds the provider union and picks this form with a v-if on
+    // the type, which the template checker cannot follow, so it is narrowed by
+    // the computed below.
+    data: { type: Object as PropType<certProvider>, required: true }
+  },
   data() {
     return {
       menu: false,

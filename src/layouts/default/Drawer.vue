@@ -12,27 +12,39 @@
       prepend-avatar="@/assets/logo.svg"
       title="S-UI"
     >
-      <template v-slot:append v-if="isMobile">
+      <template
+        v-if="isMobile"
+        #append
+      >
         <v-icon icon="mdi-close" />
       </template>
     </v-list-item>
 
-    <v-divider></v-divider>
+    <v-divider />
 
-    <v-list density="compact" nav>
-      <v-list-item link
+    <v-list
+      density="compact"
+      nav
+    >
+      <v-list-item
         v-for="item in menu"
         :key="item.title"
+        link
         :to="item.path"
-        :active="router.currentRoute.value.path == item.path">
-        <template v-slot:prepend>
-          <v-icon :icon="item.icon"></v-icon>
+        :active="router.currentRoute.value.path == item.path"
+      >
+        <template #prepend>
+          <v-icon :icon="item.icon" />
         </template>
-        <v-list-item-title v-text="$t(item.title)"></v-list-item-title>
+        <v-list-item-title>{{ $t(item.title) }}</v-list-item-title>
       </v-list-item>
     </v-list>
-    <template v-slot:append>
-      <v-list-item prepend-icon="mdi-logout" :title="$t('menu.logout')" @click="Logout"></v-list-item>
+    <template #append>
+      <v-list-item
+        prepend-icon="mdi-logout"
+        :title="$t('menu.logout')"
+        @click="Logout"
+      />
     </template>
   </v-navigation-drawer>
 </template>
@@ -42,7 +54,8 @@ import { computed } from 'vue'
 import router from '@/router'
 import { logout } from '@/plugins/httputil'
 
-const props = defineProps(['isMobile','displayDrawer'])
+const props = defineProps<{ isMobile: boolean, displayDrawer: boolean }>()
+defineEmits<{ toggleDrawer: [] }>()
 
 const showDrawer = computed((): boolean => {
   return props.displayDrawer

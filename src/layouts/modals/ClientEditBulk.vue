@@ -1,55 +1,80 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" width="800">
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="800"
+  >
     <v-card class="rounded-lg">
       <v-card-title>
         {{ $t('actions.editbulk') }}
       </v-card-title>
-      <v-divider></v-divider>
+      <v-divider />
       <v-card-text style="padding: 0 16px; overflow-y: scroll;">
         <v-container style="padding: 0;">
-          <v-card :subtitle="$t('actions.action')" class="mb-4">
+          <v-card
+            :subtitle="$t('actions.action')"
+            class="mb-4"
+          >
             <v-card-text>
               <v-row>
-                <v-col cols="12" sm="6" md="4">
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="4"
+                >
                   <v-select
                     v-model="actionMode"
                     :items="actionModes"
                     :label="$t('actions.action')"
                     hide-details
                     @update:model-value="onActionChange"
-                  ></v-select>
+                  />
                 </v-col>
               </v-row>
               <v-row v-if="actionMode === 'change_limits'">
-                <v-col cols="12" sm="6" md="4">
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="4"
+                >
                   <v-text-field
                     v-model.number="editData.addDays"
                     type="number"
                     :label="$t('bulk.addDays')"
                     :suffix="$t('date.d')"
                     hide-details
-                  ></v-text-field>
+                  />
                 </v-col>
-                <v-col cols="12" sm="6" md="4">
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="4"
+                >
                   <v-text-field
                     v-model.number="editData.addVolume"
                     type="number"
                     :label="$t('bulk.addVolume')"
                     :suffix="$t('stats.GB')"
                     hide-details
-                  ></v-text-field>
+                  />
                 </v-col>
-                <v-col cols="12" sm="6" md="4">
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="4"
+                >
                   <v-switch
                     v-model="editData.enable"
                     :label="$t('enable')"
                     color="primary"
                     hide-details
-                  ></v-switch>
+                  />
                 </v-col>
               </v-row>
               <v-row v-if="actionMode === 'add_inbounds' || actionMode === 'remove_inbounds'">
-                <v-col cols="12" sm="8">
+                <v-col
+                  cols="12"
+                  sm="8"
+                >
                   <v-select
                     v-model="editData.inboundTags"
                     :items="inboundTags"
@@ -57,18 +82,21 @@
                     multiple
                     chips
                     hide-details
-                  ></v-select>
+                  />
                 </v-col>
               </v-row>
             </v-card-text>
           </v-card>
 
           <!-- Section two: Clients (like init users in Inbound modal) -->
-          <Users :clients="clients" :data="selectedClients" />
+          <Users
+            :clients="clients"
+            :data="selectedClients"
+          />
         </v-container>
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-btn
           color="primary"
           variant="outlined"
@@ -95,11 +123,22 @@ import Users from '@/components/Users.vue'
 import { i18n } from '@/locales'
 import Data from '@/store/modules/data';
 import { Client } from '@/types/clients';
+import type { PropType } from 'vue'
+
+// An inbound the clients can be attached to, as the parent lists them.
+interface InboundTag {
+  title: string
+  value: number
+}
 
 export default {
-  props: ['visible', 'clients', 'inboundTags'],
-  emits: ['close'],
   components: { Users },
+  props: {
+    visible: { type: Boolean, required: true },
+    clients: { type: Array as PropType<Client[]>, required: true },
+    inboundTags: { type: Array as PropType<InboundTag[]>, required: true },
+  },
+  emits: ['close'],
   data() {
     return {
       loading: false,
@@ -118,9 +157,19 @@ export default {
       },
       selectedClients: {
         model: 'none',
-        values: [] as any[],
+        // Group names when picking by group, client ids when picking clients.
+        values: [] as (string | number)[],
       },
     }
+  },
+  watch: {
+    visible(newVal) {
+      if (newVal) {
+        this.actionMode = 'change_limits'
+        this.editData = { enable: true, addDays: 0, addVolume: 0, inboundTags: [] }
+        this.selectedClients = { model: 'none', values: [] }
+      }
+    },
   },
   methods: {
     onActionChange() {
@@ -136,9 +185,9 @@ export default {
           return clients
         case 'group':
           return clients
-            .filter((c: any) => this.selectedClients.values.includes(c.group))
+            .filter(c => this.selectedClients.values.includes(c.group))
         case 'client':
-          return clients.filter((c: any) => this.selectedClients.values.includes(c.id))
+          return clients.filter(c => c.id != undefined && this.selectedClients.values.includes(c.id))
         default:
           return []
       }
@@ -176,24 +225,16 @@ export default {
             c.inbounds = c.inbounds.filter((i: number) => !this.editData.inboundTags.includes(i))
           })
           break
-        case 'delete_bulk':
+        case 'delete_bulk': {
           const success = await Data().save("clients", "delbulk", targetClients.map((c: Client) => c.id))
           if (success) this.closeModal()
           this.loading = false
           return
+        }
       }
       const success = await Data().save("clients", 'editbulk', targetClients)
       if (success) this.closeModal()
       this.loading = false
-    },
-  },
-  watch: {
-    visible(newVal) {
-      if (newVal) {
-        this.actionMode = 'change_limits'
-        this.editData = { enable: true, addDays: 0, addVolume: 0, inboundTags: [] }
-        this.selectedClients = { model: 'none', values: [] }
-      }
     },
   },
 }

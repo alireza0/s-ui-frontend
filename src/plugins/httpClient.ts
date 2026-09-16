@@ -7,7 +7,7 @@ import { HttpClientRef, HttpClientOptions } from '@/types/httpClient'
 // treated as no detour at all.
 export function isNoopDetour(tag: string): boolean {
   if (!tag) return true
-  const outbound = Data().outbounds?.find((o: any) => o.tag == tag)
+  const outbound = Data().outbounds?.find(o => o.tag == tag)
   if (!outbound || outbound.type != 'direct') return false
   return Object.keys(outbound).every(key => ['id', 'type', 'tag'].includes(key))
 }
@@ -22,8 +22,8 @@ export function downloadHttpClient(tag: string): HttpClientOptions | undefined {
 // reference one.
 export function httpClientTags(): string[] {
   return (Data().config?.http_clients ?? [])
-    .map((client: any) => client.tag)
-    .filter((tag: string) => tag?.length > 0)
+    .map(client => client.tag)
+    .filter(tag => tag?.length > 0)
 }
 
 // An http_client is either the tag of a shared client or inline options.

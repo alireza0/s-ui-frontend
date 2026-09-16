@@ -1,13 +1,20 @@
 <template>
   <v-app style="overflow: auto;">
-    <drawer :isMobile="isMobile" :displayDrawer="displayDrawer" @toggleDrawer="toggleDrawer" />
-    <default-bar :isMobile="isMobile" @toggleDrawer="toggleDrawer" />
+    <drawer
+      :is-mobile="isMobile"
+      :display-drawer="displayDrawer"
+      @toggle-drawer="toggleDrawer"
+    />
+    <default-bar
+      :is-mobile="isMobile"
+      @toggle-drawer="toggleDrawer"
+    />
     <default-view />
   </v-app>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import DefaultBar from './AppBar.vue'
 import Drawer from './Drawer.vue'
 import DefaultView from './View.vue'
@@ -20,10 +27,10 @@ const toggleDrawer = () => {
   displayDrawer.value = !displayDrawer.value
 }
 
-const isMobile = computed( ():boolean =>{
-  displayDrawer.value = !smAndDown.value
-  return smAndDown.value
-})
+const isMobile = computed((): boolean => smAndDown.value)
+
+// keep the drawer open on desktop and closed on mobile
+watch(smAndDown, (v) => { displayDrawer.value = !v }, { immediate: true })
 </script>
 
 <style>

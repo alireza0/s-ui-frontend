@@ -1,86 +1,207 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" width="800">
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="800"
+  >
     <v-card class="rounded-lg">
       <v-card-title class="d-flex align-center">
         {{ $t('actions.' + title) + " " + $t('objects.outbound') }}
-        <v-spacer></v-spacer>
-        <DocLink section="outbound" :type="outbound.type" />
+        <v-spacer />
+        <DocLink
+          section="outbound"
+          :type="outbound.type"
+        />
       </v-card-title>
-      <v-divider></v-divider>
+      <v-divider />
       <v-card-text style="padding: 0 16px; overflow-y: scroll;">
         <v-container style="padding: 0;">
           <v-tabs
             v-model="tab"
             align-tabs="center"
           >
-            <v-tab value="t1">{{ $t('client.basics') }}</v-tab>
-            <v-tab value="t2">{{ $t('client.external') }}</v-tab>
+            <v-tab value="t1">
+              {{ $t('client.basics') }}
+            </v-tab>
+            <v-tab value="t2">
+              {{ $t('client.external') }}
+            </v-tab>
           </v-tabs>
           <v-window v-model="tab">
             <v-window-item value="t1">
               <v-row>
-                <v-col cols="12" sm="6" md="4">
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="4"
+                >
                   <v-select
-                  hide-details
-                  :label="$t('type')"
-                  :items="Object.keys(outTypes).map((key,index) => ({title: key, value: Object.values(outTypes)[index]}))"
-                  v-model="outbound.type"
-                  @update:modelValue="changeType">
-                  </v-select>
+                    v-model="outbound.type"
+                    hide-details
+                    :label="$t('type')"
+                    :items="Object.keys(outTypes).map((key,index) => ({title: key, value: Object.values(outTypes)[index]}))"
+                    @update:model-value="changeType"
+                  />
                 </v-col>
-                <v-col cols="12" sm="6" md="4">
-                  <v-text-field v-model="outbound.tag" :label="$t('objects.tag')" hide-details></v-text-field>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="4"
+                >
+                  <v-text-field
+                    v-model="outbound.tag"
+                    :label="$t('objects.tag')"
+                    hide-details
+                  />
                 </v-col>
               </v-row>
               <v-row v-if="!NoServer.includes(outbound.type)">
-                <v-col cols="12" sm="6" md="4">
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="4"
+                >
                   <v-text-field
-                  :label="$t('out.addr')"
-                  hide-details
-                  v-model="outbound.server">
-                  </v-text-field>
+                    v-model="outbound.server"
+                    :label="$t('out.addr')"
+                    hide-details
+                  />
                 </v-col>
-                <v-col cols="12" sm="6" md="4">
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="4"
+                >
                   <v-text-field
-                  :label="$t('out.port')"
-                  type="number"
-                  min="0"
-                  hide-details
-                  v-model.number="outbound.server_port">
-                  </v-text-field>
+                    v-model.number="outbound.server_port"
+                    :label="$t('out.port')"
+                    type="number"
+                    min="0"
+                    hide-details
+                  />
                 </v-col>
               </v-row>
-              <Socks v-if="outbound.type == outTypes.SOCKS" :data="outbound" />
-              <Http v-if="outbound.type == outTypes.HTTP" :data="outbound" />
-              <Shadowsocks v-if="outbound.type == outTypes.Shadowsocks" direction="out" :data="outbound" />
-              <Snell v-if="outbound.type == outTypes.Snell" direction="out" :data="outbound" />
-              <Bridge v-if="outbound.type == outTypes.Bridge" direction="out" :data="outbound" />
-              <Vmess v-if="outbound.type == outTypes.VMess" :data="outbound" />
-              <Trojan v-if="outbound.type == outTypes.Trojan" :data="outbound" />
-              <Hysteria v-if="outbound.type == outTypes.Hysteria" direction="out" :data="outbound" />
-              <Naive v-if="outbound.type == outTypes.Naive" direction="out" :data="outbound" />
-              <ShadowTls v-if="outbound.type == outTypes.ShadowTLS" :data="outbound" />
-              <Vless v-if="outbound.type == outTypes.VLESS" :data="outbound" />
-              <Tuic v-if="outbound.type == outTypes.TUIC" direction="out" :data="outbound" />
-              <Hysteria2 v-if="outbound.type == outTypes.Hysteria2" direction="out" :data="outbound" />
-              <AnyTls v-if="outbound.type == outTypes.AnyTls" :data="outbound" direction="out" />
-              <Tor v-if="outbound.type == outTypes.Tor" :data="outbound" />
-              <Ssh v-if="outbound.type == outTypes.SSH" :data="outbound" />
-              <Selector v-if="outbound.type == outTypes.Selector" :data="outbound" :tags="tags" />
-              <UrlTest v-if="outbound.type == outTypes.URLTest" :data="outbound" :tags="tags" />
+              <Socks
+                v-if="outbound.type == outTypes.SOCKS"
+                :data="outbound"
+              />
+              <Http
+                v-if="outbound.type == outTypes.HTTP"
+                :data="outbound"
+              />
+              <Shadowsocks
+                v-if="outbound.type == outTypes.Shadowsocks"
+                direction="out"
+                :data="outbound"
+              />
+              <Snell
+                v-if="outbound.type == outTypes.Snell"
+                direction="out"
+                :data="outbound"
+              />
+              <Bridge
+                v-if="outbound.type == outTypes.Bridge"
+                direction="out"
+                :data="outbound"
+              />
+              <Vmess
+                v-if="outbound.type == outTypes.VMess"
+                :data="outbound"
+              />
+              <Trojan
+                v-if="outbound.type == outTypes.Trojan"
+                :data="outbound"
+              />
+              <Hysteria
+                v-if="outbound.type == outTypes.Hysteria"
+                direction="out"
+                :data="outbound"
+              />
+              <Naive
+                v-if="outbound.type == outTypes.Naive"
+                direction="out"
+                :data="outbound"
+              />
+              <ShadowTls
+                v-if="outbound.type == outTypes.ShadowTLS"
+                :data="outbound"
+              />
+              <Vless
+                v-if="outbound.type == outTypes.VLESS"
+                :data="outbound"
+              />
+              <Tuic
+                v-if="outbound.type == outTypes.TUIC"
+                direction="out"
+                :data="outbound"
+              />
+              <Hysteria2
+                v-if="outbound.type == outTypes.Hysteria2"
+                direction="out"
+                :data="outbound"
+              />
+              <AnyTls
+                v-if="outbound.type == outTypes.AnyTls"
+                :data="outbound"
+                direction="out"
+              />
+              <Tor
+                v-if="outbound.type == outTypes.Tor"
+                :data="outbound"
+              />
+              <Ssh
+                v-if="outbound.type == outTypes.SSH"
+                :data="outbound"
+              />
+              <Selector
+                v-if="outbound.type == outTypes.Selector"
+                :data="outbound"
+                :tags="tags"
+              />
+              <UrlTest
+                v-if="outbound.type == outTypes.URLTest"
+                :data="outbound"
+                :tags="tags"
+              />
 
-              <Transport v-if="Object.hasOwn(outbound,'transport')" :data="outbound" />
-              <OutTLS v-if="Object.hasOwn(outbound,'tls')" :outbound="outbound" />
-              <Multiplex v-if="Object.hasOwn(outbound,'multiplex')" direction="out" :data="outbound" />
-              <Dial v-if="!NoDial.includes(outbound.type)" :dial="outbound" />
+              <Transport
+                v-if="Object.hasOwn(outbound,'transport')"
+                :data="outbound"
+              />
+              <OutTLS
+                v-if="Object.hasOwn(outbound,'tls')"
+                :outbound="outbound"
+              />
+              <Multiplex
+                v-if="Object.hasOwn(outbound,'multiplex')"
+                direction="out"
+                :data="outbound"
+              />
+              <Dial
+                v-if="!NoDial.includes(outbound.type)"
+                :dial="outbound"
+              />
             </v-window-item>
             <v-window-item value="t2">
               <v-row>
                 <v-col cols="12">
-                  <v-text-field v-model="link" :label="$t('client.external')" hide-details />
+                  <v-text-field
+                    v-model="link"
+                    :label="$t('client.external')"
+                    hide-details
+                  />
                 </v-col>
-                <v-col cols="12" align="center">
-                  <v-btn hide-details variant="tonal" :loading="loading" @click="linkConvert">{{ $t('submit') }}</v-btn>
+                <v-col
+                  cols="12"
+                  align="center"
+                >
+                  <v-btn
+                    hide-details
+                    variant="tonal"
+                    :loading="loading"
+                    @click="linkConvert"
+                  >
+                    {{ $t('submit') }}
+                  </v-btn>
                 </v-col>
               </v-row>
             </v-window-item>
@@ -88,7 +209,7 @@
         </v-container>
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-btn
           color="primary"
           variant="outlined"
@@ -110,7 +231,8 @@
 </template>
 
 <script lang="ts">
-import { OutTypes, createOutbound } from '@/types/outbounds'
+import { PropType } from 'vue'
+import { OutTypes, createOutbound, Outbound } from '@/types/outbounds'
 import DocLink from '@/components/DocLink.vue'
 import RandomUtil from '@/plugins/randomUtil'
 import Dial from '@/components/Dial.vue'
@@ -124,7 +246,6 @@ import Snell from '@/components/protocols/Snell.vue'
 import Bridge from '@/components/protocols/Bridge.vue'
 import Vmess from '@/components/protocols/Vmess.vue'
 import Trojan from '@/components/protocols/Trojan.vue'
-import Wireguard from '@/components/protocols/Wireguard.vue'
 import Hysteria from '@/components/protocols/Hysteria.vue'
 import Naive from '@/components/protocols/Naive.vue'
 import ShadowTls from '@/components/protocols/OutShadowTls.vue'
@@ -139,7 +260,17 @@ import HttpUtils from '@/plugins/httputil'
 import AnyTls from '@/components/protocols/AnyTls.vue'
 import Data from '@/store/modules/data'
 export default {
-  props: ['visible', 'data', 'id', 'tags'],
+  components: { DocLink, Dial, Multiplex, Transport, OutTLS,
+    Socks, Http, Shadowsocks, Vmess, Trojan,
+    Hysteria, Naive, ShadowTls, Vless, Tuic,
+    Hysteria2, AnyTls, Tor, Ssh, Selector, UrlTest, Snell, Bridge },
+  props: {
+    visible: { type: Boolean, required: true },
+    // A JSON string of the outbound being edited, empty when adding a new one.
+    data: { type: String, default: '' },
+    id: { type: Number, required: true },
+    tags: { type: Array as PropType<string[]>, default: () => [] },
+  },
   emits: ['close'],
   data() {
     return {
@@ -152,6 +283,13 @@ export default {
       NoDial: [OutTypes.Selector, OutTypes.URLTest],
       NoServer: [OutTypes.Direct, OutTypes.Selector, OutTypes.URLTest, OutTypes.Tor],
     }
+  },
+  watch: {
+    visible(newValue) {
+      if (newValue) {
+        this.updateData(this.$props.id)
+      }
+    },
   },
   methods: {
     updateData(id: number) {
@@ -192,7 +330,7 @@ export default {
     async linkConvert() {
       if (this.link.length>0){
         this.loading = true
-        const msg = await HttpUtils.post('api/linkConvert', { link: this.link })
+        const msg = await HttpUtils.post<Outbound>('api/linkConvert', { link: this.link })
         this.loading = false
         if (msg.success) {
           this.outbound = msg.obj
@@ -202,17 +340,6 @@ export default {
         }
       }
     }
-  },
-  watch: {
-    visible(newValue) {
-      if (newValue) {
-        this.updateData(this.$props.id)
-      }
-    },
-  },
-  components: { DocLink, Dial, Multiplex, Transport, OutTLS,
-    Socks, Http, Shadowsocks, Vmess, Trojan,
-    Wireguard, Hysteria, Naive, ShadowTls, Vless, Tuic,
-    Hysteria2, AnyTls, Tor, Ssh, Selector, UrlTest, Snell, Bridge }
+  }
 }
 </script>

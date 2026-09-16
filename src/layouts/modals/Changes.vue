@@ -1,49 +1,76 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" width="90%" max-width="800" :loading="loading">
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="90%"
+    max-width="800"
+    :loading="loading"
+  >
     <v-card class="rounded-lg">
       <v-card-title>
         <v-row>
           <v-col>{{ $t('admin.changes') }}</v-col>
-          <v-spacer></v-spacer>
-          <v-col cols="auto"><v-icon icon="mdi-close-box" @click="$emit('close')" /></v-col>
+          <v-spacer />
+          <v-col cols="auto">
+            <v-icon
+              icon="mdi-close-box"
+              @click="$emit('close')"
+            />
+          </v-col>
         </v-row>
       </v-card-title>
-      <v-divider></v-divider>
+      <v-divider />
       <v-card-text>
         <v-row>
-          <v-col cols="12" sm="4" md="3">
+          <v-col
+            cols="12"
+            sm="4"
+            md="3"
+          >
             <v-select
-            hide-details
-            :label="$t('admin.actor')"
-            :items="['', 'DepleteJob', ...admins]"
-            v-model="user"
-            @update:model-value="loadData">
-            </v-select>
+              v-model="user"
+              hide-details
+              :label="$t('admin.actor')"
+              :items="['', 'DepleteJob', ...admins]"
+              @update:model-value="loadData"
+            />
           </v-col>
-          <v-col cols="12" sm="4" md="3">
+          <v-col
+            cols="12"
+            sm="4"
+            md="3"
+          >
             <v-select
-            hide-details
-            :label="$t('admin.key')"
-            :items="['', 'inbounds', 'outbounds', 'clients', 'route', 'tls', 'experimental']"
-            v-model="key"
-            @update:model-value="loadData">
-            </v-select>
+              v-model="key"
+              hide-details
+              :label="$t('admin.key')"
+              :items="['', 'inbounds', 'outbounds', 'clients', 'route', 'tls', 'experimental']"
+              @update:model-value="loadData"
+            />
           </v-col>
-          <v-col cols="6" sm="4" md="3">
+          <v-col
+            cols="6"
+            sm="4"
+            md="3"
+          >
             <v-select
-            hide-details
-            :label="$t('count')"
-            :items="[10,20,30,50,100]"
-            v-model.number="chngCount"
-            @update:model-value="loadData">
-            </v-select>
+              v-model.number="chngCount"
+              hide-details
+              :label="$t('count')"
+              :items="[10,20,30,50,100]"
+              @update:model-value="loadData"
+            />
           </v-col>
-          <v-col cols="auto" align="center" justify="center">
+          <v-col
+            cols="auto"
+            align="center"
+            justify="center"
+          >
             <v-btn
               icon="mdi-refresh"
               variant="tonal"
               :loading="loading"
-              @click="loadData">
+              @click="loadData"
+            >
               <v-icon />
             </v-btn>
           </v-col>
@@ -56,21 +83,35 @@
           show-expand
           items-per-page="10"
         >
-          <template v-slot:item.dateTime="{ value }">
-            <v-chip variant="text" dir="ltr" density="compact">
+          <template #item.dateTime="{ value }">
+            <v-chip
+              variant="text"
+              dir="ltr"
+              density="compact"
+            >
               {{ dateFormatted(value) }}
             </v-chip>
           </template>
-          <template v-slot:item.action="{ value }">
+          <template #item.action="{ value }">
             <v-chip density="compact">
               {{ $t('actions.' + value) }}
             </v-chip>
           </template>
-          <template v-slot:expanded-row="{ columns, item }">
+          <template #expanded-row="{ columns, item }">
             <tr>
               <td :colspan="columns.length">
-                <v-card dir="ltr" v-if="item.index>0">Index: {{ item.index }}</v-card>
-                <v-card color="background" dir="ltr"><pre>{{ item.obj }}</pre></v-card>
+                <v-card
+                  v-if="(item.index ?? 0) > 0"
+                  dir="ltr"
+                >
+                  Index: {{ item.index }}
+                </v-card>
+                <v-card
+                  color="background"
+                  dir="ltr"
+                >
+                  <pre>{{ item.obj }}</pre>
+                </v-card>
               </td>
             </tr>
           </template>
@@ -83,13 +124,32 @@
 <script lang="ts">
 import { i18n } from '@/locales'
 import HttpUtils from '@/plugins/httputil'
+import type { PropType } from 'vue'
+
+// One row of api/changes, mirroring the backend's Changes model. The expanded
+// row also shows a position inside the changed list, which only some records
+// carry.
+interface Change {
+  id: number
+  dateTime: number
+  actor: string
+  key: string
+  action: string
+  obj?: unknown
+  index?: number
+}
 
 export default {
-  props: ['admins', 'actor', 'visible'],
+  props: {
+    admins: { type: Array as PropType<string[]>, required: true },
+    actor: { type: String, required: true },
+    visible: { type: Boolean, required: true },
+  },
+  emits: ['close'],
   data() {
     return {
       loading: false,
-      changes: <any[]>[],
+      changes: <Change[]>[],
       user: '',
       key: '',
       chngCount: 10,
@@ -102,20 +162,6 @@ export default {
         { title: i18n.global.t('admin.action'), key: 'action' },
       ],
     }
-  },
-  methods: {
-    async loadData() {
-      this.loading = true
-      const data = await HttpUtils.get('api/changes',{ a: this.user, k: this.key, c: this.chngCount })
-      if (data.success) {
-        this.changes = data.obj?? []
-        this.loading = false
-      }
-    },
-    dateFormatted(dt: number): string {
-      const date = new Date(dt*1000)
-      return date.toLocaleString(this.locale)
-    },
   },
   computed: {
     locale() {
@@ -139,6 +185,20 @@ export default {
       if (newValue) {
         this.loadData()
       }
+    },
+  },
+  methods: {
+    async loadData() {
+      this.loading = true
+      const data = await HttpUtils.get<Change[]>('api/changes',{ a: this.user, k: this.key, c: this.chngCount })
+      if (data.success) {
+        this.changes = data.obj?? []
+        this.loading = false
+      }
+    },
+    dateFormatted(dt: number): string {
+      const date = new Date(dt*1000)
+      return date.toLocaleString(this.locale)
     },
   },
 }

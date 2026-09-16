@@ -1,42 +1,49 @@
 <template>
   <v-text-field
     :id="elId"
-    :label="label || $t('date.expiry')"
     v-model="dateFormatted"
+    :label="label || $t('date.expiry')"
     prepend-inner-icon="mdi-calendar"
     readonly
     hide-details
-  ></v-text-field>
+  />
   <DatePicker
     v-model="Input"
-    @input="Input=$event"
     :locale="locale"
     :element="elId"
     compact-time
-    type="datetime">
-      <template v-slot:next-month>
-        <v-icon icon="mdi-chevron-right" />
-      </template>
-      <template v-slot:prev-month>
-        <v-icon icon="mdi-chevron-left" />
-      </template>
-      <template #submit-btn="{ submit, canSubmit  }">
-        <v-btn
-          :disabled="!canSubmit"
-          @click="submit"
-        >{{ $t('submit') }}</v-btn>
-      </template>
-      <template #cancel-btn="{ vm }">
-        <v-btn
-          @click="reset(vm)"
-        >{{ $t('reset') }}</v-btn>
-      </template>
-      <template #now-btn="{ goToday }">
-        <v-btn
-          @click="goToday"
-        >{{ $t('now') }}</v-btn>
-      </template>
-    </DatePicker>
+    type="datetime"
+    @input="Input=$event"
+  >
+    <template #next-month>
+      <v-icon icon="mdi-chevron-right" />
+    </template>
+    <template #prev-month>
+      <v-icon icon="mdi-chevron-left" />
+    </template>
+    <template #submit-btn="{ submit: submitPicker, canSubmit }">
+      <v-btn
+        :disabled="!canSubmit"
+        @click="submitPicker"
+      >
+        {{ $t('submit') }}
+      </v-btn>
+    </template>
+    <template #cancel-btn="{ vm }">
+      <v-btn
+        @click="reset(vm)"
+      >
+        {{ $t('reset') }}
+      </v-btn>
+    </template>
+    <template #now-btn="{ goToday }">
+      <v-btn
+        @click="goToday"
+      >
+        {{ $t('now') }}
+      </v-btn>
+    </template>
+  </DatePicker>
 </template>
 
 <script lang="ts">
@@ -47,8 +54,20 @@ import 'moment/locale/vi'
 import 'moment/locale/zh-cn'
 import 'moment/locale/zh-tw'
 
+// The picker hands its own view-model to the cancel slot; closing the picker is
+// all this component needs from it.
+interface PickerVm {
+  visible: boolean
+}
+
 export default {
-  props: ['expiry', 'label', 'inputId'],
+  components: { DatePicker },
+  props: {
+    // A unix timestamp in seconds; 0 means no expiry.
+    expiry: { type: Number, required: true },
+    label: { type: String, required: false, default: undefined },
+    inputId: { type: String, required: false, default: undefined }
+  },
   emits: ['submit'],
   data() {
     return {
@@ -56,7 +75,6 @@ export default {
       input: new Date(),
     }
   },
-  components: { DatePicker },
   computed: {
     locale() {
       return locale
@@ -70,13 +88,20 @@ export default {
       return date.toLocaleString(locale)
     },
     expDate() {
-      return parseInt(this.expiry?? 0)
+      return parseInt(String(this.expiry?? 0))
     },
     Input: {
       get() { return this.expDate == 0 ? new Date() : new Date(this.expDate*1000) },
       set(v:string) {
         this.input = new Date(v)
         this.submit()
+      }
+    }
+  },
+  watch: {
+    menu(v) {
+      if (v) {
+        this.input = this.expiry == 0 ? new Date() : new Date(this.expDate*1000)
       }
     }
   },
@@ -90,17 +115,10 @@ export default {
     submit() {
       this.$emit('submit',Math.floor(this.input.getTime()/1000))
     },
-    reset(vm:any) {
+    reset(vm:PickerVm) {
       this.$emit('submit',0)
       this.input = new Date()
       vm.visible = false
-    }
-  },
-  watch: {
-    menu(v) {
-      if (v) {
-        this.input = this.expiry == 0 ? new Date() : new Date(this.expDate*1000)
-      }
     }
   }
 }

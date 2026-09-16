@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: lint, typecheck, test, build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '26'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # The tree is clean, so a new warning is a regression and fails the build.
+      - name: Lint
+        run: npm run lint -- --max-warnings=0
+
+      - name: Type check
+        run: npx vue-tsc --noEmit
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npx vite build

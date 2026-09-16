@@ -1,46 +1,87 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" width="800">
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="800"
+  >
     <v-card class="rounded-lg">
       <v-card-title class="d-flex align-center">
         {{ $t('actions.' + title) + " " + $t('objects.endpoint') }}
-        <v-spacer></v-spacer>
-        <DocLink section="endpoint" :type="endpoint.type" />
+        <v-spacer />
+        <DocLink
+          section="endpoint"
+          :type="endpoint.type"
+        />
       </v-card-title>
-      <v-divider></v-divider>
+      <v-divider />
       <v-card-text style="padding: 0 16px; overflow-y: scroll;">
         <v-row>
-          <v-col cols="12" sm="6" md="4">
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
             <v-select
-            hide-details
-            :disabled="endpoint.id > 0"
-            :label="$t('type')"
-            :items="Object.keys(epTypes).map((key,index) => ({title: key, value: Object.values(epTypes)[index]}))"
-            v-model="endpoint.type"
-            @update:modelValue="changeType">
-            </v-select>
+              v-model="endpoint.type"
+              hide-details
+              :disabled="endpoint.id > 0"
+              :label="$t('type')"
+              :items="Object.keys(epTypes).map((key,index) => ({title: key, value: Object.values(epTypes)[index]}))"
+              @update:model-value="changeType"
+            />
           </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field v-model="endpoint.tag" :label="$t('objects.tag')" hide-details></v-text-field>
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <v-text-field
+              v-model="endpoint.tag"
+              :label="$t('objects.tag')"
+              hide-details
+            />
           </v-col>
         </v-row>
-        <Wireguard v-if="endpoint.type == epTypes.Wireguard && endpoint.ext"
+        <Wireguard
+          v-if="endpoint.type == epTypes.Wireguard && endpoint.ext"
           :data="endpoint"
-          @getWgPubKey="getWgPubKey"
-          @newWgKey="newWgKey"
-          @addPeer="addWgPeer"
-          @delPeer="delWgPeer"
-          @refreshPeerKey="refreshWgPeerKey" />
-        <Warp v-if="endpoint.type == epTypes.Warp && endpoint.ext" :data="endpoint" />
-        <TailscaleVue v-if="endpoint.type == epTypes.Tailscale" :data="endpoint" />
-        <OpenConnect v-if="endpoint.type == epTypes.OpenConnect" :data="endpoint" />
-        <OpenConnectTls v-if="endpoint.type == epTypes.OpenConnect" :data="endpoint" />
-        <OpenVpn v-if="isOpenVpn" :data="endpoint" />
+          @get-wg-pub-key="getWgPubKey"
+          @new-wg-key="newWgKey"
+          @add-peer="addWgPeer"
+          @del-peer="delWgPeer"
+          @refresh-peer-key="refreshWgPeerKey"
+        />
+        <Warp
+          v-if="endpoint.type == epTypes.Warp && endpoint.ext"
+          :data="endpoint"
+        />
+        <TailscaleVue
+          v-if="endpoint.type == epTypes.Tailscale"
+          :data="endpoint"
+        />
+        <OpenConnect
+          v-if="endpoint.type == epTypes.OpenConnect"
+          :data="endpoint"
+        />
+        <OpenConnectTls
+          v-if="endpoint.type == epTypes.OpenConnect"
+          :data="endpoint"
+        />
+        <OpenVpn
+          v-if="isOpenVpn"
+          :data="endpoint"
+        />
         <!-- static_key mode has no TLS session to configure. -->
-        <OpenVpnTls v-if="isOpenVpn && endpoint.mode == 'tls'" :data="endpoint" />
-        <Dial v-if="!NoDial.includes(endpoint.type)" :dial="endpoint" />
+        <OpenVpnTls
+          v-if="isOpenVpn && endpoint.mode == 'tls'"
+          :data="endpoint"
+        />
+        <Dial
+          v-if="!NoDial.includes(endpoint.type)"
+          :dial="endpoint"
+        />
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-btn
           color="primary"
           variant="outlined"
@@ -62,6 +103,7 @@
 </template>
 
 <script lang="ts">
+import { PropType } from 'vue'
 import { EpTypes, createEndpoint } from '@/types/endpoints'
 import DocLink from '@/components/DocLink.vue'
 import RandomUtil from '@/plugins/randomUtil'
@@ -78,7 +120,14 @@ import { push } from 'notivue'
 import { i18n } from '@/locales'
 import Data from '@/store/modules/data'
 export default {
-  props: ['visible', 'data', 'id', 'tags'],
+  components: { DocLink, Dial, Wireguard, Warp, TailscaleVue, OpenConnect, OpenConnectTls, OpenVpn, OpenVpnTls },
+  props: {
+    visible: { type: Boolean, required: true },
+    // A JSON string of the endpoint being edited, empty when adding a new one.
+    data: { type: String, default: '' },
+    id: { type: Number, required: true },
+    tags: { type: Array as PropType<string[]>, default: () => [] },
+  },
   emits: ['close'],
   data() {
     return {
@@ -90,6 +139,18 @@ export default {
       // openvpn-server listens rather than dials, so it takes no dialer options.
       NoDial: [EpTypes.OpenVPNServer],
     }
+  },
+  computed: {
+    isOpenVpn(): boolean {
+      return [EpTypes.OpenVPNClient, EpTypes.OpenVPNServer].includes(this.endpoint.type)
+    },
+  },
+  watch: {
+    visible(v) {
+      if (v) {
+        this.updateData(this.$props.id)
+      }
+    },
   },
   methods: {
     async updateData(id: number) {
@@ -113,7 +174,7 @@ export default {
       // Use previous data
       let prevConfig = {}
       switch (this.endpoint.type) {
-        case EpTypes.Wireguard:
+        case EpTypes.Wireguard: {
           const wgKeys = (await this.genWgKey())
           const randomIPoctet = RandomUtil.randomIntRange(1, 255)
           prevConfig = {
@@ -128,6 +189,7 @@ export default {
             }
           }
           break
+        }
         case EpTypes.Warp:
           prevConfig = {
             tag: tag,
@@ -156,14 +218,14 @@ export default {
     },
     // Drops empty strings, empty lists and objects left empty by the above,
     // one nesting level down (control_wrap).
-    pruneEmpty(target: any) {
+    pruneEmpty(target: Record<string, unknown>) {
       for (const [key, value] of Object.entries(target)) {
         if (value != null && typeof value === 'object' && !Array.isArray(value)) {
-          this.pruneEmpty(value)
+          this.pruneEmpty(value as Record<string, unknown>)
         }
         const isEmpty = value === '' || value == null ||
           (Array.isArray(value) && value.length == 0) ||
-          (typeof value === 'object' && !Array.isArray(value) && Object.keys(<any>value).length == 0)
+          (typeof value === 'object' && !Array.isArray(value) && Object.keys(value as object).length == 0)
         if (isEmpty) delete target[key]
       }
     },
@@ -191,11 +253,11 @@ export default {
     },
     async genWgKey(){
       this.loading = true
-      const msg = await HttpUtils.get('api/keypairs', { k: "wireguard" })
+      const msg = await HttpUtils.get<string[]>('api/keypairs', { k: "wireguard" })
       this.loading = false
       let result = { private_key: "", public_key: "" }
       if (msg.success) {
-        msg.obj.forEach((line:string) => {
+        msg.obj.forEach(line => {
           if (line.startsWith("PrivateKey")){
             result.private_key = line.substring(12)
           }
@@ -221,7 +283,7 @@ export default {
     async getWgPubKey(private_key: string) {
       if (!this.endpoint.ext) this.endpoint.ext = {keys: []}
       this.loading = true
-      const msg = await HttpUtils.get('api/keypairs', { k: "wireguard", o: private_key })
+      const msg = await HttpUtils.get<string[]>('api/keypairs', { k: "wireguard", o: private_key })
       if (msg.success) {
         this.endpoint.ext.public_key = msg.obj[0]
       }
@@ -240,7 +302,7 @@ export default {
       this.loading = false
     },
     findFreeIP(): string{
-      const peerAllowedIPs = this.endpoint.peers.map((peer: any) => peer.allowed_ips).flat()
+      const peerAllowedIPs = this.endpoint.peers.map((peer: { allowed_ips?: string[] }) => peer.allowed_ips).flat()
       for (let i = 2; i < 255; i++) {
         const newIP = '10.0.1.'+ i.toString() +'/32'
         if (!peerAllowedIPs.includes(newIP)) return newIP
@@ -249,31 +311,18 @@ export default {
     },
     delWgPeer(index: number){
       if (this.endpoint.type != EpTypes.Wireguard) return
-      this.endpoint.ext.keys = this.endpoint.ext.keys.filter((key: any) => key.public_key != this.endpoint.peers[index].public_key)
+      this.endpoint.ext.keys = this.endpoint.ext.keys.filter((key: { public_key: string }) => key.public_key != this.endpoint.peers[index].public_key)
       this.endpoint.peers.splice(index, 1)
     },
     async refreshWgPeerKey(index: number) {
       this.loading = true
       const newKeys = await this.genWgKey()
       if (!this.endpoint.ext) this.endpoint.ext = {keys: []}
-      const indexKeys = this.endpoint.ext.keys.findIndex((key: any) => key.public_key == this.endpoint.peers[index].public_key)
+      const indexKeys = this.endpoint.ext.keys.findIndex((key: { public_key: string }) => key.public_key == this.endpoint.peers[index].public_key)
       this.endpoint.ext.keys[indexKeys == -1 ? this.endpoint.ext.keys.length : indexKeys] = newKeys
       this.endpoint.peers[index].public_key = newKeys.public_key
       this.loading = false
     },
-  },
-  watch: {
-    visible(v) {
-      if (v) {
-        this.updateData(this.$props.id)
-      }
-    },
-  },
-  computed: {
-    isOpenVpn(): boolean {
-      return [EpTypes.OpenVPNClient, EpTypes.OpenVPNServer].includes(this.endpoint.type)
-    },
-  },
-  components: { DocLink, Dial, Wireguard, Warp, TailscaleVue, OpenConnect, OpenConnectTls, OpenVpn, OpenVpnTls }
+  }
 }
 </script>

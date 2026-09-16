@@ -57,7 +57,8 @@ interface InboundBasics extends Listen {
   tag: string
   tls_id: number
   addrs?: Addr[]
-  out_json?: any
+  // The outbound block a client link is built from, shaped by protocol.
+  out_json?: Record<string, unknown>
 }
 
 interface ShadowTLSHandShake extends Dial {
@@ -70,9 +71,9 @@ export interface Direct extends InboundBasics {
   override_address?: string
   override_port?: number
 }
-export interface Mixed extends InboundBasics {}
-export interface SOCKS extends InboundBasics {}
-export interface HTTP extends InboundBasics {}
+export type Mixed = InboundBasics
+export type SOCKS = InboundBasics
+export type HTTP = InboundBasics
 export interface Shadowsocks extends InboundBasics {
   method: string
   password: string
@@ -198,7 +199,7 @@ export interface Cloudflared extends InboundBasics {
   grace_period?: string
   region?: string
 }
-export interface Redirect extends InboundBasics {}
+export type Redirect = InboundBasics
 export interface TProxy extends InboundBasics {
   network?: "udp" | "tcp"
 }
@@ -266,7 +267,7 @@ const defaultValues: Record<InType, Inbound> = {
 // credentials, which the client system fills in). They are generated whenever
 // an inbound of that type is created so switching protocol never leaves an
 // inbound that cannot start.
-function generateSecrets(inbound: any) {
+function generateSecrets(inbound: { type: InType, psk?: string, version?: number, password?: string }) {
   switch (inbound.type) {
     case InTypes.Snell:
       // sing-box requires a psk of 12-255 bytes.
@@ -280,7 +281,11 @@ function generateSecrets(inbound: any) {
 }
 
 export function createInbound<T extends Inbound>(type: InType,json?: Partial<T>): Inbound {
-  const defaultObject: Inbound = { ...defaultValues[type] ?? {}, ...(json ?? {}) }
+  // structuredClone, not a spread: the defaults table is module state, and a
+  // spread copies only the top level, so every instance would share the nested
+  // objects and arrays inside it. Editing one form then leaked into the table
+  // and into every object created afterwards.
+  const defaultObject: Inbound = { ...structuredClone(defaultValues[type] ?? {}), ...(json ?? {}) }
   generateSecrets(defaultObject)
   return defaultObject
 }

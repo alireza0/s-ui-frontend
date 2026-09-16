@@ -1,26 +1,60 @@
 <template>
-  <v-dialog :model-value="visible" @update:model-value="$emit('update:visible', $event)" transition="dialog-bottom-transition" width="90%" max-width="400">
-    <v-card class="rounded-lg" :loading="loading">
+  <v-dialog
+    :model-value="visible"
+    transition="dialog-bottom-transition"
+    width="90%"
+    max-width="400"
+    @update:model-value="$emit('update:visible', $event)"
+  >
+    <v-card
+      class="rounded-lg"
+      :loading="loading"
+    >
       <v-card-title>
         <v-row>
           <v-col>{{ $t('main.stats.title') }}</v-col>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <v-col cols="auto">
-            <v-icon icon="mdi-refresh" class="me-2" @click="refresh" v-tooltip:top="$t('actions.update')" />
-            <v-icon icon="mdi-close" @click="$emit('update:visible', false)" />
+            <v-icon
+              v-tooltip:top="$t('actions.update')"
+              icon="mdi-refresh"
+              class="me-2"
+              @click="refresh"
+            />
+            <v-icon
+              icon="mdi-close"
+              @click="$emit('update:visible', false)"
+            />
           </v-col>
         </v-row>
       </v-card-title>
-      <v-divider></v-divider>
+      <v-divider />
       <v-card-text>
         <v-table density="compact">
           <tbody>
-            <tr v-for="row in tableRows" :key="row.key">
-              <td class="pa-2" style="width: 40px;">
-                <v-icon :icon="row.icon" size="small" :color="row.color || undefined" />
+            <tr
+              v-for="row in tableRows"
+              :key="row.key"
+            >
+              <td
+                class="pa-2"
+                style="width: 40px;"
+              >
+                <v-icon
+                  :icon="row.icon"
+                  size="small"
+                  :color="row.color || undefined"
+                />
               </td>
-              <td class="pa-2">{{ row.label }}</td>
-              <td class="pa-2 text-end" style="direction: ltr;">{{ row.value }}</td>
+              <td class="pa-2">
+                {{ row.label }}
+              </td>
+              <td
+                class="pa-2 text-end"
+                style="direction: ltr;"
+              >
+                {{ row.value }}
+              </td>
             </tr>
           </tbody>
         </v-table>
@@ -42,7 +76,9 @@ export default {
   emits: ['update:visible'],
   setup(props) {
     const loading = ref(false)
-    const info = ref<{
+    // api/status?r=db answers either with the counts directly or wrapped in a
+    // `db` key, so the response type carries both shapes.
+    interface DbUsage {
       clients?: number
       inbounds?: number
       outbounds?: number
@@ -50,7 +86,9 @@ export default {
       endpoints?: number
       clientUp?: number
       clientDown?: number
-    }>({})
+    }
+
+    const info = ref<DbUsage>({})
 
     const clientUp = computed(() => HumanReadable.sizeFormat(info.value.clientUp ?? 0))
     const clientDown = computed(() => HumanReadable.sizeFormat(info.value.clientDown ?? 0))
@@ -76,7 +114,7 @@ export default {
 
     const refresh = async () => {
       loading.value = true
-      const data = await HttpUtils.get('api/status', { r: 'db' })
+      const data = await HttpUtils.get<DbUsage & { db?: DbUsage }>('api/status', { r: 'db' })
       if (data.success && data.obj) {
         info.value = data.obj.db ?? data.obj
       }

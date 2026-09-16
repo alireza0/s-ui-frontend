@@ -1,5 +1,8 @@
 <template>
-  <v-dialog v-model="dialog" max-width="620">
+  <v-dialog
+    v-model="dialog"
+    max-width="620"
+  >
     <v-card>
       <v-card-title>{{ label }}</v-card-title>
       <v-divider />
@@ -18,15 +21,33 @@
               persistent-counter
               :counter-value="(v: string) => v.split('\n').filter((l: string) => l.trim().length > 0).length"
               spellcheck="false"
-            ></v-textarea>
+            />
           </v-col>
         </v-row>
       </v-card-text>
       <v-card-actions>
-        <v-btn @click="resetChanges" color="error" variant="plain">{{ $t('reset') }}</v-btn>
+        <v-btn
+          color="error"
+          variant="plain"
+          @click="resetChanges"
+        >
+          {{ $t('reset') }}
+        </v-btn>
         <v-spacer />
-        <v-btn @click="closeModal" color="primary" variant="outlined">{{ $t('actions.close') }}</v-btn>
-        <v-btn @click="saveChanges" color="primary" variant="tonal">{{ $t('actions.save') }}</v-btn>
+        <v-btn
+          color="primary"
+          variant="outlined"
+          @click="closeModal"
+        >
+          {{ $t('actions.close') }}
+        </v-btn>
+        <v-btn
+          color="primary"
+          variant="tonal"
+          @click="saveChanges"
+        >
+          {{ $t('actions.save') }}
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -35,7 +56,11 @@
 <script lang="ts">
 
 export default {
-  props: ['visible', 'label', 'content'],
+  props: {
+    visible: { type: Boolean, required: true },
+    label: { type: String, required: true },
+    content: { type: String, required: true }
+  },
   emits: ['update', 'close'],
   data() {
     return {
@@ -43,14 +68,14 @@ export default {
       localText: '',
     }
   },
+  computed: {
+  },
   watch: {
     visible(v) {
       if (v) {
         this.localText = this.content
       }
     },
-  },
-  computed: {
   },
   methods: {
     saveChanges() {

@@ -1,18 +1,45 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" width="400">
-    <v-card class="rounded-lg" id="qrcode-modal" :loading="loading">
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="400"
+  >
+    <v-card
+      id="qrcode-modal"
+      class="rounded-lg"
+      :loading="loading"
+    >
       <v-card-title>
         <v-row>
           <v-col>Wireguard QrCode</v-col>
-          <v-spacer></v-spacer>
-          <v-col cols="auto"><v-icon icon="mdi-close-box" @click="$emit('close')" /></v-col>
+          <v-spacer />
+          <v-col cols="auto">
+            <v-icon
+              icon="mdi-close-box"
+              @click="$emit('close')"
+            />
+          </v-col>
         </v-row>
       </v-card-title>
-      <v-divider></v-divider>
-      <v-row v-for="l, i in wgLinks">
-        <v-col style="text-align: center;" v-if="l.length>0">
-          <v-chip>{{ $t('types.wg.peer') + ' ' + (i+1) }}</v-chip> <v-icon icon="mdi-download" @click="download(l,i)" /><br />
-          <QrcodeVue :value="l" :size="size" @click="copyToClipboard(l)" :margin="1" style="border-radius: .5rem; cursor: copy;" />
+      <v-divider />
+      <v-row
+        v-for="(l, i) in wgLinks"
+        :key="i"
+      >
+        <v-col
+          v-if="l.length>0"
+          style="text-align: center;"
+        >
+          <v-chip>{{ $t('types.wg.peer') + ' ' + (i+1) }}</v-chip> <v-icon
+            icon="mdi-download"
+            @click="download(l,i)"
+          /><br>
+          <QrcodeVue
+            :value="l"
+            :size="size"
+            :margin="1"
+            style="border-radius: .5rem; cursor: copy;"
+            @click="copyToClipboard(l)"
+          />
         </v-col>
       </v-row>
     </v-card>
@@ -24,28 +51,56 @@ import QrcodeVue from 'qrcode.vue'
 import Clipboard from 'clipboard'
 import { i18n } from '@/locales'
 import { push } from 'notivue'
+import type { PropType } from 'vue'
+import { Endpoint, WgPeer } from '@/types/endpoints'
+
+// The panel-side extras kept beside a WireGuard endpoint: the interface public
+// key and the key pair of every peer the panel generated.
+interface WgKey {
+  public_key: string
+  private_key: string
+}
 
 export default {
-  props: ['data', 'visible'],
+  components: { QrcodeVue },
+  props: {
+    data: { type: Object as PropType<Endpoint>, required: true },
+    visible: { type: Boolean, required: true },
+  },
+  emits: ['close'],
   data() {
     return {
-      wgData: <any>{},
+      wgData: <Endpoint>{},
       wgLinks: <string[]>[],
       loading: false,
     }
+  },
+  computed: {
+    size() {
+      if (window.innerWidth > 380) return 300
+      if (window.innerWidth > 330) return 280
+      return 250
+    }
+  },
+  watch: {
+    visible(v) {
+      if (v) {
+        this.load()
+      }
+    },
   },
   methods: {
     async load() {
       this.wgData = this.$props.data
       this.wgLinks = []
       const address = this.wgData.ext?.server || location.hostname
-      this.wgData.peers.forEach((_: any, index: number) => {
+      this.wgData.peers.forEach((_: WgPeer, index: number) => {
         this.wgLinks.push(this.getWireguardLink(index, address))
       })
     },
     getWireguardLink(peerId: number, address: string) {
       const peerData = this.wgData.peers[peerId]
-      const keys = this.wgData.ext?.keys?.find((key: any) => key.public_key == peerData.public_key)
+      const keys = this.wgData.ext?.keys?.find((key: WgKey) => key.public_key == peerData.public_key)
       if (!keys || !this.wgData.ext?.public_key) return ''
       let txt = `[Interface]\n`
       txt += `PrivateKey = ${keys.private_key}\n`
@@ -109,21 +164,6 @@ export default {
       element.click();
       document.body.removeChild(element);     
     }
-  },
-  computed: {
-    size() {
-      if (window.innerWidth > 380) return 300
-      if (window.innerWidth > 330) return 280
-      return 250
-    }
-  },
-  watch: {
-    visible(v) {
-      if (v) {
-        this.load()
-      }
-    },
-  },
-  components: { QrcodeVue }
+  }
 }
 </script>

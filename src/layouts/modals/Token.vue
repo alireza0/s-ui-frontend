@@ -1,14 +1,25 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" width="800">
-    <v-card class="rounded-lg" :loading="loading">
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="800"
+  >
+    <v-card
+      class="rounded-lg"
+      :loading="loading"
+    >
       <v-card-title>
         <v-row>
           <v-col>{{ $t('admin.api.title') }}</v-col>
-          <v-spacer></v-spacer>
-          <v-col cols="auto"><v-icon icon="mdi-close-box" @click="$emit('close')" /></v-col>
+          <v-spacer />
+          <v-col cols="auto">
+            <v-icon
+              icon="mdi-close-box"
+              @click="$emit('close')"
+            />
+          </v-col>
         </v-row>
       </v-card-title>
-      <v-divider></v-divider>
+      <v-divider />
       <v-card-text>
         <v-alert
           v-if="newToken.token.length>0"
@@ -18,13 +29,13 @@
         >
           {{ $t('admin.api.msg') }}
           <v-text-field
+            v-model="newToken.token"
             readonly
             variant="outlined"
             bg-color="warning"
             append-inner-icon="mdi-content-copy"
             @click:append-inner="copyToClipboard(newToken.token)"
-            v-model="newToken.token"
-          ></v-text-field>
+          />
         </v-alert>
         <v-table density="compact">
           <thead>
@@ -37,7 +48,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(token, index) of tokens" :key="token.id">
+            <tr
+              v-for="(token, index) of tokens"
+              :key="token.id"
+            >
               <td>{{ token.id }}</td>
               <td>{{ token.token }}</td>
               <td>{{ token.desc }}</td>
@@ -48,7 +62,7 @@
                   :close-on-content-click="false"
                   location="top center"
                 >
-                  <template v-slot:activator="{ props }">
+                  <template #activator="{ props }">
                     <v-icon
                       class="me-2"
                       color="error"
@@ -57,12 +71,27 @@
                       mdi-delete
                     </v-icon>
                   </template>
-                  <v-card :title="$t('actions.del')" rounded="lg">
-                    <v-divider></v-divider>
+                  <v-card
+                    :title="$t('actions.del')"
+                    rounded="lg"
+                  >
+                    <v-divider />
                     <v-card-text>{{ $t('confirm') }}</v-card-text>
                     <v-card-actions>
-                      <v-btn color="error" variant="outlined" @click="deleteToken(token.id)">{{ $t('yes') }}</v-btn>
-                      <v-btn color="success" variant="outlined" @click="delOverlay[index] = false">{{ $t('no') }}</v-btn>
+                      <v-btn
+                        color="error"
+                        variant="outlined"
+                        @click="deleteToken(token.id)"
+                      >
+                        {{ $t('yes') }}
+                      </v-btn>
+                      <v-btn
+                        color="success"
+                        variant="outlined"
+                        @click="delOverlay[index] = false"
+                      >
+                        {{ $t('no') }}
+                      </v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-menu>
@@ -70,33 +99,53 @@
             </tr>
           </tbody>
         </v-table>
-        <v-btn color="primary" @click="showAddToken()">
+        <v-btn
+          color="primary"
+          @click="showAddToken()"
+        >
           {{ $t('actions.add') }}
         </v-btn>
-        <v-dialog v-model="showNewToken" width="300">
+        <v-dialog
+          v-model="showNewToken"
+          width="300"
+        >
           <v-card class="rounded-lg">
             <v-card-title>
               <v-row>
                 <v-col>{{ $t('admin.api.token') }}</v-col>
-                <v-spacer></v-spacer>
-                <v-col cols="auto"><v-icon icon="mdi-close-box" @click="showNewToken = false" /></v-col>
+                <v-spacer />
+                <v-col cols="auto">
+                  <v-icon
+                    icon="mdi-close-box"
+                    @click="showNewToken = false"
+                  />
+                </v-col>
               </v-row>
             </v-card-title>
-            <v-divider></v-divider>
+            <v-divider />
             <v-card-text>
               <v-row>
                 <v-col>
-                  <v-text-field :label="$t('client.desc')" v-model="newToken.desc"></v-text-field>
+                  <v-text-field
+                    v-model="newToken.desc"
+                    :label="$t('client.desc')"
+                  />
                 </v-col>
               </v-row>
               <v-row>
                 <v-col>
-                  <v-text-field :label="$t('date.expiry')" v-model.number="newToken.expiry" min="0" type="number" :suffix="$t('date.d')"></v-text-field>
+                  <v-text-field
+                    v-model.number="newToken.expiry"
+                    :label="$t('date.expiry')"
+                    min="0"
+                    type="number"
+                    :suffix="$t('date.d')"
+                  />
                 </v-col>
               </v-row>
             </v-card-text>
             <v-card-actions>
-              <v-spacer></v-spacer>
+              <v-spacer />
               <v-btn
                 color="primary"
                 variant="outlined"
@@ -116,7 +165,7 @@
         </v-dialog>
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-btn
           color="primary"
           variant="outlined"
@@ -134,13 +183,33 @@ import { i18n } from '@/locales'
 import HttpUtils from '@/plugins/httputil'
 import Clipboard from 'clipboard'
 import { push } from 'notivue';
+import type { PropType } from 'vue'
+
+// One row of api/tokens, mirroring the backend's Tokens model.
+interface ApiToken {
+  id: number
+  desc: string
+  token: string
+  expiry: number
+  userId?: number
+}
+
+// The owning admin, as the parent knows it. Nothing is read from it here.
+interface AdminUser {
+  id?: number
+  username?: string
+}
 
 export default {
-  props: ['visible', 'user'],
+  props: {
+    visible: { type: Boolean, required: true },
+    user: { type: Object as PropType<AdminUser>, default: () => ({}) },
+  },
+  emits: ['close'],
   data() {
     return {
       loading: false,
-      tokens: <any[]>[],
+      tokens: <ApiToken[]>[],
       showNewToken: false,
       newToken: {
         desc: '',
@@ -163,10 +232,18 @@ export default {
       }
     },
   },
+  watch: {
+    visible(v) {
+      if (v) {
+        this.resetNewToken()
+        this.loadData()
+      }
+    },
+  },
   methods: {
     async loadData() {
       this.loading = true
-      const data = await HttpUtils.get('api/tokens')
+      const data = await HttpUtils.get<ApiToken[]>('api/tokens')
       if (data.success) {
         this.tokens = data.obj ?? []
         this.delOverlay = new Array<boolean>(this.tokens.length).fill(false)
@@ -187,7 +264,7 @@ export default {
     async addToken() {
       this.loading = true
       this.newToken.expiry = this.newToken.expiry>0 ? this.newToken.expiry : 0
-      const response = await HttpUtils.post('api/addToken', { desc: this.newToken.desc, expiry: this.newToken.expiry })
+      const response = await HttpUtils.post<string>('api/addToken', { desc: this.newToken.desc, expiry: this.newToken.expiry })
       if (response.success) {
         this.newToken.token = response.obj
         this.loadData()
@@ -244,14 +321,6 @@ export default {
     },
     closeModal() {
       this.$emit('close')
-    },
-  },
-  watch: {
-    visible(v) {
-      if (v) {
-        this.resetNewToken()
-        this.loadData()
-      }
     },
   },
 }

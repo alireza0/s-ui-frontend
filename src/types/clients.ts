@@ -53,21 +53,23 @@ const defaultClient: Client = {
   onlineAt: 0,
 }
 
+// Per-protocol client credentials, keyed by protocol. Which fields a protocol
+// carries beyond the name varies, so the rest stays unknown until read.
 type Config = {
   [key: string]: {
     name?: string
     username?: string
-    [key: string]: any
+    [key: string]: unknown
   }
 }
 
 export function updateConfigs(configs: Config, newUserName: string): Config {
   for (const key in configs) {
-    if (configs.hasOwnProperty(key)) {
+    if (Object.hasOwn(configs, key)) {
       const config = configs[key]
-      if (config.hasOwnProperty("name")) {
+      if (Object.hasOwn(config, "name")) {
         config.name = newUserName
-      } else if (config.hasOwnProperty("username")) {
+      } else if (Object.hasOwn(config, "username")) {
         config.username = newUserName
       }
     }
@@ -188,8 +190,9 @@ export function randomConfigs(user: string): Config {
 }
 
 export function createClient<T extends Client>(json?: Partial<T>): Client {
-  defaultClient.name = RandomUtil.randomSeq(8)
-  const defaultObject: Client = { ...defaultClient, ...(json || {}) }
+  // structuredClone, and a local name rather than writing one onto the shared
+  // default: both would otherwise leak into every client created afterwards.
+  const defaultObject: Client = { ...structuredClone(defaultClient), name: RandomUtil.randomSeq(8), ...(json || {}) }
 
   // Add missing config
   defaultObject.config = { ...randomConfigs(defaultObject.name), ...defaultObject.config }

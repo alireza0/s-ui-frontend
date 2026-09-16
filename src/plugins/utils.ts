@@ -1,11 +1,7 @@
 import { i18n } from "@/locales"
 
-type OBJ = {
-  [key: string]: any
-}
-
 export const FindDiff = {
-  deepCompare(obj1: any, obj2: any): boolean {
+  deepCompare(obj1: unknown, obj2: unknown): boolean {
     // Check if the types of both objects are the same
     if (typeof obj1 !== typeof obj2) {
       return false
@@ -27,15 +23,17 @@ export const FindDiff = {
   
     // Check if both objects are plain objects
     if (typeof obj1 === 'object' && typeof obj2 === 'object' && obj1 !== null && obj2 !== null) {
-      const keys1 = Object.keys(obj1).filter(key => obj1[key] !== undefined)
-      const keys2 = Object.keys(obj2).filter(key => obj2[key] !== undefined)
+      const rec1 = obj1 as Record<string, unknown>
+      const rec2 = obj2 as Record<string, unknown>
+      const keys1 = Object.keys(rec1).filter(key => rec1[key] !== undefined)
+      const keys2 = Object.keys(rec2).filter(key => rec2[key] !== undefined)
   
       if (keys1.length !== keys2.length) {
         return false
       }
   
       for (const key of keys1) {
-        if (!keys2.includes(key) || !this.deepCompare(obj1[key], obj2[key])) {
+        if (!keys2.includes(key) || !this.deepCompare(rec1[key], rec2[key])) {
           return false
         }
       }

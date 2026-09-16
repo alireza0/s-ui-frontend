@@ -1,155 +1,300 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" width="800">
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="800"
+  >
     <v-card class="rounded-lg">
       <v-card-title class="d-flex align-center">
         {{ $t('actions.' + title) + " " + $t('objects.rule') }}
-        <v-spacer></v-spacer>
+        <v-spacer />
         <DocLink section="rule" />
       </v-card-title>
-      <v-divider></v-divider>
+      <v-divider />
       <v-card-text style="padding: 0 16px;">
         <v-row>
-          <v-col cols="12" sm="6" md="4">
-            <v-switch color="primary" v-model="logical" :label="$t('rule.logical')" hide-details></v-switch>
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <v-switch
+              v-model="logical"
+              color="primary"
+              :label="$t('rule.logical')"
+              hide-details
+            />
           </v-col>
-          <v-spacer></v-spacer>
-          <v-col cols="auto" v-if="logical" justify="center" align="center">
-            <v-btn color="primary" @click="ruleData.rules.push(<rule>{})" hide-details>{{ $t('actions.add') + " " + $t('objects.rule') }}</v-btn>
+          <v-spacer />
+          <v-col
+            v-if="logical"
+            cols="auto"
+            justify="center"
+            align="center"
+          >
+            <v-btn
+              color="primary"
+              hide-details
+              @click="ruleData.rules.push(<rule>{})"
+            >
+              {{ $t('actions.add') + " " + $t('objects.rule') }}
+            </v-btn>
           </v-col>
         </v-row>
-        <v-card style="background-color: inherit; margin-bottom: 5px;" v-for="(r, index) in ruleData.rules" v-if="ruleData.type == 'logical'">
-          <v-card-subtitle>{{ $t('objects.rule') + ' ' + (Number(index)+1) }}
-            <v-icon @click="ruleData.rules.splice(index,1)" icon="mdi-delete" v-if="ruleData.rules.length>1" />
-          </v-card-subtitle>
-          <v-card-text style="padding: 0;">
-            <RuleOptions
-              :rule="r"
-              :clients="clients"
-              :inTags="inTags"
-              :outTags="outTags"
-              :rsTags="rsTags" />
-          </v-card-text>
-        </v-card>
+        <template v-if="ruleData.type == 'logical'">
+          <v-card
+            v-for="(r, ruleIndex) in ruleData.rules"
+            :key="ruleIndex"
+            style="background-color: inherit; margin-bottom: 5px;"
+          >
+            <v-card-subtitle>
+              {{ $t('objects.rule') + ' ' + (Number(ruleIndex)+1) }}
+              <v-icon
+                v-if="ruleData.rules.length>1"
+                icon="mdi-delete"
+                @click="ruleData.rules.splice(ruleIndex,1)"
+              />
+            </v-card-subtitle>
+            <v-card-text style="padding: 0;">
+              <RuleOptions
+                :rule="r"
+                :clients="clients"
+                :in-tags="inTags"
+                :out-tags="outTags"
+                :rs-tags="rsTags"
+              />
+            </v-card-text>
+          </v-card>
+        </template>
         <RuleOptions
           v-else
           :rule="ruleData.rules[0]"
           :clients="clients"
-          :inTags="inTags"
-          :outTags="outTags"
-          :rsTags="rsTags" />
+          :in-tags="inTags"
+          :out-tags="outTags"
+          :rs-tags="rsTags"
+        />
         <v-row>
-          <v-col cols="12" sm="6" md="4">
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
             <v-select
               v-model="ruleData.action"
               :items="actions"
               :label="$t('admin.action')"
               hide-details
-            ></v-select>
+            />
           </v-col>
-          <v-col cols="12" sm="6" md="4" v-if="logical">
+          <v-col
+            v-if="logical"
+            cols="12"
+            sm="6"
+            md="4"
+          >
             <v-combobox
               v-model="ruleData.mode"
               :items="['and', 'or']"
               :label="$t('rule.mode')"
               hide-details
-            ></v-combobox>
+            />
           </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-switch color="primary" v-model="ruleData.invert" :label="$t('rule.invert')" hide-details></v-switch>
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <v-switch
+              v-model="ruleData.invert"
+              color="primary"
+              :label="$t('rule.invert')"
+              hide-details
+            />
           </v-col>
         </v-row>
-        <v-card subtitle="Route" v-if="ruleData.action == 'route'">
+        <v-card
+          v-if="ruleData.action == 'route'"
+          subtitle="Route"
+        >
           <v-row>
-            <v-col cols="12" sm="6" md="4">
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
               <v-select
                 v-model="ruleData.outbound"
                 :items="outTags"
                 :label="$t('objects.outbound')"
                 hide-details
-              ></v-select>
+              />
             </v-col>
           </v-row>
         </v-card>
-        <v-card subtitle="Route Option" v-if="ruleData.action == 'route-options'">
+        <v-card
+          v-if="ruleData.action == 'route-options'"
+          subtitle="Route Option"
+        >
           <v-row>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field v-model="ruleData.override_address" :label="$t('types.direct.overrideAddr')" hide-details></v-text-field>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model="ruleData.override_address"
+                :label="$t('types.direct.overrideAddr')"
+                hide-details
+              />
             </v-col>
-            <v-col cols="12" sm="6" md="4">
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
               <v-text-field
                 v-model.number="ruleData.override_port"
                 type="number"
                 min="0"
                 max="65534"
                 :label="$t('types.direct.overridePort')"
-                hide-details>
-              </v-text-field>
+                hide-details
+              />
             </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-switch v-model="ruleData.udp_disable_domain_unmapping" :label="$t('rule.udpDisableDomainUnmapping')" hide-details></v-switch>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-switch
+                v-model="ruleData.udp_disable_domain_unmapping"
+                :label="$t('rule.udpDisableDomainUnmapping')"
+                hide-details
+              />
             </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-switch v-model="ruleData.udp_connect" :label="$t('rule.udpConnect')" hide-details></v-switch>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-switch
+                v-model="ruleData.udp_connect"
+                :label="$t('rule.udpConnect')"
+                hide-details
+              />
             </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field v-model="ruleData.udp_timeout" :label="$t('rule.udpTimeout')" hide-details></v-text-field>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model="ruleData.udp_timeout"
+                :label="$t('rule.udpTimeout')"
+                hide-details
+              />
             </v-col>
           </v-row>
         </v-card>
-        <v-card subtitle="Reject" v-if="ruleData.action == 'reject'">
+        <v-card
+          v-if="ruleData.action == 'reject'"
+          subtitle="Reject"
+        >
           <v-row>
-            <v-col cols="12" sm="6" md="4">
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
               <v-select
                 v-model="ruleData.method"
                 :items="[{ title: 'Default', value: 'default' },{ title: 'Drop', value: 'drop'}]"
                 :label="$t('rule.method')"
                 clearable
+                hide-details
                 @click:clear="delete ruleData.method"
-                hide-details>
-            </v-select>
+              />
             </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-switch v-model="ruleData.no_drop" :label="$t('rule.noDrop')" hide-details></v-switch>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-switch
+                v-model="ruleData.no_drop"
+                :label="$t('rule.noDrop')"
+                hide-details
+              />
             </v-col>
           </v-row>
         </v-card>
-        <v-card subtitle="Sniff" v-if="ruleData.action == 'sniff'">
+        <v-card
+          v-if="ruleData.action == 'sniff'"
+          subtitle="Sniff"
+        >
           <v-row>
-            <v-col cols="12" sm="6" md="4">
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
               <v-select
                 v-model="ruleData.sniffer"
                 :items="sniffers"
                 :label="$t('rule.sniffer')"
                 multiple
                 chips
-                hide-details>
-              </v-select>
+                hide-details
+              />
             </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field v-model="ruleData.timeout" :label="$t('rule.timeout')" hide-details></v-text-field>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model="ruleData.timeout"
+                :label="$t('rule.timeout')"
+                hide-details
+              />
             </v-col>
           </v-row>
         </v-card>
-        <v-card subtitle="Resolve" v-if="ruleData.action == 'resolve'">
+        <v-card
+          v-if="ruleData.action == 'resolve'"
+          subtitle="Resolve"
+        >
           <v-row>
-            <v-col cols="12" sm="6" md="4">
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
               <v-select
                 v-model="ruleData.strategy"
                 :items="strategies"
                 :label="$t('rule.strategy')"
                 clearable
+                hide-details
                 @click:clear="delete ruleData.strategy"
-                hide-details>
-              </v-select>
+              />
             </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field v-model="ruleData.server" :label="$t('basic.dns.server')" hide-details></v-text-field>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model="ruleData.server"
+                :label="$t('basic.dns.server')"
+                hide-details
+              />
             </v-col>
           </v-row>
         </v-card>
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-btn
           color="primary"
           variant="outlined"
@@ -171,17 +316,60 @@
 </template>
 
 <script lang="ts">
-import { logicalRule, rule, actionKeys } from '@/types/rules'
+import { PropType } from 'vue'
+import { rule, actionKeys } from '@/types/rules'
 import RuleOptions from '@/components/Rule.vue'
 import DocLink from '@/components/DocLink.vue'
+
+// The form assembles a rule field by field and also addresses fields by key
+// name at runtime, so it carries an index signature alongside what it reads.
+interface RuleFields {
+  type?: string
+  mode?: string
+  rules?: rule[]
+  invert?: boolean
+  action?: string
+  outbound?: string
+  override_address?: string
+  override_port?: number
+  network_strategy?: string
+  fallback_delay?: string
+  udp_disable_domain_unmapping?: boolean
+  udp_connect?: boolean
+  udp_timeout?: string
+  sniffer?: string[]
+  timeout?: string
+  method?: string
+  no_drop?: boolean
+  server?: string
+  strategy?: string
+  [key: string]: unknown
+}
+
+// The form's own state always has the core fields; a rule being assembled
+// for saving starts empty and fills in as the action is inspected.
+// `action` and `invert` stay optional: when an existing simple rule is
+// loaded they are copied in field by field, so they are absent for a moment.
+type RuleDraft = RuleFields & { type: string, mode: string, rules: rule[] }
+
 export default {
-  props: ['visible', 'data', 'index', 'clients', 'inTags', 'outTags', 'rsTags'],
+  components: { DocLink, RuleOptions },
+  props: {
+    visible: { type: Boolean, required: true },
+    // A JSON string of the rule being edited, empty when adding a new one.
+    data: { type: String, default: '' },
+    index: { type: Number, required: true },
+    clients: { type: Array as PropType<string[]>, default: () => [] },
+    inTags: { type: Array as PropType<string[]>, default: () => [] },
+    outTags: { type: Array as PropType<string[]>, default: () => [] },
+    rsTags: { type: Array as PropType<string[]>, default: () => [] },
+  },
   emits: ['close', 'save'],
   data() {
     return {
       title: 'add',
       loading: false,
-      ruleData: <any>{
+      ruleData: <RuleDraft>{
         type: 'logical',
         mode: 'and',
         rules: <rule[]>[{}],
@@ -218,6 +406,21 @@ export default {
       ]
     }
   },
+  computed: {
+    logical: {
+      get() { return this.ruleData.type == 'logical' },
+      set(v:boolean) {
+        this.ruleData.type = v? 'logical' : 'simple'
+      }
+    }
+  },
+  watch: {
+    visible(newValue) {
+      if (newValue) {
+        this.updateData()
+      }
+    },
+  },
   methods: {
     updateData() {
       if (this.$props.index != -1) {
@@ -234,14 +437,14 @@ export default {
             if (actionKeys.includes(key)) {
               this.ruleData[key] = newData[key]
             } else {
-              this.ruleData.rules[0][key] = newData[key]
+              (this.ruleData.rules[0] as Record<string, unknown>)[key] = newData[key]
             }
           })
         }
         this.title = 'edit'
       }
       else {
-        this.ruleData = <logicalRule>{
+        this.ruleData = <RuleDraft>{
             type: 'simple',
             mode: 'and',
             rules: <rule[]>[{}],
@@ -258,7 +461,7 @@ export default {
     },
     saveChanges() {
       this.loading = true
-      let newRule = <any>{
+      let newRule: RuleFields = {
         action: this.ruleData.action,
         invert: this.ruleData.invert? this.ruleData.invert : undefined,
       }
@@ -269,25 +472,25 @@ export default {
           newRule.outbound = this.ruleData.outbound
           break
         case 'route-options':
-          newRule.override_address = this.ruleData.override_address?.length > 0 ? this.ruleData.override_address : undefined
-          newRule.override_port = this.ruleData?.override_port > 0 ? this.ruleData.override_port : undefined
-          newRule.network_strategy = this.ruleData.network_strategy?.length > 0 ? this.ruleData.network_strategy : undefined
-          newRule.fallback_delay = this.ruleData.fallback_delay?.length > 0 ? this.ruleData.fallback_delay : undefined
+          newRule.override_address = (this.ruleData.override_address?.length ?? 0) > 0 ? this.ruleData.override_address : undefined
+          newRule.override_port = (this.ruleData.override_port ?? 0) > 0 ? this.ruleData.override_port : undefined
+          newRule.network_strategy = (this.ruleData.network_strategy?.length ?? 0) > 0 ? this.ruleData.network_strategy : undefined
+          newRule.fallback_delay = (this.ruleData.fallback_delay?.length ?? 0) > 0 ? this.ruleData.fallback_delay : undefined
           newRule.udp_disable_domain_unmapping = this.ruleData.udp_disable_domain_unmapping? true : undefined
           newRule.udp_connect = this.ruleData.udp_connect? true : undefined
-          newRule.udp_timeout = this.ruleData.udp_timeout?.length > 0 ? this.ruleData.udp_timeout : undefined
+          newRule.udp_timeout = (this.ruleData.udp_timeout?.length ?? 0) > 0 ? this.ruleData.udp_timeout : undefined
           break
         case 'reject':
-          newRule.method = this.ruleData.method?.length > 0 ? this.ruleData.method : undefined
+          newRule.method = (this.ruleData.method?.length ?? 0) > 0 ? this.ruleData.method : undefined
           newRule.no_drop = this.ruleData.no_drop? true : undefined
           break
         case 'sniff':
-          newRule.sniffer = this.ruleData.sniffer?.length > 0 ? this.ruleData.sniffer : undefined
-          newRule.timeout = this.ruleData.timeout?.length > 0 ? this.ruleData.timeout : undefined
+          newRule.sniffer = (this.ruleData.sniffer?.length ?? 0) > 0 ? this.ruleData.sniffer : undefined
+          newRule.timeout = (this.ruleData.timeout?.length ?? 0) > 0 ? this.ruleData.timeout : undefined
           break
         case 'resolve':
-          newRule.strategy = this.ruleData.strategy?.length > 0 ? this.ruleData.strategy : undefined
-          newRule.server = this.ruleData.server?.length > 0 ? this.ruleData.server : undefined
+          newRule.strategy = (this.ruleData.strategy?.length ?? 0) > 0 ? this.ruleData.strategy : undefined
+          newRule.server = (this.ruleData.server?.length ?? 0) > 0 ? this.ruleData.server : undefined
           break
       }
 
@@ -305,23 +508,7 @@ export default {
     deleteRule(index:number) {
       this.ruleData.rules.splice(index,1)
     }
-  },
-  computed: {
-    logical: {
-      get() { return this.ruleData.type == 'logical' },
-      set(v:boolean) {
-        this.ruleData.type = v? 'logical' : 'simple'
-      }
-    }
-  },
-  watch: {
-    visible(newValue) {
-      if (newValue) {
-        this.updateData()
-      }
-    },
-  },
-  components: { DocLink, RuleOptions }
+  }
 }
 
 </script>

@@ -1,28 +1,63 @@
 <template>
   <v-card :subtitle="$t('objects.tls')">
     <v-row v-if="tlsOptional">
-      <v-col cols="12" sm="6" md="4">
-        <v-switch color="primary" :label="$t('tls.enable')" v-model="tlsEnable" hide-details></v-switch>
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+      >
+        <v-switch
+          v-model="tlsEnable"
+          color="primary"
+          :label="$t('tls.enable')"
+          hide-details
+        />
       </v-col>
     </v-row>
     <template v-if="tls.enabled">
       <v-row>
-        <v-col cols="12" sm="6" md="4">
-          <v-switch color="primary" :label="$t('tls.disableSni')" v-model="disable_sni" hide-details></v-switch>
+        <v-col
+          cols="12"
+          sm="6"
+          md="4"
+        >
+          <v-switch
+            v-model="disable_sni"
+            color="primary"
+            :label="$t('tls.disableSni')"
+            hide-details
+          />
         </v-col>
-        <v-col cols="12" sm="6" md="4">
-          <v-switch color="primary" :label="$t('tls.insecure')" v-model="insecure" hide-details></v-switch>
+        <v-col
+          cols="12"
+          sm="6"
+          md="4"
+        >
+          <v-switch
+            v-model="insecure"
+            color="primary"
+            :label="$t('tls.insecure')"
+            hide-details
+          />
         </v-col>
       </v-row>
       <v-row v-if="insecure">
-        <v-col cols="12" sm="8">
+        <v-col
+          cols="12"
+          sm="8"
+        >
           <v-text-field
+            v-model="pin_sha256"
             label="Base64 Pin SHA256 Fingerprint"
             :loading="loading"
             hide-details
-            v-model="pin_sha256">
-            <template v-slot:append>
-              <v-icon-btn @click="pingCert()" :loading="loading" icon="mdi-refresh" />
+          >
+            <template #append>
+              <v-icon-btn
+                :loading="loading"
+                icon="mdi-refresh"
+                @click="pingCert()"
+              />
             </template>
           </v-text-field>
         </v-col>
@@ -30,281 +65,473 @@
       <template v-if="optionCert">
         <v-row>
           <v-col cols="auto">
-            <v-btn-toggle v-model="usePath"
-            class="rounded-xl"
-            density="compact"
-            variant="outlined"
-            shaped
-            mandatory>
+            <v-btn-toggle
+              v-model="usePath"
+              class="rounded-xl"
+              density="compact"
+              variant="outlined"
+              shaped
+              mandatory
+            >
               <v-btn
                 @click="tls.certificate=undefined; tls.certificate_path=''"
-              >{{ $t('tls.usePath') }}</v-btn>
+              >
+                {{ $t('tls.usePath') }}
+              </v-btn>
               <v-btn
                 @click="tls.certificate_path=undefined; tls.certificate=''"
-              >{{ $t('tls.useText') }}</v-btn>
+              >
+                {{ $t('tls.useText') }}
+              </v-btn>
             </v-btn-toggle>
           </v-col>
         </v-row>
         <v-row v-if="usePath == 0">
-          <v-col cols="12" sm="6">
+          <v-col
+            cols="12"
+            sm="6"
+          >
             <v-text-field
+              v-model="tls.certificate_path"
               :label="$t('tls.certPath')"
               hide-details
-              v-model="tls.certificate_path">
-            </v-text-field>
+            />
           </v-col>
         </v-row>
         <v-row v-else>
-          <v-col cols="12" sm="6">
+          <v-col
+            cols="12"
+            sm="6"
+          >
             <v-textarea
+              v-model="tls.certificate"
               :label="$t('tls.cert')"
               hide-details
-              v-model="tls.certificate">
-            </v-textarea>
+            />
           </v-col>
         </v-row>
       </template>
       <v-row>
-        <v-col cols="12" sm="6" md="4" v-if="tls.server_name != undefined">
+        <v-col
+          v-if="tls.server_name != undefined"
+          cols="12"
+          sm="6"
+          md="4"
+        >
           <v-text-field
+            v-model="tls.server_name"
             label="SNI"
             hide-details
-            v-model="tls.server_name">
-          </v-text-field>
+          />
         </v-col>
-        <v-col cols="12" sm="6" md="4" v-if="tls.alpn">
+        <v-col
+          v-if="tls.alpn"
+          cols="12"
+          sm="6"
+          md="4"
+        >
           <v-select
+            v-model="tls.alpn"
             hide-details
             label="ALPN"
             multiple
             :items="alpn"
-            v-model="tls.alpn">
-          </v-select>
+          />
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" sm="6" md="4" v-if="tls.min_version">
+        <v-col
+          v-if="tls.min_version"
+          cols="12"
+          sm="6"
+          md="4"
+        >
           <v-select
+            v-model="tls.min_version"
             hide-details
             :label="$t('tls.minVer')"
             :items="tlsVersions"
-            v-model="tls.min_version">
-          </v-select>
+          />
         </v-col>
-        <v-col cols="12" sm="6" md="4" v-if="tls.max_version">
+        <v-col
+          v-if="tls.max_version"
+          cols="12"
+          sm="6"
+          md="4"
+        >
           <v-select
+            v-model="tls.max_version"
             hide-details
             :label="$t('tls.maxVer')"
             :items="tlsVersions"
-            v-model="tls.max_version">
-          </v-select>
+          />
         </v-col>
       </v-row>
       <v-row v-if="tls.cipher_suites != undefined">
-        <v-col cols="12" md="8">
+        <v-col
+          cols="12"
+          md="8"
+        >
           <v-select
+            v-model="tls.cipher_suites"
             hide-details
             :label="$t('tls.cs')"
             multiple
             :items="cipher_suites"
-            v-model="tls.cipher_suites">
-          </v-select>
+          />
         </v-col>
       </v-row>
       <v-row v-if="tls.utls != undefined">
-        <v-col cols="12" md="6">
+        <v-col
+          cols="12"
+          md="6"
+        >
           <v-select
+            v-model="tls.utls.fingerprint"
             hide-details
             label="Fingerprint"
             :items="fingerprints"
-            v-model="tls.utls.fingerprint">
-          </v-select>
+          />
         </v-col>
       </v-row>
       <v-row v-if="tls.reality != undefined">
-        <v-col cols="12" md="6">
+        <v-col
+          cols="12"
+          md="6"
+        >
           <v-text-field
-          :label="$t('tls.pubKey')"
+            v-model="tls.reality.public_key"
+            :label="$t('tls.pubKey')"
             hide-details
-            v-model="tls.reality.public_key">
-          </v-text-field>
+          />
         </v-col>
-        <v-col cols="12" md="4">
+        <v-col
+          cols="12"
+          md="4"
+        >
           <v-text-field
+            v-model="tls.reality.short_id"
             label="Short ID"
             hide-details
-            v-model="tls.reality.short_id">
-          </v-text-field>
+          />
         </v-col>
       </v-row>
       <template v-if="tls.ech != undefined">
         <v-row>
-          <v-col class="v-card-subtitle">ECH</v-col>
+          <v-col class="v-card-subtitle">
+            ECH
+          </v-col>
         </v-row>
         <v-row>
           <v-col cols="auto">
-            <v-btn-toggle v-model="useEchPath"
-            class="rounded-xl"
-            density="compact"
-            variant="outlined"
-            shaped
-            mandatory>
+            <v-btn-toggle
+              v-model="useEchPath"
+              class="rounded-xl"
+              density="compact"
+              variant="outlined"
+              shaped
+              mandatory
+            >
               <v-btn
                 @click="delete tls.ech?.config"
-              >{{ $t('tls.usePath') }}</v-btn>
+              >
+                {{ $t('tls.usePath') }}
+              </v-btn>
               <v-btn
                 @click="delete tls.ech?.config_path"
-              >{{ $t('tls.useText') }}</v-btn>
+              >
+                {{ $t('tls.useText') }}
+              </v-btn>
             </v-btn-toggle>
           </v-col>
         </v-row>
         <v-row v-if="useEchPath == 0">
-          <v-col cols="12" sm="6">
+          <v-col
+            cols="12"
+            sm="6"
+          >
             <v-text-field
+              v-model="tls.ech.config_path"
               :label="$t('tls.certPath')"
               hide-details
-              v-model="tls.ech.config_path">
-            </v-text-field>
+            />
           </v-col>
-          <v-col cols="12" sm="6">
+          <v-col
+            cols="12"
+            sm="6"
+          >
             <v-text-field
+              v-model="tls.ech.query_server_name"
               :label="$t('tls.queryServerName')"
               hide-details
-              v-model="tls.ech.query_server_name"
-              placeholder="ech.example.com">
-            </v-text-field>
+              placeholder="ech.example.com"
+            />
           </v-col>
         </v-row>
         <v-row v-else>
-          <v-col cols="12" sm="6">
+          <v-col
+            cols="12"
+            sm="6"
+          >
             <v-textarea
+              v-model="echConfigText"
               :label="$t('tls.cert')"
               hide-details
-              v-model="echConfigText">
-            </v-textarea>
+            />
           </v-col>
-          <v-col cols="12" sm="6">
+          <v-col
+            cols="12"
+            sm="6"
+          >
             <v-text-field
+              v-model="tls.ech.query_server_name"
               :label="$t('tls.queryServerName')"
               hide-details
-              v-model="tls.ech.query_server_name"
-              placeholder="ech.example.com">
-            </v-text-field>
+              placeholder="ech.example.com"
+            />
           </v-col>
         </v-row>
       </template>
       <v-row v-if="tls.handshake_timeout != undefined">
-        <v-col cols="12" sm="6" md="4">
+        <v-col
+          cols="12"
+          sm="6"
+          md="4"
+        >
           <v-text-field
+            v-model.number="handshakeTimeout"
             :label="$t('tls.handshakeTimeout')"
             type="number"
             min="1"
             :suffix="$t('date.s')"
             hide-details
-            v-model.number="handshakeTimeout">
-          </v-text-field>
+          />
         </v-col>
       </v-row>
       <!-- Refused by reality, so it is offered only for plain TLS. The forged
            hostname has to differ from the SNI, which must be set. -->
       <v-row v-if="tls.reality == undefined && tls.spoof != undefined">
-        <v-col cols="12" sm="6" md="4">
+        <v-col
+          cols="12"
+          sm="6"
+          md="4"
+        >
           <v-text-field
+            v-model="spoof"
             :label="$t('tls.spoof')"
             placeholder="allowed.example.com"
             hide-details
-            v-model="spoof">
-          </v-text-field>
+          />
         </v-col>
-        <v-col cols="12" sm="6" md="4" v-if="tls.spoof">
+        <v-col
+          v-if="tls.spoof"
+          cols="12"
+          sm="6"
+          md="4"
+        >
           <v-select
+            v-model="tls.spoof_method"
             hide-details
             :label="$t('tls.spoofMethod')"
             :items="spoofMethods"
-            v-model="tls.spoof_method">
-          </v-select>
+          />
         </v-col>
       </v-row>
       <v-row v-if="tls.fragment != undefined">
-        <v-col cols="12" sm="6" md="4">
-          <v-switch color="primary" :label="$t('tls.fragment')" v-model="tls.fragment" hide-details></v-switch>
+        <v-col
+          cols="12"
+          sm="6"
+          md="4"
+        >
+          <v-switch
+            v-model="tls.fragment"
+            color="primary"
+            :label="$t('tls.fragment')"
+            hide-details
+          />
         </v-col>
-        <v-col cols="12" sm="6" md="4" v-if="tls.fragment">
-          <v-switch color="primary" :label="$t('tls.recordFragment')" v-model="tls.record_fragment" hide-details></v-switch>
+        <v-col
+          v-if="tls.fragment"
+          cols="12"
+          sm="6"
+          md="4"
+        >
+          <v-switch
+            v-model="tls.record_fragment"
+            color="primary"
+            :label="$t('tls.recordFragment')"
+            hide-details
+          />
         </v-col>
-        <v-col cols="12" sm="6" md="4" v-if="tls.fragment">
+        <v-col
+          v-if="tls.fragment"
+          cols="12"
+          sm="6"
+          md="4"
+        >
           <v-text-field
-          :label="$t('tls.fragmentDelay')"
-          hide-details
-          type="number"
-          min=0
-          :suffix="$t('date.ms')"
-          v-model.number="fragmentFallbackDelay">
-          </v-text-field>
+            v-model.number="fragmentFallbackDelay"
+            :label="$t('tls.fragmentDelay')"
+            hide-details
+            type="number"
+            min="0"
+            :suffix="$t('date.ms')"
+          />
         </v-col>
       </v-row>
     </template>
     <v-card-actions v-if="tls.enabled">
-      <v-spacer></v-spacer>
-      <v-menu v-model="menu" :close-on-content-click="false" location="start">
-          <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" hide-details variant="tonal">{{ $t('tls.options') }}</v-btn>
-          </template>
-          <v-card>
-            <v-list>
-              <v-list-item>
-                <v-switch v-model="optionCert" color="primary" :label="$t('tls.cert')" hide-details></v-switch>
-              </v-list-item>
-              <v-list-item>
-                <v-switch v-model="optionSNI" color="primary" label="SNI" hide-details></v-switch>
-              </v-list-item>
-              <v-list-item>
-                <v-switch v-model="optionALPN" color="primary" label="ALPN" hide-details></v-switch>
-              </v-list-item>
-              <v-list-item>
-                <v-switch v-model="optionMinV" color="primary" :label="$t('tls.minVer')" hide-details></v-switch>
-              </v-list-item>
-              <v-list-item>
-                <v-switch v-model="optionMaxV" color="primary" :label="$t('tls.maxVer')" hide-details></v-switch>
-              </v-list-item>
-              <v-list-item>
-                <v-switch v-model="optionCS" color="primary" :label="$t('tls.cs')" hide-details></v-switch>
-              </v-list-item>
-              <v-list-item>
-                <v-switch v-model="optionFP" color="primary" label="UTLS" hide-details></v-switch>
-              </v-list-item>
-              <v-list-item>
-                <v-switch v-model="optionReality" color="primary" label="Reality" hide-details></v-switch>
-              </v-list-item>
-              <v-list-item>
-                <v-switch v-model="optionEch" color="primary" label="ECH" hide-details></v-switch>
-              </v-list-item>
-              <v-list-item>
-                <v-switch v-model="optionFragment" color="primary" :label="$t('tls.fragment')" hide-details></v-switch>
-              </v-list-item>
-              <v-list-item>
-                <v-switch v-model="optionHandshake" color="primary" :label="$t('tls.handshakeTimeout')" hide-details></v-switch>
-              </v-list-item>
-              <v-list-item v-if="tls.reality == undefined">
-                <v-switch v-model="optionSpoof" color="primary" :label="$t('tls.spoof')" hide-details></v-switch>
-              </v-list-item>
-            </v-list>
-          </v-card>
-        </v-menu>
+      <v-spacer />
+      <v-menu
+        v-model="menu"
+        :close-on-content-click="false"
+        location="start"
+      >
+        <template #activator="{ props }">
+          <v-btn
+            v-bind="props"
+            hide-details
+            variant="tonal"
+          >
+            {{ $t('tls.options') }}
+          </v-btn>
+        </template>
+        <v-card>
+          <v-list>
+            <v-list-item>
+              <v-switch
+                v-model="optionCert"
+                color="primary"
+                :label="$t('tls.cert')"
+                hide-details
+              />
+            </v-list-item>
+            <v-list-item>
+              <v-switch
+                v-model="optionSNI"
+                color="primary"
+                label="SNI"
+                hide-details
+              />
+            </v-list-item>
+            <v-list-item>
+              <v-switch
+                v-model="optionALPN"
+                color="primary"
+                label="ALPN"
+                hide-details
+              />
+            </v-list-item>
+            <v-list-item>
+              <v-switch
+                v-model="optionMinV"
+                color="primary"
+                :label="$t('tls.minVer')"
+                hide-details
+              />
+            </v-list-item>
+            <v-list-item>
+              <v-switch
+                v-model="optionMaxV"
+                color="primary"
+                :label="$t('tls.maxVer')"
+                hide-details
+              />
+            </v-list-item>
+            <v-list-item>
+              <v-switch
+                v-model="optionCS"
+                color="primary"
+                :label="$t('tls.cs')"
+                hide-details
+              />
+            </v-list-item>
+            <v-list-item>
+              <v-switch
+                v-model="optionFP"
+                color="primary"
+                label="UTLS"
+                hide-details
+              />
+            </v-list-item>
+            <v-list-item>
+              <v-switch
+                v-model="optionReality"
+                color="primary"
+                label="Reality"
+                hide-details
+              />
+            </v-list-item>
+            <v-list-item>
+              <v-switch
+                v-model="optionEch"
+                color="primary"
+                label="ECH"
+                hide-details
+              />
+            </v-list-item>
+            <v-list-item>
+              <v-switch
+                v-model="optionFragment"
+                color="primary"
+                :label="$t('tls.fragment')"
+                hide-details
+              />
+            </v-list-item>
+            <v-list-item>
+              <v-switch
+                v-model="optionHandshake"
+                color="primary"
+                :label="$t('tls.handshakeTimeout')"
+                hide-details
+              />
+            </v-list-item>
+            <v-list-item v-if="tls.reality == undefined">
+              <v-switch
+                v-model="optionSpoof"
+                color="primary"
+                :label="$t('tls.spoof')"
+                hide-details
+              />
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-menu>
     </v-card-actions>
   </v-card>
 </template>
 
 <script lang="ts">
+import { PropType } from 'vue'
 import HttpUtils from '@/plugins/httputil';
 import { oTls, defaultOutTls, spoofMethods } from '@/types/tls'
+
+// The object that owns the client TLS block: an outbound, one of an inbound's
+// extra addresses, or a DERP mesh node. Only what this form reads is listed.
+interface TlsHolder {
+  type?: string
+  server?: string
+  server_port?: number
+  tls: oTls
+}
+
+// What api/getCertPing answers with.
+interface CertPing {
+  leafHash: string
+}
+
 export default {
-  props: ['outbound'],
+  props: {
+    // Outbounds, address rows and mesh nodes all bind here, so the prop asks
+    // only for an object and the narrowing happens below.
+    outbound: { type: Object as PropType<object>, required: true }
+  },
   data() {
+    const outbound = <TlsHolder>this.$props.outbound
     return {
       menu: false,
-      usePath: this.$props.outbound?.tls?.certificate? 1:0,
-      useEchPath: this.$props.outbound?.tls.ech?.config? 1:0,
+      usePath: outbound?.tls?.certificate? 1:0,
+      useEchPath: outbound?.tls.ech?.config? 1:0,
       defaults: defaultOutTls,
       alpn: [
         { title: "H3", value: 'h3' },
@@ -347,37 +574,28 @@ export default {
       loading: false
     }
   },
-  methods: {
-    async pingCert() {
-      this.loading = true
-      const msg = await HttpUtils.post('api/getCertPing', {
-        domain: this.$props.outbound.server,
-        port: this.$props.outbound.server_port,
-      })
-      this.loading = false
-      if (msg.success) {
-        this.pin_sha256 = msg.obj.leafHash
-      }
-    }
-  },
   computed: {
+    // Narrow once, since no caller hands over a type the template checker could
+    // follow. The computed returns the same object, so edits reach the parent.
+    holder(): TlsHolder { return <TlsHolder>this.$props.outbound },
     tls(): oTls {
-      return <oTls> this.$props.outbound.tls
+      return <oTls> this.holder.tls
     },
     tlsEnable: {
       get() { return Object.hasOwn(this.tls, 'enabled') ? this.tls.enabled : false },
-      set(newValue: boolean) { this.$props.outbound.tls = newValue ? { enabled: true } : { enabled: false } }
+      set(newValue: boolean) { this.holder.tls = newValue ? { enabled: true } : { enabled: false } }
     },
     disable_sni: {
       get() { return this.tls.disable_sni ?? false },
-      set(newValue: boolean) { this.$props.outbound.tls.disable_sni = newValue ? true : undefined }
+      set(newValue: boolean) { this.holder.tls.disable_sni = newValue ? true : undefined }
     },
     insecure: {
       get() { return this.tls.insecure ?? false },
-      set(newValue: boolean) { this.$props.outbound.tls.insecure = newValue ? true : undefined }
+      set(newValue: boolean) { this.holder.tls.insecure = newValue ? true : undefined }
     },
     tlsOptional(): boolean {
-      return !['hysteria','hysteria2','tuic','shadowtls', 'anytls', 'naive'].includes(this.$props.outbound.type)
+      // Address rows and mesh nodes carry no type, and so match nothing here.
+      return !['hysteria','hysteria2','tuic','shadowtls', 'anytls', 'naive'].includes(<string>this.holder.type)
     },
     echConfigText: {
       get(): string { return this.tls.ech?.config ? this.tls.ech.config.join('\n') : '' },
@@ -388,56 +606,56 @@ export default {
       set(v:boolean) {
         this.usePath = 0
         if (v) {
-          this.$props.outbound.tls.certificate_path = ""
+          this.holder.tls.certificate_path = ""
         } else {
-          delete this.$props.outbound.tls.certificate_path
-          delete this.$props.outbound.tls.certificate
+          delete this.holder.tls.certificate_path
+          delete this.holder.tls.certificate
         }
       }
     },
     optionSNI: {
       get(): boolean { return this.tls.server_name != undefined },
-      set(v:boolean) { this.$props.outbound.tls.server_name = v ? '' : undefined }
+      set(v:boolean) { this.holder.tls.server_name = v ? '' : undefined }
     },
     optionALPN: {
       get(): boolean { return this.tls.alpn != undefined },
-      set(v:boolean) { this.$props.outbound.tls.alpn = v ? defaultOutTls.alpn : undefined }
+      set(v:boolean) { this.holder.tls.alpn = v ? defaultOutTls.alpn : undefined }
     },
     optionMinV: {
       get(): boolean { return this.tls.min_version != undefined },
-      set(v:boolean) { this.$props.outbound.tls.min_version = v ? defaultOutTls.min_version : undefined }
+      set(v:boolean) { this.holder.tls.min_version = v ? defaultOutTls.min_version : undefined }
     },
     optionMaxV: {
       get(): boolean { return this.tls.max_version != undefined },
-      set(v:boolean) { this.$props.outbound.tls.max_version = v ? defaultOutTls.max_version : undefined }
+      set(v:boolean) { this.holder.tls.max_version = v ? defaultOutTls.max_version : undefined }
     },
     optionCS: {
       get(): boolean { return this.tls.cipher_suites != undefined },
-      set(v:boolean) { this.$props.outbound.tls.cipher_suites = v ? defaultOutTls.cipher_suites : undefined }
+      set(v:boolean) { this.holder.tls.cipher_suites = v ? defaultOutTls.cipher_suites : undefined }
     },
     optionFP: {
       get(): boolean { return this.tls.utls != undefined },
-      set(v:boolean) { this.$props.outbound.tls.utls = v ? defaultOutTls.utls : undefined }
+      set(v:boolean) { this.holder.tls.utls = v ? defaultOutTls.utls : undefined }
     },
     optionReality: {
       get(): boolean { return this.tls.reality != undefined },
       set(v:boolean) {
-        this.$props.outbound.tls.reality = v ? defaultOutTls.reality : undefined
+        this.holder.tls.reality = v ? defaultOutTls.reality : undefined
         // reality rejects a spoofed ClientHello, so the two cannot coexist.
         if (v) this.optionSpoof = false
       }
     },
     handshakeTimeout: {
       get(): number { return parseInt(this.tls.handshake_timeout?.replace('s', '') ?? '15') || 15 },
-      set(v:number) { this.$props.outbound.tls.handshake_timeout = v > 0 ? `${v}s` : '15s' }
+      set(v:number) { this.holder.tls.handshake_timeout = v > 0 ? `${v}s` : '15s' }
     },
     optionHandshake: {
       get(): boolean { return this.tls.handshake_timeout != undefined },
       set(v:boolean) {
         if (v) {
-          this.$props.outbound.tls.handshake_timeout = '15s'
+          this.holder.tls.handshake_timeout = '15s'
         } else {
-          delete this.$props.outbound.tls.handshake_timeout
+          delete this.holder.tls.handshake_timeout
         }
       }
     },
@@ -446,11 +664,11 @@ export default {
     spoof: {
       get(): string { return this.tls.spoof ?? '' },
       set(v:string) {
-        this.$props.outbound.tls.spoof = v
+        this.holder.tls.spoof = v
         if (v.length > 0) {
-          this.$props.outbound.tls.spoof_method = this.tls.spoof_method ?? 'wrong-sequence'
+          this.holder.tls.spoof_method = this.tls.spoof_method ?? 'wrong-sequence'
         } else {
-          delete this.$props.outbound.tls.spoof_method
+          delete this.holder.tls.spoof_method
         }
       }
     },
@@ -458,36 +676,49 @@ export default {
       get(): boolean { return this.tls.spoof != undefined },
       set(v:boolean) {
         if (v) {
-          this.$props.outbound.tls.spoof = ''
+          this.holder.tls.spoof = ''
         } else {
-          delete this.$props.outbound.tls.spoof
-          delete this.$props.outbound.tls.spoof_method
+          delete this.holder.tls.spoof
+          delete this.holder.tls.spoof_method
         }
       }
     },
     optionEch: {
       get(): boolean { return this.tls.ech != undefined },
-      set(v:boolean) { this.$props.outbound.tls.ech = v ? defaultOutTls.ech : undefined }
+      set(v:boolean) { this.holder.tls.ech = v ? defaultOutTls.ech : undefined }
     },
     optionFragment: {
       get(): boolean { return this.tls.fragment != undefined },
       set(v:boolean) { 
         if (v) {
-          this.$props.outbound.tls.fragment = false
+          this.holder.tls.fragment = false
         } else {
-          delete this.$props.outbound.tls.fragment
-          delete this.$props.outbound.tls.fragment_fallback_delay
-          delete this.$props.outbound.tls.record_fragment
+          delete this.holder.tls.fragment
+          delete this.holder.tls.fragment_fallback_delay
+          delete this.holder.tls.record_fragment
         }
       }
     },
     fragmentFallbackDelay: {
       get(): number { return parseInt(this.tls.fragment_fallback_delay?.replace('ms','')?? '500')?? 500 },
-      set(v:number) { this.$props.outbound.tls.fragment_fallback_delay = v>0 ? `${v}ms` : undefined }
+      set(v:number) { this.holder.tls.fragment_fallback_delay = v>0 ? `${v}ms` : undefined }
     },
     pin_sha256: {
       get(): string { return this.tls.certificate_public_key_sha256?.join(',') ?? '' },
-      set(v: string) { this.$props.outbound.tls.certificate_public_key_sha256 = v.length > 0 ? v.split(',') : undefined }
+      set(v: string) { this.holder.tls.certificate_public_key_sha256 = v.length > 0 ? v.split(',') : undefined }
+    }
+  },
+  methods: {
+    async pingCert() {
+      this.loading = true
+      const msg = await HttpUtils.post<CertPing>('api/getCertPing', {
+        domain: this.holder.server,
+        port: this.holder.server_port,
+      })
+      this.loading = false
+      if (msg.success) {
+        this.pin_sha256 = msg.obj.leafHash
+      }
     }
   }
 }

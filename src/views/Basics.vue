@@ -1,7 +1,17 @@
 <template>
   <v-row style="margin-bottom: 10px;">
-    <v-col cols="12" justify="center" align="center">
-      <v-btn variant="outlined" color="warning" @click="saveConfig" :loading="loading" :disabled="stateChange">
+    <v-col
+      cols="12"
+      justify="center"
+      align="center"
+    >
+      <v-btn
+        variant="outlined"
+        color="warning"
+        :loading="loading"
+        :disabled="stateChange"
+        @click="saveConfig"
+      >
         {{ $t('actions.save') }}
       </v-btn>
     </v-col>
@@ -19,33 +29,66 @@
     <v-expansion-panel>
       <v-expansion-panel-title>
         {{ $t('basic.log.title') }}
-        <v-spacer></v-spacer>
-        <DocLink :href="LOG_DOC" @click.stop />
+        <v-spacer />
+        <DocLink
+          :href="LOG_DOC"
+          @click.stop
+        />
       </v-expansion-panel-title>
       <v-expansion-panel-text>
         <v-row>
-          <v-col cols="12" sm="6" md="3" lg="2">
-            <v-switch v-model="appConfig.log.disabled" color="primary" :label="$t('disable')" hide-details></v-switch>
+          <v-col
+            cols="12"
+            sm="6"
+            md="3"
+            lg="2"
+          >
+            <v-switch
+              v-model="appConfig.log.disabled"
+              color="primary"
+              :label="$t('disable')"
+              hide-details
+            />
           </v-col>
-          <v-col cols="12" sm="6" md="3" lg="2">
+          <v-col
+            cols="12"
+            sm="6"
+            md="3"
+            lg="2"
+          >
             <v-select
+              v-model="appConfig.log.level"
               hide-details
               :label="$t('basic.log.level')"
               :items="levels"
               clearable
               @click:clear="delete appConfig.log.level"
-              v-model="appConfig.log.level">
-            </v-select>
+            />
           </v-col>
-          <v-col cols="12" sm="6" md="3" lg="2">
+          <v-col
+            cols="12"
+            sm="6"
+            md="3"
+            lg="2"
+          >
             <v-text-field
               v-model="appConfig.log.output"
               hide-details
               :label="$t('basic.log.output')"
-            ></v-text-field>
+            />
           </v-col>
-          <v-col cols="12" sm="6" md="3" lg="2">
-            <v-switch v-model="appConfig.log.timestamp" color="primary" :label="$t('basic.log.timestamp')" hide-details></v-switch>
+          <v-col
+            cols="12"
+            sm="6"
+            md="3"
+            lg="2"
+          >
+            <v-switch
+              v-model="appConfig.log.timestamp"
+              color="primary"
+              :label="$t('basic.log.timestamp')"
+              hide-details
+            />
           </v-col>
         </v-row>
       </v-expansion-panel-text>
@@ -53,32 +96,63 @@
     <v-expansion-panel>
       <v-expansion-panel-title>
         NTP
-        <v-spacer></v-spacer>
-        <DocLink :href="NTP_DOC" @click.stop />
+        <v-spacer />
+        <DocLink
+          :href="NTP_DOC"
+          @click.stop
+        />
       </v-expansion-panel-title>
       <v-expansion-panel-text>
         <v-row>
-          <v-col cols="12" sm="6" md="3" lg="2">
-            <v-switch v-model="enableNtp" color="primary" :label="$t('enable')" hide-details></v-switch>
+          <v-col
+            cols="12"
+            sm="6"
+            md="3"
+            lg="2"
+          >
+            <v-switch
+              v-model="enableNtp"
+              color="primary"
+              :label="$t('enable')"
+              hide-details
+            />
           </v-col>
-          <v-col cols="12" sm="6" md="3" lg="2" v-if="appConfig.ntp?.enabled">
+          <v-col
+            v-if="appConfig.ntp?.enabled"
+            cols="12"
+            sm="6"
+            md="3"
+            lg="2"
+          >
             <v-text-field
               v-model="appConfig.ntp.server"
               hide-details
               :label="$t('out.addr')"
-            ></v-text-field>
+            />
           </v-col>
-          <v-col cols="12" sm="6" md="3" lg="2" v-if="appConfig.ntp?.enabled">
+          <v-col
+            v-if="appConfig.ntp?.enabled"
+            cols="12"
+            sm="6"
+            md="3"
+            lg="2"
+          >
             <v-text-field
               v-model.number="appConfig.ntp.server_port"
               hide-details
               type="number"
               clearable
-              @click:clear="delete appConfig.ntp?.server_port"
               :label="$t('out.port')"
-            ></v-text-field>
+              @click:clear="delete appConfig.ntp?.server_port"
+            />
           </v-col>
-          <v-col cols="12" sm="6" md="3" lg="2" v-if="appConfig.ntp?.enabled">
+          <v-col
+            v-if="appConfig.ntp?.enabled"
+            cols="12"
+            sm="6"
+            md="3"
+            lg="2"
+          >
             <v-text-field
               v-model="ntpInterval"
               hide-details
@@ -86,10 +160,13 @@
               min="0"
               type="number"
               :label="$t('ruleset.interval')"
-            ></v-text-field>
+            />
           </v-col>
         </v-row>
-        <Dial :dial="appConfig.ntp" v-if="appConfig.ntp?.enabled" />
+        <Dial
+          v-if="appConfig.ntp?.enabled"
+          :dial="appConfig.ntp"
+        />
       </v-expansion-panel-text>
     </v-expansion-panel>
     <v-expansion-panel>
@@ -102,7 +179,13 @@
              referenced by its tag. -->
         <v-row>
           <v-col cols="12">
-            <v-btn color="primary" variant="tonal" @click="showHttpClientModal(-1)">{{ $t('actions.add') }}</v-btn>
+            <v-btn
+              color="primary"
+              variant="tonal"
+              @click="showHttpClientModal(-1)"
+            >
+              {{ $t('actions.add') }}
+            </v-btn>
           </v-col>
         </v-row>
         <v-data-table
@@ -114,23 +197,42 @@
           hide-default-footer
           items-per-page="-1"
         >
-          <template v-slot:item.version="{ value }">
+          <template #item.version="{ value }">
             {{ versionName(value) }}
           </template>
-          <template v-slot:item.detour="{ value }">
+          <template #item.detour="{ value }">
             {{ value ?? '-' }}
           </template>
-          <template v-slot:item.engine="{ value }">
+          <template #item.engine="{ value }">
             {{ value ?? '-' }}
           </template>
-          <template v-slot:item.actions="{ index }">
-            <v-btn icon="mdi-file-edit" variant="text" density="compact" @click="showHttpClientModal(index)">
+          <template #item.actions="{ index }">
+            <v-btn
+              icon="mdi-file-edit"
+              variant="text"
+              density="compact"
+              @click="showHttpClientModal(index)"
+            >
               <v-icon />
-              <v-tooltip activator="parent" location="top" :text="$t('actions.edit')"></v-tooltip>
+              <v-tooltip
+                activator="parent"
+                location="top"
+                :text="$t('actions.edit')"
+              />
             </v-btn>
-            <v-btn icon="mdi-file-remove" variant="text" density="compact" color="warning" @click="delHttpClient(index)">
+            <v-btn
+              icon="mdi-file-remove"
+              variant="text"
+              density="compact"
+              color="warning"
+              @click="delHttpClient(index)"
+            >
               <v-icon />
-              <v-tooltip activator="parent" location="top" :text="$t('actions.del')"></v-tooltip>
+              <v-tooltip
+                activator="parent"
+                location="top"
+                :text="$t('actions.del')"
+              />
             </v-btn>
           </template>
         </v-data-table>
@@ -139,157 +241,286 @@
     <v-expansion-panel>
       <v-expansion-panel-title>
         Experimental
-        <v-spacer></v-spacer>
-        <DocLink :href="EXPERIMENTAL_DOC" @click.stop />
+        <v-spacer />
+        <DocLink
+          :href="EXPERIMENTAL_DOC"
+          @click.stop
+        />
       </v-expansion-panel-title>
       <v-expansion-panel-text>
         <v-row>
-          <v-col class="v-card-subtitle">Cache File <DocLink :href="CACHE_FILE_DOC" /></v-col>
+          <v-col class="v-card-subtitle">
+            Cache File <DocLink :href="CACHE_FILE_DOC" />
+          </v-col>
         </v-row>
         <v-row>
-          <v-col cols="12" sm="6" md="3" lg="2">
-            <v-switch v-model="enableCacheFile" color="primary" :label="$t('enable')" hide-details></v-switch>
+          <v-col
+            cols="12"
+            sm="6"
+            md="3"
+            lg="2"
+          >
+            <v-switch
+              v-model="enableCacheFile"
+              color="primary"
+              :label="$t('enable')"
+              hide-details
+            />
           </v-col>
-          <v-col cols="12" sm="6" md="3" lg="2" v-if="appConfig.experimental.cache_file">
+          <v-col
+            v-if="appConfig.experimental.cache_file"
+            cols="12"
+            sm="6"
+            md="3"
+            lg="2"
+          >
             <v-text-field
               v-model="appConfig.experimental.cache_file.path"
               hide-details
               :label="$t('transport.path')"
-            ></v-text-field>
+            />
           </v-col>
-          <v-col cols="12" sm="6" md="3" lg="2" v-if="appConfig.experimental.cache_file">
+          <v-col
+            v-if="appConfig.experimental.cache_file"
+            cols="12"
+            sm="6"
+            md="3"
+            lg="2"
+          >
             <v-text-field
               v-model="appConfig.experimental.cache_file.cache_id"
               hide-details
               label="Cache ID"
-            ></v-text-field>
+            />
           </v-col>
-          <v-col cols="12" sm="6" md="3" lg="2" v-if="appConfig.experimental.cache_file">
-            <v-switch v-model="appConfig.experimental.cache_file.store_fakeip"
+          <v-col
+            v-if="appConfig.experimental.cache_file"
+            cols="12"
+            sm="6"
+            md="3"
+            lg="2"
+          >
+            <v-switch
+              v-model="appConfig.experimental.cache_file.store_fakeip"
               color="primary"
               :label="$t('basic.exp.storeFakeIp')"
-              hide-details></v-switch>
+              hide-details
+            />
           </v-col>
         </v-row>
         <v-row>
-          <v-col class="v-card-subtitle">Clash API <DocLink :href="CLASH_API_DOC" /></v-col>
+          <v-col class="v-card-subtitle">
+            Clash API <DocLink :href="CLASH_API_DOC" />
+          </v-col>
         </v-row>
         <v-row>
-          <v-col cols="12" sm="6" md="3" lg="2">
-            <v-switch v-model="enableClashApi" color="primary" :label="$t('enable')" hide-details></v-switch>
+          <v-col
+            cols="12"
+            sm="6"
+            md="3"
+            lg="2"
+          >
+            <v-switch
+              v-model="enableClashApi"
+              color="primary"
+              :label="$t('enable')"
+              hide-details
+            />
           </v-col>
           <template v-if="appConfig.experimental.clash_api">
-            <v-col cols="12" sm="6" md="3" lg="2">
+            <v-col
+              cols="12"
+              sm="6"
+              md="3"
+              lg="2"
+            >
               <v-text-field
                 v-model="appConfig.experimental.clash_api.external_controller"
                 hide-details
                 :label="$t('basic.exp.extController')"
-              ></v-text-field>
+              />
             </v-col>
-            <v-col cols="12" sm="6" md="3" lg="2">
+            <v-col
+              cols="12"
+              sm="6"
+              md="3"
+              lg="2"
+            >
               <v-text-field
                 v-model="appConfig.experimental.clash_api.secret"
                 hide-details
                 :label="$t('basic.exp.secret')"
-              ></v-text-field>
+              />
             </v-col>
           </template>
         </v-row>
         <v-row v-if="appConfig.experimental.clash_api">
-          <v-col cols="12" sm="6" md="3" lg="2">
+          <v-col
+            cols="12"
+            sm="6"
+            md="3"
+            lg="2"
+          >
             <v-text-field
               v-model="appConfig.experimental.clash_api.external_ui"
               hide-details
               :label="$t('basic.exp.extUi')"
-            ></v-text-field>
+            />
           </v-col>
-          <v-col cols="12" sm="8" md="4">
+          <v-col
+            cols="12"
+            sm="8"
+            md="4"
+          >
             <v-text-field
               v-model="appConfig.experimental.clash_api.external_ui_download_url"
               hide-details
               :label="$t('basic.exp.extUiDownloadUrl')"
-            ></v-text-field>
+            />
           </v-col>
-          <v-col cols="12" sm="6" md="3" lg="2">
+          <v-col
+            cols="12"
+            sm="6"
+            md="3"
+            lg="2"
+          >
             <v-select
               v-model="appConfig.experimental.clash_api.external_ui_download_detour"
               hide-details
               :items="outboundTags"
               clearable
-              @click:clear="delete appConfig.experimental.clash_api.external_ui_download_detour"
               :label="$t('basic.exp.extUiDownloadDetour')"
-            ></v-select>
+              @click:clear="delete appConfig.experimental.clash_api.external_ui_download_detour"
+            />
           </v-col>
         </v-row>
         <v-row v-if="appConfig.experimental.clash_api">
-          <v-col cols="12" sm="6" md="3" lg="2">
+          <v-col
+            cols="12"
+            sm="6"
+            md="3"
+            lg="2"
+          >
             <v-text-field
               v-model="appConfig.experimental.clash_api.default_mode"
               hide-details
               :label="$t('basic.exp.defaultMode')"
-            ></v-text-field>
+            />
           </v-col>
-          <v-col cols="12" sm="8" md="4">
+          <v-col
+            cols="12"
+            sm="8"
+            md="4"
+          >
             <v-text-field 
               v-model="origin"
               hide-details
               :label="$t('basic.exp.allowOrigin') + ' ' + $t('commaSeparated')"
-            ></v-text-field>
+            />
           </v-col>
-          <v-col cols="12" sm="6" md="3" lg="2">
-            <v-switch v-model="appConfig.experimental.clash_api.access_control_allow_private_network" color="primary" :label="$t('basic.exp.allowPrivate')" hide-details></v-switch>
+          <v-col
+            cols="12"
+            sm="6"
+            md="3"
+            lg="2"
+          >
+            <v-switch
+              v-model="appConfig.experimental.clash_api.access_control_allow_private_network"
+              color="primary"
+              :label="$t('basic.exp.allowPrivate')"
+              hide-details
+            />
           </v-col>
         </v-row>
         <v-row>
-          <v-col class="v-card-subtitle">V2Ray API <DocLink :href="V2RAY_API_DOC" /></v-col>
+          <v-col class="v-card-subtitle">
+            V2Ray API <DocLink :href="V2RAY_API_DOC" />
+          </v-col>
         </v-row>
         <v-row>
-          <v-col cols="12" sm="6" md="3" lg="2">
-            <v-switch v-model="enableV2rayApi" color="primary" :label="$t('enable')" hide-details></v-switch>
+          <v-col
+            cols="12"
+            sm="6"
+            md="3"
+            lg="2"
+          >
+            <v-switch
+              v-model="enableV2rayApi"
+              color="primary"
+              :label="$t('enable')"
+              hide-details
+            />
           </v-col>
           <template v-if="appConfig.experimental.v2ray_api">
-            <v-col cols="12" sm="6" md="3" lg="2">
+            <v-col
+              cols="12"
+              sm="6"
+              md="3"
+              lg="2"
+            >
               <v-text-field
                 v-model="appConfig.experimental.v2ray_api.listen"
                 hide-details
                 :label="$t('objects.listen')"
-              ></v-text-field>
+              />
             </v-col>
-            <v-col cols="12" sm="6" md="3" lg="2">
-              <v-switch v-model="appConfig.experimental.v2ray_api.stats.enabled"
+            <v-col
+              cols="12"
+              sm="6"
+              md="3"
+              lg="2"
+            >
+              <v-switch
+                v-model="appConfig.experimental.v2ray_api.stats.enabled"
                 color="primary"
                 :label="$t('stats.enable')"
-                hide-details></v-switch>
+                hide-details
+              />
             </v-col>
           </template>
         </v-row>
         <v-row v-if="appConfig.experimental.v2ray_api?.stats?.enabled">
-          <v-col cols="12" sm="6">
+          <v-col
+            cols="12"
+            sm="6"
+          >
             <v-select
+              v-model="appConfig.experimental.v2ray_api.stats.inbounds"
               hide-details
               :label="$t('pages.inbounds')"
-              multiple chips closable-chips
+              multiple
+              chips
+              closable-chips
               :items="inboundTags"
-              v-model="appConfig.experimental.v2ray_api.stats.inbounds">
-            </v-select>
+            />
           </v-col>
-          <v-col cols="12" sm="6">
+          <v-col
+            cols="12"
+            sm="6"
+          >
             <v-select
+              v-model="appConfig.experimental.v2ray_api.stats.outbounds"
               hide-details
               :label="$t('pages.outbounds')"
-              multiple chips closable-chips
+              multiple
+              chips
+              closable-chips
               :items="outboundTags"
-              v-model="appConfig.experimental.v2ray_api.stats.outbounds">
-            </v-select>
+            />
           </v-col>
-          <v-col cols="12" sm="6">
+          <v-col
+            cols="12"
+            sm="6"
+          >
             <v-select
+              v-model="appConfig.experimental.v2ray_api.stats.users"
               hide-details
               :label="$t('pages.clients')"
-              multiple chips closable-chips
+              multiple
+              chips
+              closable-chips
               :items="clientNames"
-              v-model="appConfig.experimental.v2ray_api.stats.users">
-            </v-select>
+            />
           </v-col>
         </v-row>
       </v-expansion-panel-text>
@@ -339,23 +570,23 @@ const saveConfig = async () => {
 }
 
 const inboundTags = computed((): string[] => {
-  return [...Data().inbounds?.map((i:any) => i.tag), ...Data().endpoints?.filter((e:any) => e.listen_port > 0).map((e:any) => e.tag)]
+  return [...(Data().inbounds?.map(i => i.tag) ?? []), ...(Data().endpoints?.filter(e => e.listen_port > 0).map(e => e.tag) ?? [])]
 })
 
 const clientNames = computed((): string[] => {
-  const clients = <any[]>Data().clients
+  const clients = Data().clients
   return clients?.map(c => c.name)
 })
 
 const outboundTags = computed((): string[] => {
-  return [...Data().outbounds?.map((o:any) => o.tag), ...Data().endpoints?.map((e:any) => e.tag)]
+  return [...(Data().outbounds?.map(o => o.tag) ?? []), ...(Data().endpoints?.map(e => e.tag) ?? [])]
 })
 
 const levels = ["trace", "debug", "info", "warn", "error", "fatal", "panic"]
 
 // Shared HTTP clients live at the top level of the config, beside log and dns.
 const httpClients = computed((): HttpClient[] => {
-  const config = <any>appConfig.value
+  const config = appConfig.value
   if (!Array.isArray(config.http_clients)) config.http_clients = []
   return config.http_clients
 })
@@ -399,8 +630,12 @@ const enableNtp = computed({
 })
 
 const ntpInterval = computed({
-  get():any { return appConfig.value.ntp?.interval? parseInt(appConfig.value.ntp?.interval.replace('m','')) : null },
-  set(v:number) { if (appConfig.value.ntp) v>0 ? appConfig.value.ntp.interval =  v + 'm' : delete appConfig.value.ntp.interval }
+  get(): number | null { return appConfig.value.ntp?.interval? parseInt(appConfig.value.ntp?.interval.replace('m','')) : null },
+  set(v:number) {
+    if (!appConfig.value.ntp) return
+    if (v > 0) appConfig.value.ntp.interval = v + 'm'
+    else delete appConfig.value.ntp.interval
+  }
 })
 
 const enableCacheFile = computed({

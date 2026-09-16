@@ -1,19 +1,45 @@
 <template>
-  <LogVue v-model="logModal.visible" :control="logModal" :visible="logModal.visible" />
-  <Backup v-model="backupModal.visible" :control="backupModal" :visible="backupModal.visible" />
+  <LogVue
+    v-model="logModal.visible"
+    :control="logModal"
+    :visible="logModal.visible"
+  />
+  <Backup
+    v-model="backupModal.visible"
+    :control="backupModal"
+    :visible="backupModal.visible"
+  />
   <UsageStats v-model:visible="usageStatsModal.visible" />
-  <v-container class="fill-height" :loading="loading">
-    <v-responsive :class="reloadItems.length>0 ? 'fill-height text-center' : 'align-center'" >
+  <v-container
+    class="fill-height"
+    :loading="loading"
+  >
+    <v-responsive :class="reloadItems.length>0 ? 'fill-height text-center' : 'align-center'">
       <v-row class="d-flex align-center justify-center">
         <v-col cols="auto">
-          <v-img src="@/assets/logo.svg" :width="reloadItems.length>0 ? 100 : 200"></v-img>
+          <v-img
+            src="@/assets/logo.svg"
+            :width="reloadItems.length>0 ? 100 : 200"
+          />
         </v-col>
       </v-row>
       <v-row class="d-flex align-center justify-center">
         <v-col cols="auto">
-          <v-dialog v-model="menu" :close-on-content-click="false" transition="scale-transition" max-width="800">
-            <template v-slot:activator="{ props }">
-              <v-btn v-bind="props" hide-details variant="tonal" elevation="3">{{ $t('main.tiles') }} <v-icon icon="mdi-star-plus" /></v-btn>
+          <v-dialog
+            v-model="menu"
+            :close-on-content-click="false"
+            transition="scale-transition"
+            max-width="800"
+          >
+            <template #activator="{ props }">
+              <v-btn
+                v-bind="props"
+                hide-details
+                variant="tonal"
+                elevation="3"
+              >
+                {{ $t('main.tiles') }} <v-icon icon="mdi-star-plus" />
+              </v-btn>
             </template>
             <v-card rounded="xl">
               <v-card-title>
@@ -21,24 +47,43 @@
                   <v-col>
                     {{ $t('main.tiles') }}
                   </v-col>
-                  <v-spacer></v-spacer>
-                  <v-col cols="auto"><v-icon icon="mdi-close" @click="menu = false"></v-icon></v-col>
+                  <v-spacer />
+                  <v-col cols="auto">
+                    <v-icon
+                      icon="mdi-close"
+                      @click="menu = false"
+                    />
+                  </v-col>
                 </v-row>
               </v-card-title>
-              <v-divider></v-divider>
-              <v-row v-for="(items, mi) in menuItems" :key="mi" density="compact">
+              <v-divider />
+              <v-row
+                v-for="(items, mi) in menuItems"
+                :key="mi"
+                density="compact"
+              >
                 <v-col cols="12">
-                  <v-card :subtitle="items.title" variant="flat">
+                  <v-card
+                    :subtitle="items.title"
+                    variant="flat"
+                  >
                     <v-card-text>
                       <v-row density="compact">
-                        <v-col cols="12" md="6" lg="3" v-for="item in items.value" :key="item.title ?? item">
+                        <v-col
+                          v-for="item in items.value"
+                          :key="item.title ?? item"
+                          cols="12"
+                          md="6"
+                          lg="3"
+                        >
                           <v-switch
-                          density="compact"
-                          v-model="reloadItems"
-                          :value="item.value"
-                          color="primary"
-                          :label="item.title"
-                          hide-details></v-switch>
+                            v-model="reloadItems"
+                            density="compact"
+                            :value="item.value"
+                            color="primary"
+                            :label="item.title"
+                            hide-details
+                          />
                         </v-col>
                       </v-row>
                     </v-card-text>
@@ -47,135 +92,326 @@
               </v-row>
             </v-card>
           </v-dialog>
-          <v-btn variant="tonal" hide-details 
-            style="margin-inline-start: 10px;" elevation="3"
-            @click="backupModal.visible = true">{{ $t('main.backup.title') }}<v-icon icon="mdi-backup-restore" />
+          <v-btn
+            variant="tonal"
+            hide-details 
+            style="margin-inline-start: 10px;"
+            elevation="3"
+            @click="backupModal.visible = true"
+          >
+            {{ $t('main.backup.title') }}<v-icon icon="mdi-backup-restore" />
           </v-btn>
-          <v-btn variant="tonal" hide-details
-            style="margin-inline-start: 10px;" elevation="3"
-            @click="logModal.visible = true">{{ $t('basic.log.title') }} <v-icon icon="mdi-list-box-outline" />
+          <v-btn
+            variant="tonal"
+            hide-details
+            style="margin-inline-start: 10px;"
+            elevation="3"
+            @click="logModal.visible = true"
+          >
+            {{ $t('basic.log.title') }} <v-icon icon="mdi-list-box-outline" />
           </v-btn>
-          <v-btn variant="tonal" hide-details
-            style="margin-inline-start: 10px;" elevation="3"
-            @click="usageStatsModal.visible = true">{{ $t('main.stats.title') }} <v-icon icon="mdi-chart-box-outline" />
+          <v-btn
+            variant="tonal"
+            hide-details
+            style="margin-inline-start: 10px;"
+            elevation="3"
+            @click="usageStatsModal.visible = true"
+          >
+            {{ $t('main.stats.title') }} <v-icon icon="mdi-chart-box-outline" />
           </v-btn>
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" sm="6" md="3" v-for="i in reloadItems" :key="i">
-          <v-card class="rounded-lg" variant="outlined" height="210px" elevation="5">
+        <v-col
+          v-for="i in reloadItems"
+          :key="i"
+          cols="12"
+          sm="6"
+          md="3"
+        >
+          <v-card
+            class="rounded-lg"
+            variant="outlined"
+            height="210px"
+            elevation="5"
+          >
             <v-card-title>
               {{ menuItems.flatMap(cat => cat.value).find(m => m.value == i)?.title }}
               <template v-if="i == 'i-sys'">
-                <v-icon icon="mdi-update" color="primary"
-                  @click="reloadSys()" size="small" v-tooltip:top="$t('actions.update')"
-                  style="margin-inline-start: 10px;">
-                </v-icon>
+                <v-icon
+                  v-tooltip:top="$t('actions.update')"
+                  icon="mdi-update"
+                  color="primary"
+                  size="small"
+                  style="margin-inline-start: 10px;"
+                  @click="reloadSys()"
+                />
               </template>
               <template v-if="i == 'h-net'">
-                <v-icon icon="mdi-information" color="primary" size="small"
+                <v-icon
                   v-tooltip:top="'↓' + 
-                  HumanReadable.sizeFormat(tilesData.net?.recv) + ' - ' + 
-                  HumanReadable.sizeFormat(tilesData.net?.sent) + '↑'"
-                  style="margin-inline-start: 10px;">
-                </v-icon>
+                    HumanReadable.sizeFormat(tilesData.net?.recv) + ' - ' + 
+                    HumanReadable.sizeFormat(tilesData.net?.sent) + '↑'"
+                  icon="mdi-information"
+                  color="primary"
+                  size="small"
+                  style="margin-inline-start: 10px;"
+                />
               </template>
             </v-card-title>
-            <v-card-text style="padding: 0 16px;" align="center" justify="center">
-              <Gauge :tilesData="tilesData" :type="i" v-if="i.charAt(0) == 'g'" />
-              <History :tilesData="tilesData" :type="i" v-if="i.charAt(0) == 'h'" />
+            <v-card-text
+              style="padding: 0 16px;"
+              align="center"
+              justify="center"
+            >
+              <Gauge
+                v-if="i.charAt(0) == 'g'"
+                :tiles-data="tilesData"
+                :type="i"
+              />
+              <History
+                v-if="i.charAt(0) == 'h'"
+                :tiles-data="tilesData"
+                :type="i"
+              />
               <template v-if="i == 'i-sys'">
                 <v-row>
-                  <v-col cols="3">{{ $t('main.info.host') }}</v-col>
-                  <v-col cols="9" style="text-wrap: nowrap; overflow: hidden">{{ tilesData.sys?.hostName }}</v-col>
-                  <v-col cols="3">{{ $t('main.info.cpu') }}</v-col>
+                  <v-col cols="3">
+                    {{ $t('main.info.host') }}
+                  </v-col>
+                  <v-col
+                    cols="9"
+                    style="text-wrap: nowrap; overflow: hidden"
+                  >
+                    {{ tilesData.sys?.hostName }}
+                  </v-col>
+                  <v-col cols="3">
+                    {{ $t('main.info.cpu') }}
+                  </v-col>
                   <v-col cols="9">
-                    <v-chip density="compact" variant="flat">
-                      <v-tooltip activator="parent" location="top" style="direction: ltr;">
+                    <v-chip
+                      density="compact"
+                      variant="flat"
+                    >
+                      <v-tooltip
+                        activator="parent"
+                        location="top"
+                        style="direction: ltr;"
+                      >
                         {{ tilesData.sys?.cpuType }}
                       </v-tooltip>
-                     {{ tilesData.sys?.cpuCount }} {{ $t('main.info.core') }}
+                      {{ tilesData.sys?.cpuCount }} {{ $t('main.info.core') }}
                     </v-chip>
                   </v-col>
-                  <v-col cols="3">IP</v-col>
+                  <v-col cols="3">
+                    IP
+                  </v-col>
                   <v-col cols="9">
-                    <v-chip density="compact" color="primary" variant="flat" v-if="tilesData.sys?.ipv4?.length>0">
-                      <v-tooltip activator="parent" location="top" style="direction: ltr;">
+                    <v-chip
+                      v-if="tilesData.sys?.ipv4?.length>0"
+                      density="compact"
+                      color="primary"
+                      variant="flat"
+                    >
+                      <v-tooltip
+                        activator="parent"
+                        location="top"
+                        style="direction: ltr;"
+                      >
                         <span style="white-space: pre-line">{{ (tilesData.sys?.ipv4 ?? []).join('\n') }}</span>
                       </v-tooltip>
                       IPv4
                     </v-chip>
-                    <v-chip density="compact" color="primary" variant="flat" v-if="tilesData.sys?.ipv6?.length>0">
-                      <v-tooltip activator="parent" location="top" style="direction: ltr;">
+                    <v-chip
+                      v-if="tilesData.sys?.ipv6?.length>0"
+                      density="compact"
+                      color="primary"
+                      variant="flat"
+                    >
+                      <v-tooltip
+                        activator="parent"
+                        location="top"
+                        style="direction: ltr;"
+                      >
                         <span style="white-space: pre-line">{{ (tilesData.sys?.ipv6 ?? []).join('\n') }}</span>
                       </v-tooltip>
                       IPv6
                     </v-chip>
                   </v-col>
-                  <v-col cols="3">S-UI</v-col>
+                  <v-col cols="3">
+                    S-UI
+                  </v-col>
                   <v-col cols="9">
-                    <v-chip density="compact" color="primary">
+                    <v-chip
+                      density="compact"
+                      color="primary"
+                    >
                       v{{ tilesData.sys?.appVersion }}
                     </v-chip>
                   </v-col>
-                  <v-col cols="3">{{ $t('main.info.uptime') }}</v-col>
-                  <v-col cols="9" v-tooltip:top="$t('main.info.startupTime')
-                    + ': ' + new Date((tilesData.sys?.bootTime || 0) * 1000).toLocaleString(locale)">
+                  <v-col cols="3">
+                    {{ $t('main.info.uptime') }}
+                  </v-col>
+                  <v-col
+                    v-tooltip:top="$t('main.info.startupTime')
+                      + ': ' + new Date((tilesData.sys?.bootTime || 0) * 1000).toLocaleString(locale)"
+                    cols="9"
+                  >
                     {{ HumanReadable.formatSecond((Date.now()/1000) - tilesData.sys?.bootTime) }}
                   </v-col>
                 </v-row>
               </template>
               <template v-if="i == 'i-sbd'">
                 <v-row>
-                  <v-col cols="4">{{ $t('main.info.running') }}</v-col>
+                  <v-col cols="4">
+                    {{ $t('main.info.running') }}
+                  </v-col>
                   <v-col cols="8">
-                    <v-chip density="compact" color="success" variant="flat" v-if="tilesData.sbd?.running">{{ $t('yes') }}</v-chip> 
+                    <v-chip
+                      v-if="tilesData.sbd?.running"
+                      density="compact"
+                      color="success"
+                      variant="flat"
+                    >
+                      {{ $t('yes') }}
+                    </v-chip> 
                     <!-- A core stopped on purpose reads the same as a crashed
                          one here, and the operator has to be able to tell. -->
-                    <v-chip density="compact" color="warning" variant="flat" v-else-if="tilesData.sbd?.maintenance">{{ $t('setting.maintenance') }}</v-chip>
-                    <v-chip density="compact" color="error" variant="flat" v-else>{{ $t('no') }}</v-chip>
-                    <v-chip density="compact" color="transparent" v-if="tilesData.sbd?.running && !loading" style="cursor: pointer;" @click="restartSingbox()">
-                      <v-tooltip activator="parent" location="top">
+                    <v-chip
+                      v-else-if="tilesData.sbd?.maintenance"
+                      density="compact"
+                      color="warning"
+                      variant="flat"
+                    >
+                      {{ $t('setting.maintenance') }}
+                    </v-chip>
+                    <v-chip
+                      v-else
+                      density="compact"
+                      color="error"
+                      variant="flat"
+                    >
+                      {{ $t('no') }}
+                    </v-chip>
+                    <v-chip
+                      v-if="tilesData.sbd?.running && !loading"
+                      density="compact"
+                      color="transparent"
+                      style="cursor: pointer;"
+                      @click="restartSingbox()"
+                    >
+                      <v-tooltip
+                        activator="parent"
+                        location="top"
+                      >
                         {{ $t('actions.restartSb') }}
                       </v-tooltip>
-                      <v-icon icon="mdi-restart" color="warning" />
+                      <v-icon
+                        icon="mdi-restart"
+                        color="warning"
+                      />
                     </v-chip>
                   </v-col>
-                  <v-col cols="4">{{ $t('main.info.memory') }}</v-col>
+                  <v-col cols="4">
+                    {{ $t('main.info.memory') }}
+                  </v-col>
                   <v-col cols="8">
-                    <v-chip density="compact" color="primary" variant="flat" v-if="tilesData.sbd?.stats?.Alloc">
+                    <v-chip
+                      v-if="tilesData.sbd?.stats?.Alloc"
+                      density="compact"
+                      color="primary"
+                      variant="flat"
+                    >
                       {{ HumanReadable.sizeFormat(tilesData.sbd?.stats?.Alloc) }}
                     </v-chip> 
                   </v-col>
-                  <v-col cols="4">{{ $t('main.info.threads') }}</v-col>
+                  <v-col cols="4">
+                    {{ $t('main.info.threads') }}
+                  </v-col>
                   <v-col cols="8">
-                    <v-chip density="compact" color="primary" variant="flat" v-if="tilesData.sbd?.stats?.NumGoroutine">
+                    <v-chip
+                      v-if="tilesData.sbd?.stats?.NumGoroutine"
+                      density="compact"
+                      color="primary"
+                      variant="flat"
+                    >
                       {{ tilesData.sbd?.stats?.NumGoroutine }}
                     </v-chip>
                   </v-col>
-                  <v-col cols="4">{{ $t('main.info.uptime') }}</v-col>
-                  <v-col cols="8">{{ HumanReadable.formatSecond(tilesData.sbd?.stats?.Uptime) }}</v-col>
-                  <v-col cols="4">{{ $t('online') }}</v-col>
+                  <v-col cols="4">
+                    {{ $t('main.info.uptime') }}
+                  </v-col>
+                  <v-col cols="8">
+                    {{ HumanReadable.formatSecond(tilesData.sbd?.stats?.Uptime) }}
+                  </v-col>
+                  <v-col cols="4">
+                    {{ $t('online') }}
+                  </v-col>
                   <v-col cols="8">
                     <template v-if="tilesData.sbd?.running">
-                      <v-chip density="compact" color="primary" variant="flat" v-if="Data().onlines.user">
-                        <v-tooltip activator="parent" location="top" overflow="auto">
-                          <span v-text="$t('pages.clients')" style="font-weight: bold;"></span><br/>
-                          <span v-for="user in Data().onlines.user" :key="user">{{ user }}<br /></span>
+                      <v-chip
+                        v-if="Data().onlines.user"
+                        density="compact"
+                        color="primary"
+                        variant="flat"
+                      >
+                        <v-tooltip
+                          activator="parent"
+                          location="top"
+                          overflow="auto"
+                        >
+                          <span
+                            style="font-weight: bold;"
+                            v-text="$t('pages.clients')"
+                          /><br>
+                          <span
+                            v-for="user in Data().onlines.user"
+                            :key="user"
+                          >{{ user }}<br></span>
                         </v-tooltip>
                         {{ Data().onlines.user?.length }}
                       </v-chip>
-                      <v-chip density="compact" color="success" variant="flat" v-if="Data().onlines.inbound">
-                        <v-tooltip activator="parent" location="top" :text="$t('pages.inbounds')">
-                          <span v-text="$t('pages.inbounds')" style="font-weight: bold;"></span><br/>
-                          <span v-for="i in Data().onlines.inbound" :key="i">{{ i }}<br /></span>
+                      <v-chip
+                        v-if="Data().onlines.inbound"
+                        density="compact"
+                        color="success"
+                        variant="flat"
+                      >
+                        <v-tooltip
+                          activator="parent"
+                          location="top"
+                          :text="$t('pages.inbounds')"
+                        >
+                          <span
+                            style="font-weight: bold;"
+                            v-text="$t('pages.inbounds')"
+                          /><br>
+                          <span
+                            v-for="tag in Data().onlines.inbound"
+                            :key="tag"
+                          >{{ tag }}<br></span>
                         </v-tooltip>
                         {{ Data().onlines.inbound?.length }}
                       </v-chip>
-                      <v-chip density="compact" color="info" variant="flat" v-if="Data().onlines.outbound">
-                        <v-tooltip activator="parent" location="top" :text="$t('pages.outbounds')">
-                          <span v-text="$t('pages.outbounds')" style="font-weight: bold;"></span><br/>
-                          <span v-for="o in Data().onlines.outbound" :key="o">{{ o }}<br /></span>
+                      <v-chip
+                        v-if="Data().onlines.outbound"
+                        density="compact"
+                        color="info"
+                        variant="flat"
+                      >
+                        <v-tooltip
+                          activator="parent"
+                          location="top"
+                          :text="$t('pages.outbounds')"
+                        >
+                          <span
+                            style="font-weight: bold;"
+                            v-text="$t('pages.outbounds')"
+                          /><br>
+                          <span
+                            v-for="o in Data().onlines.outbound"
+                            :key="o"
+                          >{{ o }}<br></span>
                         </v-tooltip>
                         {{ Data().onlines.outbound?.length }}
                       </v-chip>
@@ -228,7 +464,58 @@ const menuItems = [
   },
 ]
 
-const tilesData = ref(<any>{})
+// What api/status answers with. The panel asks for only the sections it is
+// showing, so a section is absent until its first reload; every reader below
+// and in the template guards with ?. before it reaches in.
+interface Usage {
+  current: number
+  total: number
+}
+
+interface NetUsage {
+  recv: number
+  sent: number
+  precv: number
+  psent: number
+}
+
+interface DiskIo {
+  read: number
+  write: number
+}
+
+interface SysInfo {
+  hostName: string
+  cpuType: string
+  cpuCount: number
+  ipv4: string[]
+  ipv6: string[]
+  appVersion: string
+  bootTime: number
+}
+
+interface SingBoxInfo {
+  running: boolean
+  maintenance: boolean
+  stats: {
+    Alloc: number
+    NumGoroutine: number
+    Uptime: number
+  }
+}
+
+interface TilesData {
+  cpu: number
+  mem: Usage
+  dsk: Usage
+  swp: Usage
+  net: NetUsage
+  dio: DiskIo
+  sys: SysInfo
+  sbd: SingBoxInfo
+}
+
+const tilesData = ref(<TilesData>{})
 
 const reloadItems = computed({
   get() { return Data().reloadItems },
@@ -236,21 +523,22 @@ const reloadItems = computed({
     if (Data().reloadItems.length == 0 && v.length>0) startTimer()
     if (Data().reloadItems.length > 0 && v.length == 0) stopTimer()
     Data().reloadItems = v
-    v.length>0 ? localStorage.setItem("reloadItems",v.join(',')) : localStorage.removeItem("reloadItems")
+    if (v.length > 0) localStorage.setItem("reloadItems", v.join(','))
+    else localStorage.removeItem("reloadItems")
   }
 })
 
 const reloadData = async () => {
   const request = [...new Set(reloadItems.value.map(r => r.split('-')[1]))]
   if (tilesData.value?.sys?.appVersion) request.filter(r => r != 'sys')
-  const data = await HttpUtils.get('api/status',{ r: request.join(',')})
+  const data = await HttpUtils.get<TilesData>('api/status',{ r: request.join(',')})
   if (data.success) {
     tilesData.value = data.obj
   }
 }
 
 const reloadSys = async () => {
-  const data = await HttpUtils.get('api/status',{ r: 'sys'})
+  const data = await HttpUtils.get<TilesData>('api/status',{ r: 'sys'})
   if (data.success) {
     tilesData.value.sys = data.obj.sys
   }

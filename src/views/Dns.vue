@@ -4,8 +4,8 @@
     :visible="dnsModal.visible"
     :index="dnsModal.index"
     :data="dnsModal.data"
-    :tsTags="tsTags"
-    :rslvdTags="rslvdTags"
+    :ts-tags="tsTags"
+    :rslvd-tags="rslvdTags"
     @close="closeDnsModal"
     @save="saveDnsModal"
   />
@@ -15,72 +15,150 @@
     :index="dnsRuleModal.index"
     :data="dnsRuleModal.data"
     :clients="clients"
-    :inTags="inboundTags"
-    :serverTags="dnsServerTags"
-    :ruleSets="ruleSets"
+    :in-tags="inboundTags"
+    :server-tags="dnsServerTags"
+    :rule-sets="ruleSets"
     @close="closeDnsRuleModal"
     @save="saveDnsRuleModal"
   />
   <v-row>
-    <v-col cols="12" justify="center" align="center">
-      <v-btn color="primary" @click="showDnsModal(-1)" style="margin: 0 5px;">{{ $t('dns.add') }}</v-btn>
-      <v-btn color="primary" @click="showDnsRuleModal(-1)" style="margin: 0 5px;">{{ $t('dns.rule.add') }}</v-btn>
-      <v-btn variant="outlined" color="warning" @click="saveConfig" :loading="loading" :disabled="stateChange">
+    <v-col
+      cols="12"
+      justify="center"
+      align="center"
+    >
+      <v-btn
+        color="primary"
+        style="margin: 0 5px;"
+        @click="showDnsModal(-1)"
+      >
+        {{ $t('dns.add') }}
+      </v-btn>
+      <v-btn
+        color="primary"
+        style="margin: 0 5px;"
+        @click="showDnsRuleModal(-1)"
+      >
+        {{ $t('dns.rule.add') }}
+      </v-btn>
+      <v-btn
+        variant="outlined"
+        color="warning"
+        :loading="loading"
+        :disabled="stateChange"
+        @click="saveConfig"
+      >
         {{ $t('actions.save') }}
       </v-btn>
     </v-col>
   </v-row>
   <v-row>
-    <v-col class="v-card-subtitle" cols="12">{{ $t('pages.basics') }}</v-col>
+    <v-col
+      class="v-card-subtitle"
+      cols="12"
+    >
+      {{ $t('pages.basics') }}
+    </v-col>
     <v-col cols="12">
       <v-row>
-        <v-col cols="12" sm="6" md="3" lg="2">
+        <v-col
+          cols="12"
+          sm="6"
+          md="3"
+          lg="2"
+        >
           <v-select
+            v-model="finalDns"
             hide-details
             :label="$t('dns.final')"
             :items="[ {title: $t('dns.firstServer'), value: ''}, ...dnsServerTags]"
-            v-model="finalDns">
-          </v-select>
+          />
         </v-col>
-        <v-col cols="12" sm="6" md="3" lg="2">
+        <v-col
+          cols="12"
+          sm="6"
+          md="3"
+          lg="2"
+        >
           <v-select
+            v-model="dns.strategy"
             hide-details
             :label="$t('dns.domainStrategy')"
             clearable
-            @click:clear="delete dns.strategy"
             :items="['prefer_ipv4','prefer_ipv6','ipv4_only','ipv6_only']"
-            v-model="dns.strategy">
-          </v-select>
+            @click:clear="delete dns.strategy"
+          />
         </v-col>
-        <v-col cols="12" sm="6" md="3" lg="2">
+        <v-col
+          cols="12"
+          sm="6"
+          md="3"
+          lg="2"
+        >
           <v-text-field
-            v-model="dns.client_subnet" hide-details
-            clearable @click:clear="delete dns.client_subnet"
-            :label="$t('dns.rule.action.clientSubnet')"></v-text-field>
+            v-model="dns.client_subnet"
+            hide-details
+            clearable
+            :label="$t('dns.rule.action.clientSubnet')"
+            @click:clear="delete dns.client_subnet"
+          />
         </v-col>
         <v-col cols="auto">
           <v-text-field
             v-model.number="dns.cache_capacity"
-            type="number" min="1024" hide-details
-            clearable @click:clear="delete dns.cache_capacity"
-            :label="$t('dns.cacheCapacity')"></v-text-field>
+            type="number"
+            min="1024"
+            hide-details
+            clearable
+            :label="$t('dns.cacheCapacity')"
+            @click:clear="delete dns.cache_capacity"
+          />
         </v-col>
         <v-col cols="auto">
-          <v-checkbox v-model="dns.disable_cache" hide-details :label="$t('dns.disableCache')" />
+          <v-checkbox
+            v-model="dns.disable_cache"
+            hide-details
+            :label="$t('dns.disableCache')"
+          />
         </v-col>
         <v-col cols="auto">
-          <v-checkbox v-model="dns.disable_expire" hide-details :label="$t('dns.disableExpire')" />
+          <v-checkbox
+            v-model="dns.disable_expire"
+            hide-details
+            :label="$t('dns.disableExpire')"
+          />
         </v-col>
         <v-col cols="auto">
-          <v-checkbox v-model="dns.reverse_mapping" hide-details :label="$t('dns.reverseMapping')" />
+          <v-checkbox
+            v-model="dns.reverse_mapping"
+            hide-details
+            :label="$t('dns.reverseMapping')"
+          />
         </v-col>
       </v-row>
     </v-col>
   </v-row>
   <v-row>
-    <v-col class="v-card-subtitle" cols="12">{{ $t('dns.title') }}</v-col>
-    <v-col cols="12" sm="4" md="3" lg="2" v-for="(item, index) in <any[]>dns.servers" :key="item.id">
-      <v-card rounded="xl" elevation="5" min-width="200" :title="item.tag">
+    <v-col
+      class="v-card-subtitle"
+      cols="12"
+    >
+      {{ $t('dns.title') }}
+    </v-col>
+    <v-col
+      v-for="(item, index) in <any[]>dns.servers"
+      :key="item.id"
+      cols="12"
+      sm="4"
+      md="3"
+      lg="2"
+    >
+      <v-card
+        rounded="xl"
+        elevation="5"
+        min-width="200"
+        :title="item.tag"
+      >
         <v-card-subtitle style="margin-top: -15px;">
           <v-row>
             <v-col>{{ item.type }}</v-col>
@@ -102,31 +180,62 @@
           <v-row>
             <v-col>{{ $t('objects.tls') }}</v-col>
             <v-col>
-              {{ Object.hasOwn(item,'tls') ? $t(item.tls?.enabled ? 'enable' : 'disable') : '-'  }}
+              {{ Object.hasOwn(item,'tls') ? $t(item.tls?.enabled ? 'enable' : 'disable') : '-' }}
             </v-col>
           </v-row>
         </v-card-text>
-        <v-divider></v-divider>
+        <v-divider />
         <v-card-actions style="padding: 0;">
-          <v-btn icon="mdi-file-edit" @click="showDnsModal(index)">
+          <v-btn
+            icon="mdi-file-edit"
+            @click="showDnsModal(index)"
+          >
             <v-icon />
-            <v-tooltip activator="parent" location="top" :text="$t('actions.edit')"></v-tooltip>
+            <v-tooltip
+              activator="parent"
+              location="top"
+              :text="$t('actions.edit')"
+            />
           </v-btn>
-          <v-btn icon="mdi-file-remove" style="margin-inline-start:0;" color="warning" @click="delDnsOverlay[index] = true">
+          <v-btn
+            icon="mdi-file-remove"
+            style="margin-inline-start:0;"
+            color="warning"
+            @click="delDnsOverlay[index] = true"
+          >
             <v-icon />
-            <v-tooltip activator="parent" location="top" :text="$t('actions.del')"></v-tooltip>
+            <v-tooltip
+              activator="parent"
+              location="top"
+              :text="$t('actions.del')"
+            />
           </v-btn>
           <v-overlay
             v-model="delDnsOverlay[index]"
             contained
             class="align-center justify-center"
           >
-            <v-card :title="$t('actions.del')" rounded="lg">
-              <v-divider></v-divider>
+            <v-card
+              :title="$t('actions.del')"
+              rounded="lg"
+            >
+              <v-divider />
               <v-card-text>{{ $t('confirm') }}</v-card-text>
               <v-card-actions>
-                <v-btn color="error" variant="outlined" @click="delDns(index)">{{ $t('yes') }}</v-btn>
-                <v-btn color="success" variant="outlined" @click="delDnsOverlay[index] = false">{{ $t('no') }}</v-btn>
+                <v-btn
+                  color="error"
+                  variant="outlined"
+                  @click="delDns(index)"
+                >
+                  {{ $t('yes') }}
+                </v-btn>
+                <v-btn
+                  color="success"
+                  variant="outlined"
+                  @click="delDnsOverlay[index] = false"
+                >
+                  {{ $t('no') }}
+                </v-btn>
               </v-card-actions>
             </v-card>
           </v-overlay>
@@ -135,15 +244,30 @@
     </v-col>
   </v-row>
   <v-row>
-    <v-col class="v-card-subtitle" cols="12">{{ $t('dns.rule.title') }}</v-col>
-    <v-col cols="12" sm="4" md="3" lg="2" v-for="(item, index) in <any[]>dnsRules"
+    <v-col
+      class="v-card-subtitle"
+      cols="12"
+    >
+      {{ $t('dns.rule.title') }}
+    </v-col>
+    <v-col
+      v-for="(item, index) in <any[]>dnsRules"
       :key="item.id"
+      cols="12"
+      sm="4"
+      md="3"
+      lg="2"
       :draggable="true"
       @dragstart="onDragStart(index)"
       @dragover.prevent
       @drop="onDrop(index)"
+    >
+      <v-card
+        rounded="xl"
+        elevation="5"
+        min-width="200"
+        :title="index+1"
       >
-      <v-card rounded="xl" elevation="5" min-width="200" :title="index+1">
         <v-card-subtitle style="margin-top: -15px;">
           <v-row>
             <v-col>{{ item.type != undefined ? $t('rule.logical') + ' (' + item.mode + ')' : $t('rule.simple') }}</v-col>
@@ -175,27 +299,58 @@
             </v-col>
           </v-row>
         </v-card-text>
-        <v-divider></v-divider>
+        <v-divider />
         <v-card-actions style="padding: 0;">
-          <v-btn icon="mdi-file-edit" @click="showDnsRuleModal(index)">
+          <v-btn
+            icon="mdi-file-edit"
+            @click="showDnsRuleModal(index)"
+          >
             <v-icon />
-            <v-tooltip activator="parent" location="top" :text="$t('actions.edit')"></v-tooltip>
+            <v-tooltip
+              activator="parent"
+              location="top"
+              :text="$t('actions.edit')"
+            />
           </v-btn>
-          <v-btn icon="mdi-file-remove" style="margin-inline-start:0;" color="warning" @click="delDnsRuleOverlay[index] = true">
+          <v-btn
+            icon="mdi-file-remove"
+            style="margin-inline-start:0;"
+            color="warning"
+            @click="delDnsRuleOverlay[index] = true"
+          >
             <v-icon />
-            <v-tooltip activator="parent" location="top" :text="$t('actions.del')"></v-tooltip>
+            <v-tooltip
+              activator="parent"
+              location="top"
+              :text="$t('actions.del')"
+            />
           </v-btn>
           <v-overlay
             v-model="delDnsRuleOverlay[index]"
             contained
             class="align-center justify-center"
           >
-            <v-card :title="$t('actions.del')" rounded="lg">
-              <v-divider></v-divider>
+            <v-card
+              :title="$t('actions.del')"
+              rounded="lg"
+            >
+              <v-divider />
               <v-card-text>{{ $t('confirm') }}</v-card-text>
               <v-card-actions>
-                <v-btn color="error" variant="outlined" @click="delDnsRule(index)">{{ $t('yes') }}</v-btn>
-                <v-btn color="success" variant="outlined" @click="delDnsRuleOverlay[index] = false">{{ $t('no') }}</v-btn>
+                <v-btn
+                  color="error"
+                  variant="outlined"
+                  @click="delDnsRule(index)"
+                >
+                  {{ $t('yes') }}
+                </v-btn>
+                <v-btn
+                  color="success"
+                  variant="outlined"
+                  @click="delDnsRuleOverlay[index] = false"
+                >
+                  {{ $t('no') }}
+                </v-btn>
               </v-card-actions>
             </v-card>
           </v-overlay>
@@ -211,10 +366,10 @@ import { computed, ref, onBeforeMount } from 'vue'
 import DnsVue from '@/layouts/modals/Dns.vue'
 import DnsRuleVue from '@/layouts/modals/DnsRule.vue'
 import { Config } from '@/types/config'
-import { actionDnsRuleKeys, dnsRule } from '@/types/dns'
+import { actionDnsRuleKeys, Dns, dnsRule, DnsServer } from '@/types/dns'
 import { FindDiff } from '@/plugins/utils'
 
-const oldConfig = ref(<any>{})
+const oldConfig = ref(<Partial<Config>>{})
 const loading = ref(false)
 
 const appConfig = computed((): Config => {
@@ -236,15 +391,15 @@ onBeforeMount( async () => {
 })
 
 const tsTags = computed((): string[] => {
-  return Data().endpoints?.filter((e:any) => e.type == "tailscale").map((e:any) => e.tag)
+  return Data().endpoints?.filter(e => e.type == "tailscale").map(e => e.tag)
 })
 
 const rslvdTags = computed((): string[] => {
-  return Data().services?.filter((e:any) => e.type == "resolved").map((e:any) => e.tag)
+  return Data().services?.filter(e => e.type == "resolved").map(e => e.tag)
 })
 
 const clients = computed((): string[] => {
-  return Data().clients.map((c:any) => c.name)
+  return Data().clients.map(c => c.name)
 })
 
 const stateChange = computed(() => {
@@ -261,15 +416,15 @@ const saveConfig = async () => {
 }
 
 const inboundTags = computed((): string[] => {
-  return [...Data().inbounds?.map((o:any) => o.tag), ...Data().endpoints?.filter((e:any) => e.listen_port > 0).map((e:any) => e.tag)]
+  return [...(Data().inbounds?.map(o => o.tag) ?? []), ...(Data().endpoints?.filter(e => e.listen_port > 0).map(e => e.tag) ?? [])]
 })
 
-const dns = computed((): any => {
+const dns = computed((): Dns => {
   return appConfig.value.dns
 })
 
 const dnsServerTags = computed((): string[] => {
-  return dns.value?.servers?.filter((s:any) => s.tag && s.tag != "")?.map((s:any) => s.tag) ?? []
+  return dns.value?.servers?.filter(s => s.tag && s.tag != "")?.map(s => s.tag) ?? []
 })
 
 const finalDns = computed({
@@ -283,7 +438,7 @@ const dnsRules = computed((): dnsRule[] => {
 })
 
 const ruleSets = computed((): string[] => {
-  return appConfig.value?.route?.rule_set?.map((r:any) => r.tag) ?? []
+  return appConfig.value?.route?.rule_set?.map(r => r.tag) ?? []
 })
 
 let delDnsOverlay = ref(new Array<boolean>)
@@ -305,7 +460,7 @@ const closeDnsModal = () => {
   dnsModal.value.visible = false
 }
 
-const saveDnsModal = (data:any) => {
+const saveDnsModal = (data:DnsServer) => {
   // New or Edit
   if (dnsModal.value.index == -1) {
     dns.value.servers.push(data)
@@ -351,13 +506,13 @@ const delDnsRule = (index: number) => {
   delDnsRuleOverlay.value[index] = false
 }
 
-const draggedItemIndex = ref(null)
+const draggedItemIndex = ref<number | null>(null)
 
-const onDragStart = (index: any) => {
+const onDragStart = (index: number) => {
   draggedItemIndex.value = index
 }
 
-const onDrop = (index: any) => {
+const onDrop = (index: number) => {
   if (draggedItemIndex.value !== null) {
     // Swap the dragged item with the dropped one
     const draggedItem = dnsRules.value[draggedItemIndex.value]

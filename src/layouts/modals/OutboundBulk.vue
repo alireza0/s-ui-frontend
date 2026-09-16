@@ -1,24 +1,43 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" width="800" :model-value="visible">
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="800"
+    :model-value="visible"
+  >
     <v-card class="rounded-lg">
       <v-card-title>
         {{ $t('actions.addbulk') }} {{ $t('objects.outbound') }}
       </v-card-title>
-      <v-divider></v-divider>
+      <v-divider />
       <v-card-text style="padding: 0 16px; overflow-y: scroll;">
         <v-row v-if="outbounds.length==0">
           <v-col cols="12">
-            <v-text-field v-model="link"
+            <v-text-field
+              v-model="link"
               dir="ltr"
               :label="$t('client.sub')"
               placeholder="http[s]://<domain>[:]<port>/<path>"
-              hide-details />
+              hide-details
+            />
           </v-col>
           <v-col cols="12">
-            <v-checkbox v-model="addUrlTest" :label="$t('out.addUrlTest')" />
+            <v-checkbox
+              v-model="addUrlTest"
+              :label="$t('out.addUrlTest')"
+            />
           </v-col>
-          <v-col cols="12" align="center">
-            <v-btn hide-details variant="tonal" :loading="loading" @click="linkCheck">{{ $t('submit') }}</v-btn>
+          <v-col
+            cols="12"
+            align="center"
+          >
+            <v-btn
+              hide-details
+              variant="tonal"
+              :loading="loading"
+              @click="linkCheck"
+            >
+              {{ $t('submit') }}
+            </v-btn>
           </v-col>
         </v-row>
         <v-data-table
@@ -36,30 +55,58 @@
             { title: $t('objects.tls'), value: 'tls' }
           ]"
         >
-          <template v-slot:[`item.check`]="{ index }">
-            <v-icon color="success" icon="mdi-check" v-if="outChecks[index]==1" />
-            <v-icon color="error" icon="mdi-close" v-else-if="outChecks[index]==2" />
-            <v-progress-circular v-else-if="outChecks[index]==3" indeterminate />
-            <v-icon v-else icon="mdi-help"></v-icon>
+          <template #[`item.check`]="{ index }">
+            <v-icon
+              v-if="outChecks[index]==1"
+              color="success"
+              icon="mdi-check"
+            />
+            <v-icon
+              v-else-if="outChecks[index]==2"
+              color="error"
+              icon="mdi-close"
+            />
+            <v-progress-circular
+              v-else-if="outChecks[index]==3"
+              indeterminate
+            />
+            <v-icon
+              v-else
+              icon="mdi-help"
+            />
           </template>
-          <template v-slot:[`item.type`]="{ item }">
+          <template #[`item.type`]="{ item }">
             {{ item.type }}
           </template>
-          <template v-slot:[`item.tag`]="{ item }">
+          <template #[`item.tag`]="{ item }">
             {{ item.tag }}
           </template>
-          <template v-slot:[`item.tls`]="{ item }">
+          <template #[`item.tls`]="{ item }">
             {{ Object.hasOwn(item,'tls') ? $t(item.tls?.enabled ? 'enable' : 'disable') : '-' }}
           </template>
-          <template v-slot:[`item.server`]="{ item }">
+          <template #[`item.server`]="{ item }">
             {{ item.server }}{{ item.server_port ? ':' + item.server_port : '' }}
           </template>
         </v-data-table>
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="primary" variant="outlined" @click="closeModal">{{ $t('actions.close') }}</v-btn>
-        <v-btn color="primary" variant="tonal" :loading="loading" :disabled="outbounds.length==0" @click="saveChanges">{{ $t('actions.save') }}</v-btn>
+        <v-spacer />
+        <v-btn
+          color="primary"
+          variant="outlined"
+          @click="closeModal"
+        >
+          {{ $t('actions.close') }}
+        </v-btn>
+        <v-btn
+          color="primary"
+          variant="tonal"
+          :loading="loading"
+          :disabled="outbounds.length==0"
+          @click="saveChanges"
+        >
+          {{ $t('actions.save') }}
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -70,9 +117,13 @@ import HttpUtils from '@/plugins/httputil'
 import RandomUtil from '@/plugins/randomUtil';
 import Data from '@/store/modules/data'
 import { createOutbound, Outbound } from '@/types/outbounds'
+import type { PropType } from 'vue'
 
 export default {
-  props: ['visible', 'outboundTags'],
+  props: {
+    visible: { type: Boolean, required: true },
+    outboundTags: { type: Array as PropType<string[]>, required: true },
+  },
   emits: ['close'],
   data() {
     return {
@@ -82,6 +133,18 @@ export default {
       outChecks: <number[]>[],
       addUrlTest: false,
     }
+  },
+  computed: {
+    newOutboundTags(): string[] {
+      return this.outbounds.map((o:Outbound) => o.tag)
+    }
+  },
+  watch: {
+    visible(v) {
+      if (v) {
+        this.resetData()
+      }
+    },
   },
   methods: {
     resetData() {
@@ -98,10 +161,10 @@ export default {
     async linkCheck() {
       this.loading = true
       this.outbounds = []
-      const msg = await HttpUtils.post('api/subConvert', { link: this.link })
+      const msg = await HttpUtils.post<Outbound[]>('api/subConvert', { link: this.link })
       if (msg.success) {
         if (msg.obj?.length>0) {
-          msg.obj.forEach((o:any, index:number) => {
+          msg.obj.forEach((o:Outbound, index:number) => {
             if (this.newOutboundTags.includes(o.tag)) o.tag = o.tag + "-" + (index+1)
             this.outbounds.push(createOutbound(o.type, o))
             this.outChecks.push(0)
@@ -138,18 +201,6 @@ export default {
       })
       this.loading = false
     }
-  },
-  computed: {
-    newOutboundTags(): string[] {
-      return this.outbounds.map((o:Outbound) => o.tag)
-    }
-  },
-  watch: {
-    visible(v) {
-      if (v) {
-        this.resetData()
-      }
-    },
   },
 }
 </script>

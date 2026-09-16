@@ -1,10 +1,10 @@
 <template>
   <InboundVue 
+    :id="modal.id"
     v-model="modal.visible"
     :visible="modal.visible"
-    :id="modal.id"
-    :inTags="inTags"
-    :tlsConfigs="tlsConfigs"
+    :in-tags="inTags"
+    :tls-configs="tlsConfigs"
     @close="closeModal"
   />
   <Stats
@@ -22,13 +22,34 @@
     @close="closeSessions"
   />
   <v-row>
-    <v-col cols="12" justify="center" align="center">
-      <v-btn color="primary" @click="showModal(0)">{{ $t('actions.add') }}</v-btn>
+    <v-col
+      cols="12"
+      justify="center"
+      align="center"
+    >
+      <v-btn
+        color="primary"
+        @click="showModal(0)"
+      >
+        {{ $t('actions.add') }}
+      </v-btn>
     </v-col>
   </v-row>
   <v-row>
-    <v-col cols="12" sm="4" md="3" lg="2" v-for="(item, index) in <any[]>inbounds" :key="item.tag">
-      <v-card rounded="xl" elevation="5" min-width="200" :title="item.tag">
+    <v-col
+      v-for="(item, index) in <any[]>inbounds"
+      :key="item.tag"
+      cols="12"
+      sm="4"
+      md="3"
+      lg="2"
+    >
+      <v-card
+        rounded="xl"
+        elevation="5"
+        min-width="200"
+        :title="item.tag"
+      >
         <v-card-subtitle style="margin-top: -15px;">
           <v-row>
             <v-col>{{ item.type }}</v-col>
@@ -57,59 +78,128 @@
             <v-col>{{ $t('pages.clients') }}</v-col>
             <v-col>
               <template v-if="item.users">
-                <v-tooltip activator="parent" dir="ltr" location="bottom" v-if="item.users.length > 0">
-                  <span v-for="u in item.users">{{ u }}<br /></span>
+                <v-tooltip
+                  v-if="item.users.length > 0"
+                  activator="parent"
+                  dir="ltr"
+                  location="bottom"
+                >
+                  <span
+                    v-for="u in item.users"
+                    :key="u"
+                  >{{ u }}<br></span>
                 </v-tooltip>
                 {{ item.users.length }}
               </template>
-              <template v-else>-</template>
+              <template v-else>
+                -
+              </template>
             </v-col>
           </v-row>
           <v-row>
             <v-col>{{ $t('online') }}</v-col>
             <v-col>
               <template v-if="onlines.includes(item.tag)">
-                <v-chip density="comfortable" size="small" color="success" variant="flat"
-                  link @click="showSessions(item.tag)">
+                <v-chip
+                  density="comfortable"
+                  size="small"
+                  color="success"
+                  variant="flat"
+                  link
+                  @click="showSessions(item.tag)"
+                >
                   {{ $t('online') }}
-                  <v-tooltip activator="parent" location="top" :text="$t('sessions.title')"></v-tooltip>
+                  <v-tooltip
+                    activator="parent"
+                    location="top"
+                    :text="$t('sessions.title')"
+                  />
                 </v-chip>
               </template>
-              <template v-else>-</template>
+              <template v-else>
+                -
+              </template>
             </v-col>
           </v-row>
         </v-card-text>
-        <v-divider></v-divider>
+        <v-divider />
         <v-card-actions style="padding: 0;">
-          <v-btn icon="mdi-file-edit" @click="showModal(item.id)">
+          <v-btn
+            icon="mdi-file-edit"
+            @click="showModal(item.id)"
+          >
             <v-icon />
-            <v-tooltip activator="parent" location="top" :text="$t('actions.edit')"></v-tooltip>
+            <v-tooltip
+              activator="parent"
+              location="top"
+              :text="$t('actions.edit')"
+            />
           </v-btn>
-          <v-btn icon="mdi-file-remove" style="margin-inline-start:0;" color="warning" @click="delOverlay[index] = true">
+          <v-btn
+            icon="mdi-file-remove"
+            style="margin-inline-start:0;"
+            color="warning"
+            @click="delOverlay[index] = true"
+          >
             <v-icon />
-            <v-tooltip activator="parent" location="top" :text="$t('actions.del')"></v-tooltip>
+            <v-tooltip
+              activator="parent"
+              location="top"
+              :text="$t('actions.del')"
+            />
           </v-btn>
           <v-overlay
             v-model="delOverlay[index]"
             contained
             class="align-center justify-center"
           >
-            <v-card :title="$t('actions.del')" rounded="lg">
-              <v-divider></v-divider>
+            <v-card
+              :title="$t('actions.del')"
+              rounded="lg"
+            >
+              <v-divider />
               <v-card-text>{{ $t('confirm') }}</v-card-text>
               <v-card-actions>
-                <v-btn color="error" variant="outlined" @click="delInbound(item.id)">{{ $t('yes') }}</v-btn>
-                <v-btn color="success" variant="outlined" @click="delOverlay[index] = false">{{ $t('no') }}</v-btn>
+                <v-btn
+                  color="error"
+                  variant="outlined"
+                  @click="delInbound(item.id)"
+                >
+                  {{ $t('yes') }}
+                </v-btn>
+                <v-btn
+                  color="success"
+                  variant="outlined"
+                  @click="delOverlay[index] = false"
+                >
+                  {{ $t('no') }}
+                </v-btn>
               </v-card-actions>
             </v-card>
           </v-overlay>
-          <v-btn icon="mdi-content-duplicate" :loading="cloneLoading" @click="clone(item.id)">
+          <v-btn
+            icon="mdi-content-duplicate"
+            :loading="cloneLoading"
+            @click="clone(item.id)"
+          >
             <v-icon />
-            <v-tooltip activator="parent" location="top" :text="$t('actions.clone')"></v-tooltip>
+            <v-tooltip
+              activator="parent"
+              location="top"
+              :text="$t('actions.clone')"
+            />
           </v-btn>
-          <v-btn icon="mdi-chart-line" @click="showStats(item.tag)" v-if="Data().enableTraffic">
+          <v-btn
+            v-if="Data().enableTraffic"
+            icon="mdi-chart-line"
+            @click="showStats(item.tag)"
+          >
             <v-icon />
-            <v-tooltip activator="parent" location="top" :text="$t('stats.graphTitle')"></v-tooltip>
+            <v-tooltip
+              activator="parent"
+              location="top"
+              :text="$t('stats.graphTitle')"
+            />
           </v-btn>
         </v-card-actions>
       </v-card>      
@@ -122,25 +212,21 @@ import Data from '@/store/modules/data'
 import InboundVue from '@/layouts/modals/Inbound.vue'
 import Stats from '@/layouts/modals/Stats.vue'
 import Sessions from '@/layouts/modals/Sessions.vue'
-import { Config } from '@/types/config'
 import { computed, ref } from 'vue'
 import { createInbound, Inbound } from '@/types/inbounds'
+import { tls } from '@/types/tls'
 import RandomUtil from '@/plugins/randomUtil'
-
-const appConfig = computed((): Config => {
-  return <Config> Data().config
-})
 
 const inbounds = computed((): Inbound[] => {
   return <Inbound[]> Data().inbounds
 })
 
-const tlsConfigs = computed((): any[] => {
-  return <any[]> Data().tlsConfigs
+const tlsConfigs = computed((): tls[] => {
+  return Data().tlsConfigs
 })
 
 const inTags = computed((): string[] => {
-  return [...inbounds.value?.map(i => i.tag), ...Data().endpoints?.filter((e:any) => e.listen_port > 0).map((e:any) => e.tag)]
+  return [...(inbounds.value?.map(i => i.tag) ?? []), ...(Data().endpoints?.filter(e => e.listen_port > 0).map(e => e.tag) ?? [])]
 })
 
 const onlines = computed(() => {

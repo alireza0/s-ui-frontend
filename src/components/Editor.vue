@@ -1,30 +1,36 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" width="800">
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="800"
+  >
     <v-card class="rounded-lg">
       <v-card-title>
         {{ title }}
       </v-card-title>
-      <v-divider></v-divider>
+      <v-divider />
       <v-card-text style="padding: 0 16px; overflow-y: scroll;">
         <div class="code-editor">
           <div class="line-numbers">
-            <span v-for="n in lineCount" :key="n">{{ n }}</span>
+            <span
+              v-for="n in lineCount"
+              :key="n"
+            >{{ n }}</span>
           </div>
           <v-textarea
             ref="textareaRef"
             v-model="content"
-            @scroll="syncScroll"
             hide-details
             variant="outlined"
             bg-color="background"
             :style="{ 'font-family': 'monospace' }"
             no-resize
             auto-grow
-          ></v-textarea>
+            @scroll="syncScroll"
+          />
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-btn
           color="primary"
           variant="outlined"
@@ -48,7 +54,11 @@
 import { useTheme } from 'vuetify'
 
 export default {
-  props: ['visible', 'data', 'title'],
+  props: {
+    visible: { type: Boolean, required: true },
+    data: { type: String, required: true },
+    title: { type: String, required: true }
+  },
   emits: ['close', 'save'],
   data() {
     return {
@@ -59,6 +69,13 @@ export default {
   computed: {
     lineCount() {
       return this.content?.split('\n').length
+    }
+  },
+  watch: {
+    visible(v) {
+      if (v) {
+        this.content = this.$props.data
+      }
     }
   },
   methods: {
@@ -74,13 +91,6 @@ export default {
     },
     saveChanges() {
       this.$emit('save', this.content)
-    }
-  },
-  watch: {
-    visible(v) {
-      if (v) {
-        this.content = this.$props.data
-      }
     }
   }
 }

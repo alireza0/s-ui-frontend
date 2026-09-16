@@ -1,32 +1,57 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" width="800" @after-enter="updateData(id)">
-    <v-card class="rounded-lg" :loading="loading">
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="800"
+    @after-enter="updateData(id)"
+  >
+    <v-card
+      class="rounded-lg"
+      :loading="loading"
+    >
       <v-card-title class="d-flex align-center">
         {{ $t('actions.' + title) + " " + $t('objects.inbound') }}
-        <v-spacer></v-spacer>
-        <DocLink section="inbound" :type="inbound.type" />
+        <v-spacer />
+        <DocLink
+          section="inbound"
+          :type="inbound.type"
+        />
       </v-card-title>
-      <v-divider></v-divider>
+      <v-divider />
       <v-skeleton-loader
-          class="mx-auto border"
-          width="95%"
-          type="card, text, divider, list-item-two-line"
-          v-if="loading"
-        ></v-skeleton-loader>
+        v-if="loading"
+        class="mx-auto border"
+        width="95%"
+        type="card, text, divider, list-item-two-line"
+      />
       <v-card-text style="padding: 0 16px; overflow-y: scroll;">
-        <v-container style="padding: 0;" :hidden="loading">
+        <v-container
+          style="padding: 0;"
+          :hidden="loading"
+        >
           <v-row>
-            <v-col cols="12" sm="6" md="4">
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
               <v-select
-              hide-details
-              :label="$t('type')"
-              :items="Object.keys(inTypes).map((key,index) => ({title: key, value: Object.values(inTypes)[index]}))"
-              v-model="inbound.type"
-              @update:modelValue="changeType">
-              </v-select>
+                v-model="inbound.type"
+                hide-details
+                :label="$t('type')"
+                :items="Object.keys(inTypes).map((key,index) => ({title: key, value: Object.values(inTypes)[index]}))"
+                @update:model-value="changeType"
+              />
             </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field v-model="inbound.tag" :label="$t('objects.tag')" hide-details></v-text-field>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model="inbound.tag"
+                :label="$t('objects.tag')"
+                hide-details
+              />
             </v-col>
           </v-row>
           <v-tabs
@@ -36,42 +61,145 @@
             fixed-tabs
             align-tabs="center"
           >
-            <v-tab value="s">{{ $t('in.sSide') }}</v-tab>
-            <v-tab value="c">{{ $t('in.cSide') }}</v-tab>
+            <v-tab value="s">
+              {{ $t('in.sSide') }}
+            </v-tab>
+            <v-tab value="c">
+              {{ $t('in.cSide') }}
+            </v-tab>
           </v-tabs>
-          <v-window v-model="side" style="margin-top: 10px;">
+          <v-window
+            v-model="side"
+            style="margin-top: 10px;"
+          >
             <v-window-item value="s">
-              <Listen :data="inbound" :inTags="inTags" v-if="!NoListen.includes(inbound.type)" />
-              <Direct v-if="inbound.type == inTypes.Direct" :data="inbound" />
-              <Shadowsocks v-if="inbound.type == inTypes.Shadowsocks" direction="in" :data="inbound" />
-              <Snell v-if="inbound.type == inTypes.Snell" direction="in" :data="inbound" />
-              <Cloudflared v-if="inbound.type == inTypes.Cloudflared" :data="inbound" />
-              <Hysteria v-if="inbound.type == inTypes.Hysteria" direction="in" :data="inbound" />
-              <Hysteria2 v-if="inbound.type == inTypes.Hysteria2" direction="in" :data="inbound" />
-              <Naive v-if="inbound.type == inTypes.Naive" direction="in" :data="inbound" />
-              <ShadowTls v-if="inbound.type == inTypes.ShadowTLS" direction="in" :data="inbound" />
-              <Tuic v-if="inbound.type == inTypes.TUIC" direction="in" :data="inbound" />
-              <Tun v-if="inbound.type == inTypes.Tun" :data="inbound" />
-              <AnyTls v-if="inbound.type == inTypes.AnyTls" :data="inbound" direction="in" />
-              <TProxy v-if="inbound.type == inTypes.TProxy" :inbound="inbound" />
-              <Transport v-if="Object.hasOwn(inbound,'transport')" :data="inbound" />
-              <Users v-if="hasUser" :clients="clients" :data="initUsers" />
-              <InTls v-if="HasTls.includes(inbound.type)"  :inbound="inbound" :tlsConfigs="tlsConfigs" :tls_id="inbound.tls_id" />
-              <Multiplex v-if="MuxAvailable.includes(inbound.type)" direction="in" :data="inbound" />
+              <Listen
+                v-if="!NoListen.includes(inbound.type)"
+                :data="inbound"
+                :in-tags="inTags"
+              />
+              <Direct
+                v-if="inbound.type == inTypes.Direct"
+                :data="inbound"
+              />
+              <Shadowsocks
+                v-if="inbound.type == inTypes.Shadowsocks"
+                direction="in"
+                :data="inbound"
+              />
+              <Snell
+                v-if="inbound.type == inTypes.Snell"
+                direction="in"
+                :data="inbound"
+              />
+              <Cloudflared
+                v-if="inbound.type == inTypes.Cloudflared"
+                :data="inbound"
+              />
+              <Hysteria
+                v-if="inbound.type == inTypes.Hysteria"
+                direction="in"
+                :data="inbound"
+              />
+              <Hysteria2
+                v-if="inbound.type == inTypes.Hysteria2"
+                direction="in"
+                :data="inbound"
+              />
+              <Naive
+                v-if="inbound.type == inTypes.Naive"
+                direction="in"
+                :data="inbound"
+              />
+              <ShadowTls
+                v-if="inbound.type == inTypes.ShadowTLS"
+                direction="in"
+                :data="inbound"
+              />
+              <Tuic
+                v-if="inbound.type == inTypes.TUIC"
+                direction="in"
+                :data="inbound"
+              />
+              <Tun
+                v-if="inbound.type == inTypes.Tun"
+                :data="inbound"
+              />
+              <AnyTls
+                v-if="inbound.type == inTypes.AnyTls"
+                :data="inbound"
+                direction="in"
+              />
+              <TProxy
+                v-if="inbound.type == inTypes.TProxy"
+                :inbound="inbound"
+              />
+              <Transport
+                v-if="Object.hasOwn(inbound,'transport')"
+                :data="inbound"
+              />
+              <Users
+                v-if="hasUser"
+                :clients="clients"
+                :data="initUsers"
+              />
+              <InTls
+                v-if="HasTls.includes(inbound.type)"
+                :inbound="inbound"
+                :tls-configs="tlsConfigs"
+                :tls_id="inbound.tls_id"
+              />
+              <Multiplex
+                v-if="MuxAvailable.includes(inbound.type)"
+                direction="in"
+                :data="inbound"
+              />
             </v-window-item>
             <v-window-item value="c">
-              <OutJsonVue :inData="inbound" :type="inbound.type" />
-              <Multiplex v-if="Object.hasOwn(inbound,'multiplex')" direction="out" :data="inbound.out_json" />
-              <Dial v-if="inbound.out_json" :dial="inbound.out_json" mode="client" />
+              <OutJsonVue
+                :in-data="inbound"
+                :type="inbound.type"
+              />
+              <!-- The guard tests the inbound for multiplex support but the form
+                   edits the client block, which only exists once out_json is
+                   initialised. -->
+              <Multiplex
+                v-if="Object.hasOwn(inbound,'multiplex') && inbound.out_json"
+                direction="out"
+                :data="inbound.out_json"
+              />
+              <Dial
+                v-if="inbound.out_json"
+                :dial="inbound.out_json"
+                mode="client"
+              />
               <v-card>
                 <v-card-text>
-                  <v-card-subtitle>{{ $t('in.multiDomain') }}
-                    <v-chip color="primary" density="compact" variant="elevated" @click="add_addr"><v-icon icon="mdi-plus" /></v-chip>
+                  <v-card-subtitle>
+                    {{ $t('in.multiDomain') }}
+                    <v-chip
+                      color="primary"
+                      density="compact"
+                      variant="elevated"
+                      @click="add_addr"
+                    >
+                      <v-icon icon="mdi-plus" />
+                    </v-chip>
                   </v-card-subtitle>
-                  <template v-for="addr,index in inbound.addrs">
-                    {{ $t('in.addr') }} #{{ (index+1) }} <v-icon icon="mdi-delete" color="error" @click="inbound.addrs?.splice(index,1)" />
-                    <v-divider></v-divider>
-                    <AddrVue :addr="addr" :hasTls="HasTls.includes(inbound.type)" />
+                  <template
+                    v-for="(addr, index) in inbound.addrs"
+                    :key="index"
+                  >
+                    {{ $t('in.addr') }} #{{ (index+1) }} <v-icon
+                      icon="mdi-delete"
+                      color="error"
+                      @click="inbound.addrs?.splice(index,1)"
+                    />
+                    <v-divider />
+                    <AddrVue
+                      :addr="addr"
+                      :has-tls="HasTls.includes(inbound.type)"
+                    />
                   </template>
                 </v-card-text>
               </v-card>
@@ -80,7 +208,7 @@
         </v-container>
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-btn
           color="primary"
           variant="outlined"
@@ -106,7 +234,9 @@
 </template>
 
 <script lang="ts">
+import { PropType } from 'vue'
 import { InTypes, createInbound, Addr, ShadowTLS } from '@/types/inbounds'
+import { tls } from '@/types/tls'
 import DocLink from '@/components/DocLink.vue'
 import RandomUtil from '@/plugins/randomUtil'
 import Dial from '@/components/Dial.vue'
@@ -131,7 +261,18 @@ import AddrVue from '@/components/Addr.vue'
 import OutJsonVue from '@/components/OutJson.vue'
 import Data from '@/store/modules/data'
 export default {
-  props: ['visible', 'id', 'inTags', 'tlsConfigs'],
+  components: {
+    DocLink,
+    Listen, InTls, Hysteria2, Naive, Direct, Shadowsocks,
+    Users, Hysteria, ShadowTls, TProxy, Multiplex, Tuic, Tun,
+    AnyTls, Transport, AddrVue, OutJsonVue, Dial, Snell, Cloudflared
+  },
+  props: {
+    visible: { type: Boolean, required: true },
+    id: { type: Number, required: true },
+    inTags: { type: Array as PropType<string[]>, default: () => [] },
+    tlsConfigs: { type: Array as PropType<tls[]>, default: () => [] },
+  },
   emits: ['close'],
   data() {
     return {
@@ -143,7 +284,7 @@ export default {
       inboundWithUsers: ['mixed', 'socks', 'http', 'shadowsocks', 'vmess', 'trojan', 'naive', 'hysteria', 'shadowtls', 'tuic', 'hysteria2', 'vless', 'anytls', 'snell'],
       initUsers: {
         model: 'none',
-        values: <any>[],
+        values: <(number | string)[]>[],
       },
       HasInData: [
         InTypes.SOCKS,
@@ -182,6 +323,33 @@ export default {
       // Cloudflare edge and sing-box rejects listen fields on it.
       NoListen: [InTypes.Tun, InTypes.Cloudflared],
     }
+  },
+  computed: {
+    validate() {
+      if (this.inbound == undefined) return false
+      if (this.inbound.tag == "") return false
+      if (this.inbound.listen_port > 65535 || this.inbound.listen_port < 1) return false
+      if (this.OnlyTLS.includes(this.inbound.type) && this.inbound.tls_id == 0) return false
+      return true
+    },
+    clients() {
+      return Data().clients?? []
+    },
+    hasUser() {
+      if (this.$props.id > 0) return false
+      if (!this.inboundWithUsers.includes(this.inbound.type)) return false
+      if (this.inbound.type == InTypes.ShadowTLS && (<ShadowTLS>this.inbound).version < 3 ) return false
+      // `managed` is set by the backend on inbounds it owns; not part of the type.
+      if ((this.inbound as { managed?: boolean }).managed) return false
+      return true
+    },
+  },
+  watch: {
+    visible(newValue) {
+      if (newValue) {
+        this.loading = true
+      }
+    },
   },
   methods: {
     async loadData(id: number) {
@@ -254,55 +422,25 @@ export default {
 
       // save data
       this.loading = true
-      let clientIds = []
+      // Persisted clients always carry an id, and in 'client' mode the
+      // selection holds ids rather than group names.
+      let clientIds: number[] = []
       if (this.hasUser) {
         switch (this.initUsers.model) {
           case 'all':
-            clientIds = this.clients.map((c:any) => c.id)
+            clientIds = this.clients.map(c => c.id as number)
             break
           case 'group':
-            clientIds = this.clients.filter((c:any) => this.initUsers.values.includes(c.group)).map((c:any) => c.id)
+            clientIds = this.clients.filter(c => this.initUsers.values.includes(c.group)).map(c => c.id as number)
             break
           case 'client':
-            clientIds = this.initUsers.values
+            clientIds = this.initUsers.values as number[]
         }
       }
       const success = await Data().save("inbounds", this.$props.id == 0 ? "new" : "edit", this.inbound, clientIds)
       if (success) this.closeModal()
       this.loading = false
     },
-  },
-  computed: {
-    validate() {
-      if (this.inbound == undefined) return false
-      if (this.inbound.tag == "") return false
-      if (this.inbound.listen_port > 65535 || this.inbound.listen_port < 1) return false
-      if (this.OnlyTLS.includes(this.inbound.type) && this.inbound.tls_id == 0) return false
-      return true
-    },
-    clients() {
-      return Data().clients?? []
-    },
-    hasUser() {
-      if (this.$props.id > 0) return false
-      if (!this.inboundWithUsers.includes(this.inbound.type)) return false
-      if (this.inbound.type == InTypes.ShadowTLS && (<ShadowTLS>this.inbound).version < 3 ) return false
-      if ((<any>this.inbound).managed) return false
-      return true
-    },
-  },
-  watch: {
-    visible(newValue) {
-      if (newValue) {
-        this.loading = true
-      }
-    },
-  },
-  components: {
-    DocLink,
-    Listen, InTls, Hysteria2, Naive, Direct, Shadowsocks,
-    Users, Hysteria, ShadowTls, TProxy, Multiplex, Tuic, Tun,
-    AnyTls, Transport, AddrVue, OutJsonVue, Dial, Snell, Cloudflared
   }
 }
 </script>

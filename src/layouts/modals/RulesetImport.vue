@@ -1,11 +1,21 @@
 <template>
-  <v-dialog transition="dialog-top-transition" width="800">
+  <v-dialog
+    transition="dialog-top-transition"
+    width="800"
+  >
     <v-card class="rounded-lg">
       <v-card-title>
         <v-row>
           <v-col>{{ $t('rule.import.title') }}</v-col>
-          <v-col cols="auto" v-if="importPreview.length > 0">
-            <v-chip size="small" color="primary" variant="tonal">
+          <v-col
+            v-if="importPreview.length > 0"
+            cols="auto"
+          >
+            <v-chip
+              size="small"
+              color="primary"
+              variant="tonal"
+            >
               {{ $t('count') }}: {{ importPreview.length }}
             </v-chip>
           </v-col>
@@ -13,7 +23,10 @@
       </v-card-title>
       <v-divider />
       <v-card-text style="padding: 0 16px; overflow-y: scroll;">
-        <v-tabs v-model="tab" @update:modelValue="tabChanged">
+        <v-tabs
+          v-model="tab"
+          @update:model-value="tabChanged"
+        >
           <v-tab value="text">
             {{ $t('rule.import.pasteUrls') }}
           </v-tab>
@@ -21,9 +34,17 @@
             {{ $t('rule.import.uploadTxt') }}
           </v-tab>
         </v-tabs>
-        <v-window v-model="tab" class="mb-4">
+        <v-window
+          v-model="tab"
+          class="mb-4"
+        >
           <v-window-item value="text">
-            <v-alert variant="text" type="info">{{ $t('rule.import.urlsHint') }}</v-alert>
+            <v-alert
+              variant="text"
+              type="info"
+            >
+              {{ $t('rule.import.urlsHint') }}
+            </v-alert>
             <v-textarea
               v-model="importRawText"
               label="URLs"
@@ -33,10 +54,15 @@
               hide-details
               spellcheck="false"
               placeholder="https://github.com/.../geoip-telegram.srs&#10;https://github.com/.../geosite-youtube.srs"
-            ></v-textarea>
+            />
           </v-window-item>
           <v-window-item value="file">
-            <v-alert variant="text" type="info">{{ $t('rule.import.fileHint') }}</v-alert>
+            <v-alert
+              variant="text"
+              type="info"
+            >
+              {{ $t('rule.import.fileHint') }}
+            </v-alert>
             <v-file-input
               :label="$t('rule.import.selectTxt')"
               accept=".txt"
@@ -44,30 +70,49 @@
               hide-details
               prepend-icon="mdi-file-document"
               @change="onFileUpload"
-            ></v-file-input>
+            />
           </v-window-item>
         </v-window>
         <v-row class="mb-4">
-          <v-col cols="12" sm="6" md="4">
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
             <v-select
+              v-model="importFormat"
               hide-details
               :label="$t('ruleset.format')"
               :items="['source', 'binary']"
-              v-model="importFormat">
-            </v-select>
+            />
           </v-col>
-          <v-col cols="12" sm="6" md="4">
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
             <v-select
+              v-model="importDetour"
               hide-details
               :label="$t('objects.outbound')"
               :items="outTags"
               clearable
               @click:clear="importDetour=''"
-              v-model="importDetour">
-            </v-select>
+            />
           </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field v-model.number="importInterval" :suffix="$t('date.d')" type="number" min="0" :label="$t('ruleset.interval')" hide-details></v-text-field>
+          <v-col
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <v-text-field
+              v-model.number="importInterval"
+              :suffix="$t('date.d')"
+              type="number"
+              min="0"
+              :label="$t('ruleset.interval')"
+              hide-details
+            />
           </v-col>
         </v-row>
 
@@ -75,21 +120,51 @@
           <v-divider class="my-4" />
           <span class="v-card-subtitle">
             {{ $t('rule.import.preview') }}
-            <v-badge v-if="importPreview.length > 0" color="success" :content="importPreview.length" inline />
-            <v-badge v-if="importSkipped > 0" color="warning" :content="importSkipped" inline v-tooltip:top="$t('rule.import.skipped')" />
+            <v-badge
+              v-if="importPreview.length > 0"
+              color="success"
+              :content="importPreview.length"
+              inline
+            />
+            <v-badge
+              v-if="importSkipped > 0"
+              v-tooltip:top="$t('rule.import.skipped')"
+              color="warning"
+              :content="importSkipped"
+              inline
+            />
           </span>
-          <v-table density="compact" striped="even" class="mb-4">
+          <v-table
+            density="compact"
+            striped="even"
+            class="mb-4"
+          >
             <thead>
               <tr><th>{{ $t('objects.tag') }}</th><th>{{ $t('ruleset.format') }}</th><th>URL</th><th>{{ $t('actions.del') }}</th></tr>
             </thead>
             <tbody>
-              <tr v-for="(item, i) in importPreview" :key="i" :style="item.exists ? 'opacity:0.4' : ''">
+              <tr
+                v-for="(item, i) in importPreview"
+                :key="i"
+                :style="item.exists ? 'opacity:0.4' : ''"
+              >
                 <td>
                   {{ item.tag }}
                 </td>
                 <td>{{ item.format }}</td>
-                <td v-tooltip:top="item.url" dir="ltr">.../{{ item.url.split('/').pop() ?? item.url }}</td>
-                <td><v-icon icon="mdi-delete" color="error" @click="importPreview.splice(i, 1)" /></td>
+                <td
+                  v-tooltip:top="item.url"
+                  dir="ltr"
+                >
+                  .../{{ item.url.split('/').pop() ?? item.url }}
+                </td>
+                <td>
+                  <v-icon
+                    icon="mdi-delete"
+                    color="error"
+                    @click="importPreview.splice(i, 1)"
+                  />
+                </td>
               </tr>
             </tbody>
           </v-table>
@@ -97,12 +172,29 @@
       </v-card-text>
       <v-divider />
       <v-card-actions class="pa-3">
-        <v-btn @click="parseImport" variant="tonal" :disabled="importRawText.trim().length === 0">
-          <v-icon icon="mdi-magnify" class="mr-1" />{{ $t('rule.import.parse') }}
+        <v-btn
+          variant="tonal"
+          :disabled="importRawText.trim().length === 0"
+          @click="parseImport"
+        >
+          <v-icon
+            icon="mdi-magnify"
+            class="mr-1"
+          />{{ $t('rule.import.parse') }}
         </v-btn>
         <v-spacer />
-        <v-btn @click="close" variant="text">{{ $t('actions.close') }}</v-btn>
-        <v-btn @click="save" color="primary" variant="flat" :disabled="newCount === 0">
+        <v-btn
+          variant="text"
+          @click="close"
+        >
+          {{ $t('actions.close') }}
+        </v-btn>
+        <v-btn
+          color="primary"
+          variant="flat"
+          :disabled="newCount === 0"
+          @click="save"
+        >
           {{ $t('actions.save') }}
         </v-btn>
       </v-card-actions>
@@ -112,16 +204,22 @@
 
 <script lang="ts">
 import { downloadHttpClient } from '@/plugins/httpClient'
-interface ImportItem { tag: string; url: string; format: string; exists: boolean }
+import { ruleset } from '@/types/rules'
+import type { PropType } from 'vue'
+interface ImportItem { tag: string; url: string; format: ruleset['format']; exists: boolean }
 
 export default {
-  props: ["visible", "outTags", "rsTags"],
+  props: {
+    visible: { type: Boolean, required: true },
+    outTags: { type: Array as PropType<string[]>, required: true },
+    rsTags: { type: Array as PropType<string[]>, required: true },
+  },
   emits: ['save', 'close'],
   data() {
     return {
       tab: 'text',
       importRawText: '',
-      importFormat: 'binary',
+      importFormat: <ruleset['format']>'binary',
       importDetour: '',
       importInterval: 1,
       importPreview: [] as ImportItem[],
@@ -133,6 +231,14 @@ export default {
     },
     newCount(): number {
       return this.importPreview.filter(i => !i.exists).length
+    },
+  },
+  watch: {
+    visible(v) {
+      if (v) {
+        this.tab = 'text'
+        this.tabChanged()
+      }
     },
   },
   methods: {
@@ -162,7 +268,7 @@ export default {
     },
     save() {
       const toAdd = this.importPreview.filter(i => !i.exists).map(item => {
-        const rs: any = { type: 'remote', tag: item.tag, format: item.format, url: item.url }
+        const rs: ruleset = { type: 'remote', tag: item.tag, format: item.format, url: item.url }
         const httpClient = downloadHttpClient(this.importDetour)
         if (httpClient) rs.http_client = httpClient
         if (this.importInterval > 0) rs.update_interval = this.importInterval + 'd'
@@ -175,14 +281,6 @@ export default {
       if (!file) return
       this.importRawText = await file.text()
       this.parseImport()
-    },
-  },
-  watch: {
-    visible(v) {
-      if (v) {
-        this.tab = 'text'
-        this.tabChanged()
-      }
     },
   },
 }

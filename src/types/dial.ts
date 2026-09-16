@@ -11,7 +11,8 @@ export interface Dial {
   tcp_multi_path?: boolean
   udp_fragment?: boolean
   fallback_delay?: string
-  domain_resolver?: string | any
+  // A DNS server tag, or an inline block naming one plus its options.
+  domain_resolver?: string | Record<string, unknown>
   disable_tcp_keep_alive?: boolean
   tcp_keep_alive?: string
   tcp_keep_alive_interval?: string

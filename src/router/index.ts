@@ -80,12 +80,11 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory((window as any).BASE_URL),
+  history: createWebHistory((window as Window & { BASE_URL?: string }).BASE_URL),
   routes,
 })
 
-const DEFAULT_TITLE = 'S-UI'
-let intervalId:any
+let intervalId: ReturnType<typeof setInterval> | undefined
 
 // Navigation guard to check authentication state
 router.beforeEach((to) => {

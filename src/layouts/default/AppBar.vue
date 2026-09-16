@@ -1,35 +1,52 @@
 <template>
   <v-app-bar :elevation="5">
-    <v-icon v-if="isMobile" icon="mdi-menu" @click="$emit('toggleDrawer')" />
-    <span v-else style="width: 24px"></span>
-    <v-app-bar-title :text="$t(<string>route.name)" class="align-center text-center " />
+    <v-icon
+      v-if="isMobile"
+      icon="mdi-menu"
+      @click="$emit('toggleDrawer')"
+    />
+    <span
+      v-else
+      style="width: 24px"
+    />
+    <v-app-bar-title
+      :text="$t(<string>route.name)"
+      class="align-center text-center "
+    />
     <!-- A stopped core is invisible from the panel otherwise, and the flag
          survives a reboot, so it has to be said on every page. -->
     <v-chip
       v-if="maintenance"
+      v-tooltip="$t('setting.maintenanceOnHint')"
       color="warning"
       variant="flat"
       density="comfortable"
       prepend-icon="mdi-wrench"
       class="mr-2"
-      v-tooltip="$t('setting.maintenanceOnHint')"
     >
       {{ $t('setting.maintenance') }}
     </v-chip>
     <v-btn
+      v-tooltip="$t('donate')"
       icon
       variant="text"
       href="https://donate.alireza0.dev"
       target="_blank"
       rel="noopener"
       class="donate-btn"
-      v-tooltip="$t('donate')"
     >
-      <v-icon icon="mdi-heart" color="red" size="1.5em" />
+      <v-icon
+        icon="mdi-heart"
+        color="red"
+        size="1.5em"
+      />
     </v-btn>
     <v-menu>
-      <template v-slot:activator="{ props }">
-        <v-btn icon v-bind="props">
+      <template #activator="{ props }">
+        <v-btn
+          icon
+          v-bind="props"
+        >
           <v-icon>mdi-translate</v-icon>
         </v-btn>
       </template>
@@ -37,16 +54,19 @@
         <v-list-item
           v-for="lang in languages"
           :key="lang.value"
-          @click="changeLocale(lang.value)"
           :active="isActiveLocale(lang.value)"
+          @click="changeLocale(lang.value)"
         >
           <v-list-item-title>{{ lang.title }}</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>
     <v-menu>
-      <template v-slot:activator="{ props }">
-        <v-btn icon v-bind="props">
+      <template #activator="{ props }">
+        <v-btn
+          icon
+          v-bind="props"
+        >
           <v-icon>mdi-theme-light-dark</v-icon>
         </v-btn>
       </template>
@@ -54,9 +74,9 @@
         <v-list-item
           v-for="th in themes"
           :key="th.value"
-          @click="changeTheme(th.value)"
           :prepend-icon="th.icon"
           :active="isActiveTheme(th.value)"
+          @click="changeTheme(th.value)"
         >
           <v-list-item-title>{{ $t(`theme.${th.value}`) }}</v-list-item-title>
         </v-list-item>
@@ -74,7 +94,8 @@ import { useThemeSwitcher } from '@/composables/useThemeSwitcher'
 import { computed } from 'vue'
 import Data from '@/store/modules/data'
 
-defineProps(['isMobile'])
+defineProps<{ isMobile: boolean }>()
+defineEmits<{ toggleDrawer: [] }>()
 
 const route = useRoute()
 const { locale: i18nLocale } = useI18n()

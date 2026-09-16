@@ -37,10 +37,19 @@ export interface WireGuard extends EndpointBasics, Dial {
   peers: WgPeer[]
   udp_timeout?: string
   workers?: number
-  ext: any
+  ext: WgExt
 }
 
-export interface Warp extends WireGuard {}
+// Panel-only extras kept alongside a WireGuard endpoint: the public key derived
+// from the private one, and the keypairs handed out to peers.
+export interface WgExt {
+  public_key?: string
+  server?: string
+  dns?: string
+  keys: { public_key: string, private_key: string }[]
+}
+
+export type Warp = WireGuard
 
 export interface Tailscale extends EndpointBasics, Dial {
   state_directory?: string
@@ -177,7 +186,15 @@ export interface OpenVPNServer extends EndpointBasics {
 type InterfaceMap = {
   [Key in keyof typeof EpTypes]: {
     type: string
-    [otherProperties: string]: any // You can add other properties as needed
+  // NOTE: deliberate `any`, and the one piece of type debt left in this file.
+  // The per-protocol interfaces declared above are NOT wired into this map, so
+  // every Endpoint collapses to an open bag. Closing it is a design change, not a
+  // rename: switching the index signature to `unknown` costs ~51 errors across
+  // 13 consumer files, and declaring the shared fields costs more, because the
+  // defaults table below holds partial objects. Wire the interfaces in and give
+  // the defaults a Partial type to fix this properly.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [otherProperties: string]: any
   }
 }
 
@@ -195,6 +212,10 @@ const defaultValues: Record<EpType, Endpoint> = {
 }
 
 export function createEndpoint<T extends Endpoint>(type: string,json?: Partial<T>): Endpoint {
-  const defaultObject: Endpoint = { ...defaultValues[type], ...(json || {}) }
+  // structuredClone, not a spread: the defaults table is module state, and a
+  // spread copies only the top level, so every instance would share the nested
+  // objects and arrays inside it. Editing one form then leaked into the table
+  // and into every object created afterwards.
+  const defaultObject: Endpoint = { ...structuredClone(defaultValues[type]), ...(json || {}) }
   return defaultObject
 }

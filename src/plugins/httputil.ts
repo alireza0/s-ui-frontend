@@ -4,21 +4,40 @@ import router from '@/router'
 import { push } from 'notivue'
 import { clearAuthenticated } from './auth'
 import Data from '@/store/modules/data'
+import type { AxiosRequestConfig } from 'axios'
 
-export interface Msg {
+// The envelope every endpoint answers with. What rides in `obj` depends on the
+// endpoint, so it is unknown until a caller names it: HttpUtils.get<Foo>(url).
+export interface Msg<T = unknown> {
   success: boolean
   msg: string
-  obj: any | null
+  obj: T
+}
+
+// What a rejected request carries. A request can fail before it ever reaches
+// the server, so nothing below the error itself is guaranteed to be there.
+interface RequestError {
+  response?: {
+    status?: number
+    data?: {
+      msg?: string
+    }
+  }
+}
+
+// An answer that carries no object, for the cases that never produced one.
+function _objectlessMsg<T>(success: boolean, msg: string): Msg<T> {
+  return { success: success, msg: msg, obj: null as unknown as T }
 }
 
 // sessionExpired reports whether a failed request means the session is gone.
 // The status code is the authority; the string match is kept so a frontend
 // newer than its backend still recognises the old 200-with-a-message answer.
-function _sessionExpired(status: number | undefined, msg: string): boolean {
+function _sessionExpired(status: number | undefined, msg: string | undefined): boolean {
   return status === 401 || status === 403 || msg === "Invalid login"
 }
 
-function _handleMsg(msg: any): void {
+function _handleMsg(msg: unknown): void {
   if (!isMsg(msg)) {
     return
   }
@@ -59,54 +78,56 @@ export const logout = async () => {
   }
 }
 
-function _respToMsg(resp: any): Msg {
+function _respToMsg<T>(resp: { data: unknown }): Msg<T> {
   const data = resp.data
   if (data == null) {
-    return { success: true, msg: "", obj: null }
+    return _objectlessMsg<T>(true, "")
   } else if (isMsg(data)) {
-    if (data.hasOwnProperty('success')) {
-        return { success: data.success, msg: data.msg, obj: data.obj || null }
+    if (Object.hasOwn(data, 'success')) {
+        return { success: data.success, msg: data.msg, obj: (data.obj || null) as T }
     } else {
-        return data
+        return data as Msg<T>
     }
   } else {
-    return { success: false, msg: `unknown data: ${data}`, obj: null }
+    return _objectlessMsg<T>(false, `unknown data: ${String(data)}`)
   }
 }
 
-function isMsg(obj: any): obj is Msg {
-  return Object.hasOwn(obj,'success') && Object.hasOwn(obj,'msg') && Object.hasOwn(obj, 'obj')
+function isMsg(obj: unknown): obj is Msg {
+  return Object.hasOwn(obj as object,'success') && Object.hasOwn(obj as object,'msg') && Object.hasOwn(obj as object, 'obj')
 }
-  
+
 const HttpUtils = {
-  async get(url: string, data: object = {}, options: any[] = []): Promise<Msg> {
-    let msg: Msg
+  async get<T = unknown>(url: string, data: object = {}, options: object = {}): Promise<Msg<T>> {
+    let msg: Msg<T>
     try {
         const resp = await api.get(url, { params: data, ...options })
-        msg = _respToMsg(resp)
-    } catch (e: any) {
-        if (_sessionExpired(e?.response?.status, e?.response?.data?.msg)) {
+        msg = _respToMsg<T>(resp)
+    } catch (e: unknown) {
+        const err = e as RequestError
+        if (_sessionExpired(err?.response?.status, err?.response?.data?.msg)) {
             push.error({ title: i18n.global.t('invalidLogin') })
             logout()
-            return { success: false, msg: "Invalid login", obj: null }
+            return _objectlessMsg<T>(false, "Invalid login")
         }
-        msg = { success: false, msg: e.toString(), obj: null }
+        msg = _objectlessMsg<T>(false, String(e))
     }
     _handleMsg(msg)
     return msg
   },
-  async post(url: string, data: object | null, options: any = undefined): Promise<Msg> {
-    let msg: Msg
+  async post<T = unknown>(url: string, data: object | null, options: AxiosRequestConfig | undefined = undefined): Promise<Msg<T>> {
+    let msg: Msg<T>
     try {
         const resp = await api.post(url, data, options)
-        msg = _respToMsg(resp)
-    } catch (e: any) {
-        if (_sessionExpired(e?.response?.status, e?.response?.data?.msg)) {
+        msg = _respToMsg<T>(resp)
+    } catch (e: unknown) {
+        const err = e as RequestError
+        if (_sessionExpired(err?.response?.status, err?.response?.data?.msg)) {
             push.error({ title: i18n.global.t('invalidLogin') })
             logout()
-            return { success: false, msg: "Invalid login", obj: null }
+            return _objectlessMsg<T>(false, "Invalid login")
         }
-        msg = { success: false, msg: e.toString(), obj: null }
+        msg = _objectlessMsg<T>(false, String(e))
     }
     _handleMsg(msg)
     return msg

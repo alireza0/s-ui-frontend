@@ -62,10 +62,10 @@ const RandomUtil = {
     return btoa(String.fromCharCode(...array))
   },
   randomShortId(): string[] {
-    let shortIds = new Array(24).fill('')
-    for (var ii = 1; ii < 24; ii++) {
-      for (var jj = 0; jj <= this.randomInt(8); jj++){
-          let randomNum = this.randomInt(256)
+    const shortIds = new Array(24).fill('')
+    for (let ii = 1; ii < 24; ii++) {
+      for (let jj = 0; jj <= this.randomInt(8); jj++){
+          const randomNum = this.randomInt(256)
           shortIds[ii] += ('0' + randomNum.toString(16)).slice(-2)
       }
   }

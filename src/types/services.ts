@@ -1,5 +1,6 @@
 import { Listen } from "./inbounds"
-import { iTls } from "./tls"
+import { iTls, oTls } from "./tls"
+import { Dial } from "./dial"
 
 export const SrvTypes = {
   DERP: 'derp',
@@ -20,22 +21,38 @@ interface SrvBasics extends Listen {
   tls_id: number
 }
 
+// A tailscale control server the DERP node verifies clients against, or meshes
+// with. Both carry dial options, which Dial.vue edits in place.
+export interface DerpEndpoint extends Dial {
+  url?: string
+  server?: string
+  server_port?: number
+  host?: string
+  tls?: oTls
+}
+
+// The embedded STUN server. Listen.vue edits the listen fields inside it.
+export interface DerpStun extends Partial<Listen> {
+  enabled?: boolean
+}
+
 export interface DERP extends SrvBasics {
   tls: iTls
   config_path: string
   verify_client_endpoint?: string[]
-  verify_client_url?: any[]
+  verify_client_url?: DerpEndpoint[]
   home?: string
-  mesh_with?: any[]
+  mesh_with?: DerpEndpoint[]
   mesh_psk?: string
   mesh_psk_file?: string
-  stun?: any
+  stun?: DerpStun
 }
 
-export interface Resolved extends SrvBasics {}
+export type Resolved = SrvBasics
 
 export interface SSMAPI extends SrvBasics {
-  servers: any
+  // Keyed by path; a path serves either one shadowsocks inbound tag or several.
+  servers: Record<string, string | string[]>
   tls?: iTls
 }
 
@@ -102,6 +119,10 @@ const defaultValues: Record<SrvType, Srv> = {
 }
 
 export function createSrv<T extends Srv>(type: string, json?: Partial<T>): Srv {
-  const defaultObject: Srv = { ...defaultValues[type], ...(json || {}) }
+  // structuredClone, not a spread: the defaults table is module state, and a
+  // spread copies only the top level, so every instance would share the nested
+  // objects and arrays inside it. Editing one form then leaked into the table
+  // and into every object created afterwards.
+  const defaultObject: Srv = { ...structuredClone(defaultValues[type]), ...(json || {}) }
   return defaultObject
 }

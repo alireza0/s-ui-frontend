@@ -1,64 +1,138 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" width="800">
+  <v-dialog
+    transition="dialog-bottom-transition"
+    width="800"
+  >
     <v-card class="rounded-lg">
       <v-card-title>
         {{ $t('actions.addbulk') }}
       </v-card-title>
-      <v-divider></v-divider>
+      <v-divider />
       <v-card-text style="padding: 0 16px; overflow-y: scroll;">
         <v-container style="padding: 0;">
           <v-row>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field v-model.number="count" type="number" min="1" max="100" :label="$t('count')" hide-details></v-text-field>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model.number="count"
+                type="number"
+                min="1"
+                max="100"
+                :label="$t('count')"
+                hide-details
+              />
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="12" sm="8">
+            <v-col
+              cols="12"
+              sm="8"
+            >
               <v-combobox
+                v-model="bulkData.name"
                 chips
                 multiple
-                v-model="bulkData.name"
                 :items="patterns"
                 :label="$t('client.name')"
-                hide-details>
-              </v-combobox>
+                hide-details
+              />
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="12" sm="8">
+            <v-col
+              cols="12"
+              sm="8"
+            >
               <v-combobox
+                v-model="bulkData.desc"
                 chips
                 multiple
-                v-model="bulkData.desc"
                 :items="patterns"
                 :label="$t('client.desc')"
-                hide-details>
-              </v-combobox>
+                hide-details
+              />
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="12" sm="6" md="4">
-              <v-combobox v-model="bulkData.group" :items="groups" :label="$t('client.group')" hide-details></v-combobox>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-combobox
+                v-model="bulkData.group"
+                :items="groups"
+                :label="$t('client.group')"
+                hide-details
+              />
             </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field v-model.number="bulkData.Volume" type="number" min="0" :label="$t('stats.volume')" suffix="GiB" hide-details></v-text-field>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model.number="bulkData.Volume"
+                type="number"
+                min="0"
+                :label="$t('stats.volume')"
+                suffix="GiB"
+                hide-details
+              />
             </v-col>
-            <v-col cols="12" sm="6" md="4" v-if="!(bulkData.delayStart && !bulkData.autoReset)">
-              <DatePick :expiry="bulkData.expiry" @submit="setDate" />
+            <v-col
+              v-if="!(bulkData.delayStart && !bulkData.autoReset)"
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <DatePick
+                :expiry="bulkData.expiry"
+                @submit="setDate"
+              />
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="12" sm="6" md="4">
-              <v-switch color="primary"
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-switch
                 v-model="bulkData.delayStart"
-                :label="$t('client.delayStart')" hide-details>
-              </v-switch>
+                color="primary"
+                :label="$t('client.delayStart')"
+                hide-details
+              />
             </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-switch color="primary" v-model="bulkData.autoReset" :label="$t('client.autoReset')" hide-details></v-switch>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-switch
+                v-model="bulkData.autoReset"
+                color="primary"
+                :label="$t('client.autoReset')"
+                hide-details
+              />
             </v-col>
-            <v-col cols="12" sm="6" md="4" v-if="bulkData.autoReset || bulkData.delayStart">
-              <v-text-field v-model.number="bulkData.resetDays" type="number" min="1" :label="$t('client.resetDays')" hide-details></v-text-field>
+            <v-col
+              v-if="bulkData.autoReset || bulkData.delayStart"
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-text-field
+                v-model.number="bulkData.resetDays"
+                type="number"
+                min="1"
+                :label="$t('client.resetDays')"
+                hide-details
+              />
             </v-col>
           </v-row>
           <v-row>
@@ -71,8 +145,12 @@
                 chips
                 hide-details
               >
-                <template v-slot:append>
-                  <v-icon @click="setAllInbounds" icon="mdi-set-all" v-tooltip:top="$t('all')" />
+                <template #append>
+                  <v-icon
+                    v-tooltip:top="$t('all')"
+                    icon="mdi-set-all"
+                    @click="setAllInbounds"
+                  />
                 </template>
               </v-select>
             </v-col>
@@ -80,7 +158,7 @@
         </v-container>
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-btn
           color="primary"
           variant="outlined"
@@ -108,19 +186,39 @@ import RandomUtil from '@/plugins/randomUtil'
 import { Client, createClient, randomConfigs } from '@/types/clients'
 import { i18n } from '@/locales'
 import Data from '@/store/modules/data'
+import type { PropType } from 'vue'
+
+// An inbound the clients can be attached to, as the parent lists them.
+interface InboundTag {
+  title: string
+  value: number
+}
+
+// A name or description is built from literal text and generator tokens picked
+// out of `patterns`.
+interface PatternToken {
+  title: string
+  value: string
+}
+type PatternPart = string | PatternToken
 
 export default {
-  props: ['visible', 'inboundTags', 'groups'],
+  components: { DatePick },
+  props: {
+    visible: { type: Boolean, required: true },
+    inboundTags: { type: Array as PropType<InboundTag[]>, required: true },
+    groups: { type: Array as PropType<string[]>, required: true },
+  },
   emits: ['close'],
   data() {
     return {
       count: 1,
       clients: <Client[]>[],
       bulkData: {
-        name: <any[]>[],
-        desc: <any[]>[],
+        name: <PatternPart[]>[],
+        desc: <PatternPart[]>[],
         group: '',
-        clientInbounds: [],
+        clientInbounds: <number[]>[],
         expiry: 0,
         Volume: 0,
         delayStart: false,
@@ -134,10 +232,18 @@ export default {
       loading: false,
     }
   },
+  computed: {},
+  watch: {
+    visible(newValue) {
+      if (newValue) {
+        this.resetData()
+      }
+    },
+  },
   methods: {
     resetData() {
-      this.count = 1,
-      this.clients = [],
+      this.count = 1
+      this.clients = []
       this.bulkData = {
         name: [this.patterns[1], "-", this.patterns[0]],
         desc: [],
@@ -187,7 +293,7 @@ export default {
       if (success) this.closeModal()
       this.loading = false
     },
-    genByPattern(pattern: any[], order :number){
+    genByPattern(pattern: PatternPart[], order :number){
       if (pattern.length == 0) return RandomUtil.randomSeq(8)
       let result = ''
       pattern.forEach(p => {
@@ -211,18 +317,9 @@ export default {
       this.bulkData.expiry = v
     },
     setAllInbounds(){
-      this.bulkData.clientInbounds = this.inboundTags.map((i:any) => i.value).sort()
+      this.bulkData.clientInbounds = this.inboundTags.map(i => i.value).sort()
     }
   },
-  computed: {},
-  watch: {
-    visible(newValue) {
-      if (newValue) {
-        this.resetData()
-      }
-    },
-  },
-  components: { DatePick },
 }
 
 </script>

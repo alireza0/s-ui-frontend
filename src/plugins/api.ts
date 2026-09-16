@@ -1,4 +1,5 @@
 import axios from 'axios'
+import type { CancelTokenSource } from 'axios'
 
 // Everything below is configured on the instance this module exports. It used
 // to be set on the global axios default and the exported instance was created
@@ -15,9 +16,17 @@ const api = axios.create({
     },
 })
 
-const pendingRequests = new Map()
+const pendingRequests = new Map<string, CancelTokenSource>()
 
-function _requestKey(config: any): string {
+// Only the three fields the key is built from; both the request config and the
+// one hanging off a rejection are read through this.
+interface RequestKeyConfig {
+    method?: string
+    url?: string
+    params?: Record<string, unknown>
+}
+
+function _requestKey(config: RequestKeyConfig): string {
     const params = config.params ?? {}
     const query = Object.keys(params)
         .sort()
@@ -34,7 +43,7 @@ api.interceptors.request.use(
         // Check if there is already a pending request with the same key
         if (pendingRequests.has(requestKey)) {
             const cancelSource = pendingRequests.get(requestKey)
-            cancelSource.cancel('Duplicate request cancelled')
+            cancelSource?.cancel('Duplicate request cancelled')
         }
         
         // Create a new cancel token for the request
