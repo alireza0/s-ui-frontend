@@ -162,6 +162,29 @@
           @update:model-value="updateSrcIPOption($event)"
         />
       </v-col>
+      <v-col
+        v-if="rule.source_ip_cidr != undefined"
+        cols="12"
+        sm="6"
+      >
+        <v-text-field
+          v-model="source_ip_cidr"
+          :label="$t('rule.srcCidr') + ' ' + $t('commaSeparated')"
+          hide-details
+        />
+      </v-col>
+      <v-col
+        v-if="rule.source_ip_is_private != undefined"
+        cols="12"
+        sm="6"
+      >
+        <v-switch
+          v-model="rule.source_ip_is_private"
+          color="primary"
+          :label="$t('rule.srcPrivateIp')"
+          hide-details
+        />
+      </v-col>
     </v-row>
     <v-row v-if="optionSrcPort">
       <v-col
@@ -459,6 +482,10 @@ const port = computed({
 const port_range = computed({
   get() { return rule.value.port_range?.join(',') },
   set(v: string) { rule.value.port_range = v.length>0 ? v.split(',') : [] }
+})
+const source_ip_cidr = computed({
+  get() { return rule.value.source_ip_cidr?.join(',') },
+  set(v: string) { rule.value.source_ip_cidr = v.length>0 ? v.split(',') : [] }
 })
 const source_port = computed({
   get() { return rule.value.source_port?.join(',') },
