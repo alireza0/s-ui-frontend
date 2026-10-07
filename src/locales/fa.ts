@@ -144,6 +144,8 @@ export default {
     startCore: "اجرای هسته",
     restartSb: "ریستارت سینگ‌باکس",
     closeSessions: "قطع اتصال کاربر",
+    moveUp: "انتقال به بالا",
+    moveDown: "انتقال به پایین",
   },
   login: {
     title: "ورود",

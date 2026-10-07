@@ -489,7 +489,9 @@ const headers = [
   { title: i18n.global.t('client.group'), key: 'group' },
   { title: i18n.global.t('pages.inbounds'), key: 'inbounds', width: 10 },
   { title: i18n.global.t('actions.action'), key: 'actions', sortable: false },
-  { title: i18n.global.t('stats.volume'), key: 'volume' },
+  // Sorted by what was used, not by the quota: with unlimited clients every
+  // volume is 0 and the column did not sort at all (#1277).
+  { title: i18n.global.t('stats.volume'), key: 'volume', sortRaw: (a: Client, b: Client) => (a.up + a.down) - (b.up + b.down) },
   { title: i18n.global.t('date.expiry'), key: 'expiry' },
   { title: i18n.global.t('online'), key: 'online' },
   { title: i18n.global.t('date.created'), key: 'createdAt' },

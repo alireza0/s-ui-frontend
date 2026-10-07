@@ -144,6 +144,8 @@ export default {
     startCore: "啟動核心",
     restartSb: "重新啟動 Sing-Box",
     closeSessions: "中斷此用戶連線",
+    moveUp: "上移",
+    moveDown: "下移",
   },
   login: {
     title: "登入",
@@ -557,7 +559,7 @@ export default {
     srcIpRules: "來源 IP",
     srcPortRules: "來源連接埠",
     udpDisableDomainUnmapping: "停用 UDP 網域反解映射",
-    udpConnect: "UDP Connect",
+    udpConnect: "啟用 UDP 連線",
     udpTimeout: "UDP 逾時",
     method: "方法",
     noDrop: "不丟棄",

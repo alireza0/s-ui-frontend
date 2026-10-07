@@ -77,10 +77,7 @@
           :quic="fieldGroup == 'quic'"
         />
         <Headers :data="client" />
-        <Dial
-          :dial="client"
-          mode="client"
-        />
+        <Dial :dial="client" />
       </v-card-text>
       <v-card-actions>
         <v-spacer />
