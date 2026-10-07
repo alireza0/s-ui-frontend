@@ -144,6 +144,8 @@ export default {
     startCore: "Start Core",
     restartSb: "Restart Singbox",
     closeSessions: "Disconnect User",
+    moveUp: "Move up",
+    moveDown: "Move down",
   },
   login: {
     title: "Login",

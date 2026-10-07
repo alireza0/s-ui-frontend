@@ -144,6 +144,8 @@ export default {
     startCore: "Chạy lõi",
     restartSb: "Khởi động lại Singbox",
     closeSessions: "Ngắt kết nối người dùng",
+    moveUp: "Di chuyển lên",
+    moveDown: "Di chuyển xuống",
   },
   login: {
     title: "Đăng nhập",

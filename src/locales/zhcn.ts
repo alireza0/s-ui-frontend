@@ -144,6 +144,8 @@ export default {
     startCore: "启动内核",
     restartSb: "重启 Singbox",
     closeSessions: "断开该用户",
+    moveUp: "上移",
+    moveDown: "下移",
   },
   login: {
     title: "登录",

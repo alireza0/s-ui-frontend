@@ -144,6 +144,8 @@ export default {
     startCore: "啟動核心",
     restartSb: "重啟 Singbox",
     closeSessions: "斷開該使用者",
+    moveUp: "上移",
+    moveDown: "下移",
   },
   login: {
     title: "登錄",

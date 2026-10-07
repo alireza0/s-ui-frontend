@@ -143,6 +143,8 @@ export default {
     startCore: "Запустить ядро",
     restartSb: "Перезапустить Singbox",
     closeSessions: "Отключить пользователя",
+    moveUp: "Переместить вверх",
+    moveDown: "Переместить вниз",
     apply: "Применить",
   },
   login: {
