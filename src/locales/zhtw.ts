@@ -202,6 +202,7 @@ export default {
     path: "預設路徑",
     update: "自動更新時間",
     subUri: "訂閱 URI",
+    subCustomHeaders: "自訂 HTTP 標頭",
     jsonSub: "JSON 訂閱",
     toProxy: "路由至代理",
     defaultRules: "預設規則",

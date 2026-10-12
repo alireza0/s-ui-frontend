@@ -202,6 +202,7 @@ export default {
     path: "Default Path",
     update: "Automatic Update Time",
     subUri: "Subscription URI",
+    subCustomHeaders: "Custom HTTP Headers",
     jsonSub: "JSON Subscription",
     toProxy: "Route to Proxy",
     defaultRules: "Default Rules",

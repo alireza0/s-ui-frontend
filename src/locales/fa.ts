@@ -202,6 +202,7 @@ export default {
     path: "مسیر پیشفرض",
     update: "زمان بروزرسانی خودکار",
     subUri: "آدرس نهایی سابسکریپشن",
+    subCustomHeaders: "هدرهای سفارشی HTTP",
     jsonSub: "سابسکریپشن JSON",
     toProxy: "هدایت به پروکسی",
     defaultRules: "قوانین پیش‌فرض",

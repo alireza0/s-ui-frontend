@@ -347,6 +347,20 @@
               />
             </v-col>
           </v-row>
+          <v-row>
+            <v-col
+              cols="12"
+              md="8"
+            >
+              <v-textarea
+                v-model="settings.subCustomHeaders"
+                :label="$t('setting.subCustomHeaders')"
+                auto-grow
+                rows="3"
+                hide-details
+              />
+            </v-col>
+          </v-row>
         </v-window-item>
 
         <v-window-item value="t3">
@@ -396,6 +410,7 @@ const settings = ref({
 	subEncode: "true",
 	subShowInfo: "false",
 	subURI: "",
+	subCustomHeaders: "",
   subJsonExt: "",
   subClashExt: "",
   subClashNoDefGrp: "false",

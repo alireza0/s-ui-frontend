@@ -202,6 +202,7 @@ export default {
     path: "Путь по умолчанию",
     update: "Время автоматического обновления",
     subUri: "URI подписки",
+    subCustomHeaders: "Дополнительные HTTP-заголовки",
     jsonSub: "JSON подписка",
     toProxy: "Маршрутизация на Proxy",
     defaultRules: "Правила по умолчанию",

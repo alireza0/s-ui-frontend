@@ -202,6 +202,7 @@ export default {
     path: "Đường dẫn mặc định",
     update: "Thời gian cập nhật tự động",
     subUri: "URI đăng ký",
+    subCustomHeaders: "Tiêu đề HTTP tùy chỉnh",
     jsonSub: "Đăng ký JSON",
     toProxy: "Chuyển hướng tới Proxy",
     defaultRules: "Quy tắc mặc định",
