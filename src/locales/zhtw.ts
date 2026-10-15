@@ -207,6 +207,8 @@ export default {
     path: "預設路徑",
     update: "自動更新時間",
     subUri: "訂閱 URI",
+    subCustomHeaders: "自訂 HTTP 標頭",
+    subCustomHeadersHint: "隨每個訂閱傳送的額外標頭，每行一個 \"Name: value\"；以 # 開頭的行會被忽略",
     jsonSub: "JSON 訂閱",
     toProxy: "路由至代理",
     defaultRules: "預設規則",

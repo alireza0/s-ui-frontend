@@ -207,6 +207,8 @@ export default {
     path: "Default Path",
     update: "Automatic Update Time",
     subUri: "Subscription URI",
+    subCustomHeaders: "Custom HTTP Headers",
+    subCustomHeadersHint: "Extra headers sent with every subscription, one \"Name: value\" per line; lines starting with # are ignored",
     jsonSub: "JSON Subscription",
     toProxy: "Route to Proxy",
     defaultRules: "Default Rules",

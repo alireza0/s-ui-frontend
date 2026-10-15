@@ -207,6 +207,8 @@ export default {
     path: "مسیر پیشفرض",
     update: "زمان بروزرسانی خودکار",
     subUri: "آدرس نهایی سابسکریپشن",
+    subCustomHeaders: "هدرهای سفارشی HTTP",
+    subCustomHeadersHint: "هدرهای اضافه برای همهٔ سابسکریپشن‌ها، هر خط یک «Name: value»؛ خطوطی که با # شروع شوند نادیده گرفته می‌شوند",
     jsonSub: "سابسکریپشن JSON",
     toProxy: "هدایت به پروکسی",
     defaultRules: "قوانین پیش‌فرض",
