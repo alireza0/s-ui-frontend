@@ -208,6 +208,7 @@ export default {
     update: "Время автоматического обновления",
     subUri: "URI подписки",
     subCustomHeaders: "Дополнительные HTTP-заголовки",
+    subCustomHeadersHint: "Заголовки для каждой подписки, по одному «Name: value» в строке; строки с # игнорируются",
     jsonSub: "JSON подписка",
     toProxy: "Маршрутизация на Proxy",
     defaultRules: "Правила по умолчанию",

@@ -354,7 +354,9 @@
             >
               <v-textarea
                 v-model="settings.subCustomHeaders"
+                v-tooltip:top="$t('setting.subCustomHeadersHint')"
                 :label="$t('setting.subCustomHeaders')"
+                :placeholder="'announce: Hello!\nannounce-url: https://example.com/'"
                 auto-grow
                 rows="3"
                 hide-details

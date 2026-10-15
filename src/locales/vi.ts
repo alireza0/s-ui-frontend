@@ -208,6 +208,7 @@ export default {
     update: "Thời gian cập nhật tự động",
     subUri: "URI đăng ký",
     subCustomHeaders: "Tiêu đề HTTP tùy chỉnh",
+    subCustomHeadersHint: "Tiêu đề thêm cho mọi đăng ký, mỗi dòng một \"Name: value\"; dòng bắt đầu bằng # bị bỏ qua",
     jsonSub: "Đăng ký JSON",
     toProxy: "Chuyển hướng tới Proxy",
     defaultRules: "Quy tắc mặc định",
