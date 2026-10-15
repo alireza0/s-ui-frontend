@@ -147,6 +147,11 @@ export default {
     moveUp: "Move up",
     moveDown: "Move down",
   },
+  urlTest: {
+    custom: "Custom test URL",
+    url: "Test URL",
+    invalid: "Must be an http(s) URL",
+  },
   login: {
     title: "Login",
     username: "Username",

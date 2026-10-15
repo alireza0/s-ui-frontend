@@ -51,6 +51,7 @@
         {{ $t('actions.testAll') || 'Test all' }}
       </v-btn>
     </v-col>
+    <UrlTestTarget />
   </v-row>
   <v-row>
     <v-col
@@ -254,6 +255,8 @@ import Sessions from '@/layouts/modals/Sessions.vue'
 import QrCode from '@/layouts/modals/WgQrCode.vue'
 import { Endpoint } from '@/types/endpoints'
 import { computed, ref } from 'vue'
+import UrlTestTarget from '@/components/UrlTestTarget.vue'
+import { useUrlTestTarget } from '@/composables/useUrlTestTarget'
 
 // What api/checkOutbound answers with.
 interface CheckReply {
@@ -270,12 +273,13 @@ interface CheckResult {
 }
 
 const checkResults = ref<Record<string, CheckResult>>({})
+const { link: testLink } = useUrlTestTarget()
 
 // Endpoints (e.g. generated WARP nodes) register as outbounds in the core, so
 // the same api/checkOutbound latency test used on the Outbounds page works here.
 const checkEndpoint = async (tag: string) => {
   checkResults.value = { ...checkResults.value, [tag]: { loading: true, success: false } }
-  const msg = await HttpUtils.get<CheckReply>('api/checkOutbound', { tag })
+  const msg = await HttpUtils.get<CheckReply>('api/checkOutbound', { tag, link: testLink.value })
   const success = msg.success && msg.obj?.OK
   const errorMessage = success ? undefined : (msg.obj?.Error ?? msg.msg ?? '')
   checkResults.value = {
