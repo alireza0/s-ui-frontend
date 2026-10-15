@@ -147,6 +147,11 @@ export default {
     moveUp: "上移",
     moveDown: "下移",
   },
+  urlTest: {
+    custom: "自定义测试 URL",
+    url: "测试 URL",
+    invalid: "必须是 http(s) URL",
+  },
   login: {
     title: "登录",
     username: "用户名",

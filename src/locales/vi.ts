@@ -147,6 +147,11 @@ export default {
     moveUp: "Di chuyển lên",
     moveDown: "Di chuyển xuống",
   },
+  urlTest: {
+    custom: "URL kiểm tra tùy chỉnh",
+    url: "URL kiểm tra",
+    invalid: "Phải là URL http(s)",
+  },
   login: {
     title: "Đăng nhập",
     username: "Tên người dùng",

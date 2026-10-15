@@ -59,6 +59,7 @@
         {{ $t('actions.testAll') || 'Test all' }}
       </v-btn>
     </v-col>
+    <UrlTestTarget />
   </v-row>
   <v-row>
     <v-col
@@ -255,6 +256,8 @@ import Stats from '@/layouts/modals/Stats.vue'
 import Sessions from '@/layouts/modals/Sessions.vue'
 import { Outbound } from '@/types/outbounds'
 import { computed, ref } from 'vue'
+import UrlTestTarget from '@/components/UrlTestTarget.vue'
+import { useUrlTestTarget } from '@/composables/useUrlTestTarget'
 
 // What api/checkOutbound answers with.
 interface CheckReply {
@@ -271,10 +274,11 @@ interface CheckResult {
 }
 
 const checkResults = ref<Record<string, CheckResult>>({})
+const { link: testLink } = useUrlTestTarget()
 
 const checkOutbound = async (tag: string) => {
   checkResults.value = { ...checkResults.value, [tag]: { loading: true, success: false } }
-  const msg = await HttpUtils.get<CheckReply>('api/checkOutbound', { tag })
+  const msg = await HttpUtils.get<CheckReply>('api/checkOutbound', { tag, link: testLink.value })
   const success = msg.success && msg.obj?.OK
   const errorMessage = success ? undefined : (msg.obj?.Error ?? msg.msg ?? '')
   checkResults.value = {

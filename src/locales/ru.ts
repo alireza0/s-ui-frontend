@@ -147,6 +147,11 @@ export default {
     moveDown: "Переместить вниз",
     apply: "Применить",
   },
+  urlTest: {
+    custom: "Свой URL проверки",
+    url: "URL проверки",
+    invalid: "Нужен URL http(s)",
+  },
   login: {
     title: "Вход",
     username: "Имя пользователя",

@@ -147,6 +147,11 @@ export default {
     moveUp: "انتقال به بالا",
     moveDown: "انتقال به پایین",
   },
+  urlTest: {
+    custom: "آدرس تست دلخواه",
+    url: "آدرس تست",
+    invalid: "باید یک آدرس http(s) باشد",
+  },
   login: {
     title: "ورود",
     username: "نام کاربری",
