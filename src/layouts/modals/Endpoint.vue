@@ -70,9 +70,13 @@
           v-if="isOpenVpn"
           :data="endpoint"
         />
-        <!-- static_key mode has no TLS session to configure. -->
+        <!-- static_key mode has no TLS session to configure. Switching between
+             client and server replaces the endpoint object, but the v-if holds
+             for both, so the key forces a remount: the form sets up its tls
+             block and its server/client defaults only when it is created. -->
         <OpenVpnTls
           v-if="isOpenVpn && endpoint.mode == 'tls'"
+          :key="endpoint.type"
           :data="endpoint"
         />
         <Dial

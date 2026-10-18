@@ -264,6 +264,7 @@ export default {
       system: "رابط سیستمی",
       noUdp: "غیرفعال کردن UDP (DTLS)",
       ipv6Disabled: "غیرفعال کردن IPv6",
+      options: "گزینه‌های OpenConnect",
       tls: {
         ca: "مرجع صدور گواهی (CA)",
         caPath: "مسیر مرجع صدور گواهی (CA)",
@@ -291,6 +292,8 @@ export default {
       duplicateCn: "اجازه CN تکراری",
       dataCiphers: "رمزهای داده",
       dataCiphersFallback: "رمز داده جایگزین",
+      options: "گزینه‌های OpenVPN",
+      credentials: "اطلاعات ورود",
       tls: {
         ca: "مرجع صدور گواهی (CA)",
         caPath: "مسیر مرجع صدور گواهی (CA)",

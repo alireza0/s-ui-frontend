@@ -25,19 +25,6 @@
           :items="flavors"
         />
       </v-col>
-      <v-col
-        cols="12"
-        sm="6"
-        md="4"
-      >
-        <v-text-field
-          v-model="data.name"
-          :label="$t('types.openconnect.interfaceName')"
-          hide-details
-          clearable
-          @click:clear="delete data.name"
-        />
-      </v-col>
     </v-row>
     <v-row>
       <v-col
@@ -62,12 +49,27 @@
           v-model="data.password"
           :label="$t('types.pw')"
           hide-details
-          type="password"
+          :type="showPassword ? 'text' : 'password'"
           clearable
+          append-inner-icon="mdi-refresh"
           @click:clear="delete data.password"
+          @click:append-inner="genPassword"
         />
       </v-col>
+    </v-row>
+    <v-row v-if="optionCookie">
+      <v-col cols="12">
+        <v-text-field
+          v-model="data.cookie"
+          :label="$t('types.openconnect.cookie')"
+          hide-details
+          type="password"
+        />
+      </v-col>
+    </v-row>
+    <v-row v-if="optionAuthGroup || optionName || optionMtu || optionUdpTimeout">
       <v-col
+        v-if="optionAuthGroup"
         cols="12"
         sm="6"
         md="4"
@@ -76,31 +78,28 @@
           v-model="data.auth_group"
           :label="$t('types.openconnect.authGroup')"
           hide-details
-          clearable
-          @click:clear="delete data.auth_group"
         />
       </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="12">
-        <v-text-field
-          v-model="data.cookie"
-          :label="$t('types.openconnect.cookie')"
-          hide-details
-          type="password"
-          clearable
-          @click:clear="delete data.cookie"
-        />
-      </v-col>
-    </v-row>
-    <v-row>
       <v-col
+        v-if="optionName"
         cols="12"
         sm="6"
         md="4"
       >
         <v-text-field
-          v-model.number="mtu"
+          v-model="data.name"
+          :label="$t('types.openconnect.interfaceName')"
+          hide-details
+        />
+      </v-col>
+      <v-col
+        v-if="optionMtu"
+        cols="12"
+        sm="6"
+        md="4"
+      >
+        <v-text-field
+          v-model.number="data.mtu"
           label="MTU"
           type="number"
           min="0"
@@ -108,6 +107,7 @@
         />
       </v-col>
       <v-col
+        v-if="optionUdpTimeout"
         cols="12"
         sm="6"
         md="4"
@@ -116,9 +116,7 @@
           v-model="data.udp_timeout"
           :label="$t('types.openconnect.udpTimeout')"
           hide-details
-          clearable
           placeholder="5m"
-          @click:clear="delete data.udp_timeout"
         />
       </v-col>
     </v-row>
@@ -160,12 +158,75 @@
         />
       </v-col>
     </v-row>
+    <v-card-actions class="pt-0">
+      <v-spacer />
+      <v-menu
+        v-model="menu"
+        :close-on-content-click="false"
+        location="start"
+      >
+        <template #activator="{ props }">
+          <v-btn
+            v-bind="props"
+            hide-details
+            variant="tonal"
+          >
+            {{ $t('types.openconnect.options') }}
+          </v-btn>
+        </template>
+        <v-card>
+          <v-list>
+            <v-list-item>
+              <v-switch
+                v-model="optionAuthGroup"
+                color="primary"
+                :label="$t('types.openconnect.authGroup')"
+                hide-details
+              />
+            </v-list-item>
+            <v-list-item>
+              <v-switch
+                v-model="optionCookie"
+                color="primary"
+                :label="$t('types.openconnect.cookie')"
+                hide-details
+              />
+            </v-list-item>
+            <v-list-item>
+              <v-switch
+                v-model="optionName"
+                color="primary"
+                :label="$t('types.openconnect.interfaceName')"
+                hide-details
+              />
+            </v-list-item>
+            <v-list-item>
+              <v-switch
+                v-model="optionMtu"
+                color="primary"
+                label="MTU"
+                hide-details
+              />
+            </v-list-item>
+            <v-list-item>
+              <v-switch
+                v-model="optionUdpTimeout"
+                color="primary"
+                :label="$t('types.openconnect.udpTimeout')"
+                hide-details
+              />
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-menu>
+    </v-card-actions>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { Endpoint } from '@/types/endpoints'
+import RandomUtil from '@/plugins/randomUtil'
 
 // Only the OpenConnect endpoint fields this form edits.
 interface OpenConnectData {
@@ -201,8 +262,56 @@ const flavors = [
   { title: 'Junos Network Connect', value: 'nc' },
 ]
 
-const mtu = computed({
-  get: (): number => data.value.mtu ?? 0,
-  set: (v: number) => { data.value.mtu = v > 0 ? v : undefined },
+const menu = ref(false)
+
+// A typed-in password stays masked, but a generated one is shown, since it
+// still has to be copied to the account on the server.
+const showPassword = ref(false)
+
+const genPassword = () => {
+  data.value.password = RandomUtil.randomSeq(16)
+  showPassword.value = true
+}
+
+// Optional fields stay out of the form, and out of the saved config, until
+// switched on from the options menu.
+const optionAuthGroup = computed({
+  get: (): boolean => data.value.auth_group !== undefined,
+  set: (v: boolean) => {
+    if (v) data.value.auth_group = ''
+    else delete data.value.auth_group
+  },
+})
+
+const optionCookie = computed({
+  get: (): boolean => data.value.cookie !== undefined,
+  set: (v: boolean) => {
+    if (v) data.value.cookie = ''
+    else delete data.value.cookie
+  },
+})
+
+const optionName = computed({
+  get: (): boolean => data.value.name !== undefined,
+  set: (v: boolean) => {
+    if (v) data.value.name = ''
+    else delete data.value.name
+  },
+})
+
+const optionMtu = computed({
+  get: (): boolean => data.value.mtu !== undefined,
+  set: (v: boolean) => {
+    if (v) data.value.mtu = 1500
+    else delete data.value.mtu
+  },
+})
+
+const optionUdpTimeout = computed({
+  get: (): boolean => data.value.udp_timeout !== undefined,
+  set: (v: boolean) => {
+    if (v) data.value.udp_timeout = '5m'
+    else delete data.value.udp_timeout
+  },
 })
 </script>

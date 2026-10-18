@@ -264,6 +264,7 @@ export default {
       system: "System Interface",
       noUdp: "Disable UDP (DTLS)",
       ipv6Disabled: "Disable IPv6",
+      options: "OpenConnect Options",
       tls: {
         ca: "Certificate Authority",
         caPath: "Certificate Authority Path",
@@ -291,6 +292,8 @@ export default {
       duplicateCn: "Allow Duplicate CN",
       dataCiphers: "Data Ciphers",
       dataCiphersFallback: "Data Cipher Fallback",
+      options: "OpenVPN Options",
+      credentials: "Credentials",
       tls: {
         ca: "Certificate Authority",
         caPath: "Certificate Authority Path",

@@ -264,6 +264,7 @@ export default {
       system: "Системный интерфейс",
       noUdp: "Отключить UDP (DTLS)",
       ipv6Disabled: "Отключить IPv6",
+      options: "Параметры OpenConnect",
       tls: {
         ca: "Удостоверяющий центр (CA)",
         caPath: "Путь к УЦ (CA)",
@@ -291,6 +292,8 @@ export default {
       duplicateCn: "Разрешить дублирование CN",
       dataCiphers: "Шифры данных",
       dataCiphersFallback: "Запасной шифр данных",
+      options: "Параметры OpenVPN",
+      credentials: "Учётные данные",
       tls: {
         ca: "Удостоверяющий центр (CA)",
         caPath: "Путь к УЦ (CA)",

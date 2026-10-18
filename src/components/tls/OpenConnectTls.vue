@@ -98,6 +98,26 @@
             hide-details
           />
         </v-col>
+        <v-spacer />
+        <!-- Self-signed, so the server has to be given this certificate as
+             the CA it trusts for clients. -->
+        <v-col cols="auto">
+          <v-btn
+            variant="tonal"
+            density="compact"
+            icon="mdi-key-star"
+            :loading="loading"
+            @click="genClientCert"
+          >
+            <v-icon />
+            <v-tooltip
+              activator="parent"
+              location="top"
+            >
+              {{ $t('actions.generate') }}
+            </v-tooltip>
+          </v-btn>
+        </v-col>
       </v-row>
     </template>
 
@@ -212,6 +232,9 @@
 
 <script lang="ts">
 import { PropType } from 'vue'
+import HttpUtils from '@/plugins/httputil'
+import { push } from 'notivue'
+import { i18n } from '@/locales'
 import { OpenConnectTls } from '@/types/endpoints'
 
 // Material that sing-box takes either as a file path or as the PEM itself.
@@ -227,7 +250,18 @@ const mutualFields = ['client_certificate', 'client_certificate_path', 'client_k
 // The endpoint that owns the TLS block. OpenConnect defines its own TLS
 // options, so they sit on the endpoint rather than in a panel TLS config.
 interface TlsHolder {
+  tag?: string
+  username?: string
   tls?: OpenConnectTls
+}
+
+// The keypair endpoint returns the private key and the certificate as one run
+// of lines, so each block is taken from its own BEGIN/END markers.
+function pemBlock(lines: string[], type: string): string[] {
+  const start = lines.indexOf('-----BEGIN ' + type + '-----')
+  const end = lines.indexOf('-----END ' + type + '-----')
+  if (start == -1 || end < start) return []
+  return lines.slice(start, end + 1)
 }
 
 export default {
@@ -240,6 +274,7 @@ export default {
   data() {
     return {
       menu: false,
+      loading: false,
       usePath: 0,
     }
   },
@@ -339,6 +374,31 @@ export default {
     },
     clearPaths() {
       for (const field of pathFields) delete this.tls[field]
+    },
+    // Named after the username where there is one, since servers that map a
+    // certificate to an account usually read it from the common name.
+    async genClientCert() {
+      this.loading = true
+      const msg = await HttpUtils.get<string[]>('api/keypairs', { k: 'tls-client', o: this.holder.username || this.holder.tag || '' })
+      this.loading = false
+      if (!msg.success || msg.obj.length == 0) {
+        push.error({ message: i18n.global.t('error') + ': ' + msg.obj })
+        return
+      }
+      const key = pemBlock(msg.obj, 'PRIVATE KEY')
+      const certificate = pemBlock(msg.obj, 'CERTIFICATE')
+      if (key.length == 0 || certificate.length == 0) {
+        push.error({ message: i18n.global.t('error') + ': ' + msg.obj })
+        return
+      }
+      // The generated pair only exists here, so the form has to hold it as
+      // text; there is no file on disk to point at. The key it comes with is
+      // not encrypted, so a leftover key password would no longer match.
+      this.clearPaths()
+      this.usePath = 1
+      this.tls.client_certificate = certificate
+      this.tls.client_key = key
+      delete this.tls.client_key_password
     },
   },
 }

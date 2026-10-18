@@ -264,6 +264,7 @@ export default {
       system: "Giao diện hệ thống",
       noUdp: "Tắt UDP (DTLS)",
       ipv6Disabled: "Tắt IPv6",
+      options: "Tùy chọn OpenConnect",
       tls: {
         ca: "Tổ chức chứng thực (CA)",
         caPath: "Đường dẫn CA",
@@ -291,6 +292,8 @@ export default {
       duplicateCn: "Cho phép trùng CN",
       dataCiphers: "Mã hoá dữ liệu",
       dataCiphersFallback: "Mã hoá dữ liệu dự phòng",
+      options: "Tùy chọn OpenVPN",
+      credentials: "Thông tin đăng nhập",
       tls: {
         ca: "Tổ chức chứng thực (CA)",
         caPath: "Đường dẫn CA",

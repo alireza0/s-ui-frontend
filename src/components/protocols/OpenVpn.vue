@@ -54,19 +54,6 @@
           hide-details
         />
       </v-col>
-      <v-col
-        cols="12"
-        sm="6"
-        md="4"
-      >
-        <v-text-field
-          v-model.number="maxClients"
-          :label="$t('types.openvpn.maxClients')"
-          type="number"
-          min="0"
-          hide-details
-        />
-      </v-col>
     </v-row>
 
     <v-row>
@@ -90,21 +77,23 @@
         <v-select
           v-model="data.network"
           hide-details
-          :label="$t('objects.network')"
+          :label="$t('network')"
           :items="networks"
         />
       </v-col>
+      <!-- static_key has no TLS session to negotiate a cipher, so its single
+           fixed one is always set (the mode switch fills in a default). -->
       <v-col
+        v-if="data.mode == 'static_key'"
         cols="12"
         sm="6"
         md="4"
       >
-        <v-text-field
-          v-model="data.name"
-          :label="$t('types.openvpn.interfaceName')"
+        <v-select
+          v-model="data.cipher"
+          :label="$t('types.openvpn.cipher')"
+          :items="staticCiphers"
           hide-details
-          clearable
-          @click:clear="delete data.name"
         />
       </v-col>
     </v-row>
@@ -140,6 +129,7 @@
         />
       </v-col>
       <v-col
+        v-if="optionPeerIpv6"
         cols="12"
         sm="6"
         md="4"
@@ -148,8 +138,6 @@
           v-model="data.peer_address_ipv6"
           :label="$t('types.openvpn.peerAddressIpv6')"
           hide-details
-          clearable
-          @click:clear="delete data.peer_address_ipv6"
         />
       </v-col>
     </v-row>
@@ -185,7 +173,7 @@
       </v-col>
     </v-row>
 
-    <v-row v-if="!isServer && data.mode == 'tls'">
+    <v-row v-if="!isServer && data.mode == 'tls' && optionCredentials">
       <v-col
         cols="12"
         sm="6"
@@ -195,8 +183,6 @@
           v-model="data.username"
           :label="$t('types.un')"
           hide-details
-          clearable
-          @click:clear="delete data.username"
         />
       </v-col>
       <v-col
@@ -209,92 +195,100 @@
           :label="$t('types.pw')"
           hide-details
           type="password"
-          clearable
-          @click:clear="delete data.password"
         />
       </v-col>
     </v-row>
 
-    <v-row>
+    <!-- A TLS session negotiates one cipher out of `data_ciphers`, in the
+         order listed, so the full width keeps several chips readable. -->
+    <template v-if="data.mode != 'static_key' && optionDataCiphers">
+      <v-row>
+        <v-col cols="12">
+          <v-select
+            v-model="data.data_ciphers"
+            :label="$t('types.openvpn.dataCiphers')"
+            :items="tlsCiphers"
+            hide-details
+            multiple
+            chips
+            closable-chips
+          />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col
+          cols="12"
+          sm="6"
+          md="4"
+        >
+          <v-select
+            v-model="data.data_ciphers_fallback"
+            :label="$t('types.openvpn.dataCiphersFallback')"
+            :items="tlsCiphers"
+            hide-details
+            clearable
+            @click:clear="delete data.data_ciphers_fallback"
+          />
+        </v-col>
+      </v-row>
+    </template>
+
+    <v-row v-if="optionAuth || optionName || optionMtu || (isServer && optionMaxClients)">
       <v-col
+        v-if="optionAuth"
+        cols="12"
+        sm="6"
+        md="4"
+      >
+        <v-select
+          v-model="data.auth"
+          :label="$t('types.openvpn.auth')"
+          :items="digests"
+          hide-details
+        />
+      </v-col>
+      <v-col
+        v-if="optionName"
         cols="12"
         sm="6"
         md="4"
       >
         <v-text-field
-          v-model.number="mtu"
+          v-model="data.name"
+          :label="$t('types.openvpn.interfaceName')"
+          hide-details
+        />
+      </v-col>
+      <v-col
+        v-if="optionMtu"
+        cols="12"
+        sm="6"
+        md="4"
+      >
+        <v-text-field
+          v-model.number="data.mtu"
           label="MTU"
           type="number"
           min="0"
           hide-details
         />
       </v-col>
-      <!-- The two modes negotiate the data cipher differently, and sing-box
-           rejects the option belonging to the other one: `cipher` names the
-           single fixed cipher a static_key tunnel uses, while a TLS session
-           negotiates one out of `data_ciphers`. -->
       <v-col
-        v-if="data.mode == 'static_key'"
+        v-if="isServer && optionMaxClients"
         cols="12"
         sm="6"
         md="4"
       >
         <v-text-field
-          v-model="data.cipher"
-          :label="$t('types.openvpn.cipher')"
+          v-model.number="data.max_clients"
+          :label="$t('types.openvpn.maxClients')"
+          type="number"
+          min="0"
           hide-details
-          clearable
-          placeholder="AES-256-CBC"
-          @click:clear="delete data.cipher"
-        />
-      </v-col>
-      <v-col
-        v-else
-        cols="12"
-        sm="6"
-        md="4"
-      >
-        <v-combobox
-          v-model="dataCiphers"
-          :label="$t('types.openvpn.dataCiphers')"
-          hide-details
-          multiple
-          chips
-          closable-chips
-          placeholder="AES-256-GCM"
-        />
-      </v-col>
-      <v-col
-        cols="12"
-        sm="6"
-        md="4"
-      >
-        <v-text-field
-          v-model="data.auth"
-          :label="$t('types.openvpn.auth')"
-          hide-details
-          clearable
-          placeholder="SHA256"
-          @click:clear="delete data.auth"
         />
       </v-col>
     </v-row>
-    <v-row v-if="data.mode != 'static_key'">
-      <v-col
-        cols="12"
-        sm="6"
-        md="4"
-      >
-        <v-text-field
-          v-model="data.data_ciphers_fallback"
-          :label="$t('types.openvpn.dataCiphersFallback')"
-          hide-details
-          clearable
-          placeholder="AES-256-GCM"
-          @click:clear="delete data.data_ciphers_fallback"
-        />
-      </v-col>
-    </v-row>
+
     <v-row>
       <v-col
         cols="12"
@@ -322,11 +316,90 @@
         />
       </v-col>
     </v-row>
+
+    <v-card-actions class="pt-0">
+      <v-spacer />
+      <v-menu
+        v-model="menu"
+        :close-on-content-click="false"
+        location="start"
+      >
+        <template #activator="{ props }">
+          <v-btn
+            v-bind="props"
+            hide-details
+            variant="tonal"
+          >
+            {{ $t('types.openvpn.options') }}
+          </v-btn>
+        </template>
+        <v-card>
+          <v-list>
+            <v-list-item v-if="!isServer && data.mode == 'tls'">
+              <v-switch
+                v-model="optionCredentials"
+                color="primary"
+                :label="$t('types.openvpn.credentials')"
+                hide-details
+              />
+            </v-list-item>
+            <v-list-item v-if="!isServer && data.mode == 'static_key'">
+              <v-switch
+                v-model="optionPeerIpv6"
+                color="primary"
+                :label="$t('types.openvpn.peerAddressIpv6')"
+                hide-details
+              />
+            </v-list-item>
+            <v-list-item v-if="data.mode != 'static_key'">
+              <v-switch
+                v-model="optionDataCiphers"
+                color="primary"
+                :label="$t('types.openvpn.dataCiphers')"
+                hide-details
+              />
+            </v-list-item>
+            <v-list-item>
+              <v-switch
+                v-model="optionAuth"
+                color="primary"
+                :label="$t('types.openvpn.auth')"
+                hide-details
+              />
+            </v-list-item>
+            <v-list-item>
+              <v-switch
+                v-model="optionName"
+                color="primary"
+                :label="$t('types.openvpn.interfaceName')"
+                hide-details
+              />
+            </v-list-item>
+            <v-list-item>
+              <v-switch
+                v-model="optionMtu"
+                color="primary"
+                label="MTU"
+                hide-details
+              />
+            </v-list-item>
+            <v-list-item v-if="isServer">
+              <v-switch
+                v-model="optionMaxClients"
+                color="primary"
+                :label="$t('types.openvpn.maxClients')"
+                hide-details
+              />
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-menu>
+    </v-card-actions>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { Endpoint } from '@/types/endpoints'
 
 // One form serves both openvpn-client and openvpn-server, so it takes the
@@ -368,6 +441,8 @@ const model = defineModel<Endpoint>('data', { required: true })
 // returns the same object, so edits still reach the parent.
 const data = computed(() => model.value as unknown as OpenVpnData)
 
+const menu = ref(false)
+
 const modes = [
   { title: 'TLS', value: 'tls' },
   { title: 'Static Key', value: 'static_key' },
@@ -377,6 +452,25 @@ const keyDirections = [
   { title: 'Server', value: 'server' },
   { title: 'Client', value: 'client' },
 ]
+
+// The names sing-openvpn accepts (options_validation.go). A static_key tunnel
+// can only use the CBC ones; a TLS session also takes the AEAD ciphers, which
+// lead the list as the ones to prefer, and the CFB/OFB stream forms.
+const cbcCiphers = [
+  'AES-256-CBC', 'AES-192-CBC', 'AES-128-CBC',
+  'CAMELLIA-256-CBC', 'CAMELLIA-192-CBC', 'CAMELLIA-128-CBC',
+  'ARIA-256-CBC', 'ARIA-192-CBC', 'ARIA-128-CBC',
+  'SEED-CBC', 'SM4-CBC', 'CAST5-CBC', 'BF-CBC',
+  'DES-EDE3-CBC', 'DES-EDE-CBC', 'DES-CBC',
+]
+const staticCiphers = [...cbcCiphers, 'NONE']
+const tlsCiphers = [
+  'AES-256-GCM', 'AES-192-GCM', 'AES-128-GCM', 'CHACHA20-POLY1305',
+  ...cbcCiphers,
+  'AES-256-CFB', 'AES-192-CFB', 'AES-128-CFB',
+  'AES-256-OFB', 'AES-192-OFB', 'AES-128-OFB',
+]
+const digests = ['SHA256', 'SHA384', 'SHA512', 'SHA224', 'SHA1', 'RIPEMD160', 'MD5', 'NONE']
 
 // Each mode rejects the other's cipher options outright, so switching has
 // to clear the ones that no longer apply. static_key additionally requires
@@ -389,20 +483,12 @@ const mode = computed({
     if (v === 'static_key') {
       delete data.value.data_ciphers
       delete data.value.data_ciphers_fallback
-      if (!data.value.cipher || data.value.cipher.includes('GCM')) {
+      if (!data.value.cipher || !staticCiphers.includes(data.value.cipher)) {
         data.value.cipher = 'AES-256-CBC'
       }
     } else {
       delete data.value.cipher
     }
-  },
-})
-
-const dataCiphers = computed({
-  get: (): string[] => data.value.data_ciphers ?? [],
-  set: (v: string[]) => {
-    if (v?.length) data.value.data_ciphers = v
-    else delete data.value.data_ciphers
   },
 })
 
@@ -423,13 +509,72 @@ const networks = computed((): { title: string; value: string }[] => {
   ])
 })
 
-const mtu = computed({
-  get: (): number => data.value.mtu ?? 0,
-  set: (v: number) => { data.value.mtu = v > 0 ? v : undefined },
+// Optional fields stay out of the form, and out of the saved config, until
+// switched on from the options menu.
+const optionCredentials = computed({
+  get: (): boolean => data.value.username !== undefined || data.value.password !== undefined,
+  set: (v: boolean) => {
+    if (v) {
+      data.value.username = ''
+      data.value.password = ''
+    } else {
+      delete data.value.username
+      delete data.value.password
+    }
+  },
 })
 
-const maxClients = computed({
-  get: (): number => data.value.max_clients ?? 0,
-  set: (v: number) => { data.value.max_clients = v > 0 ? v : undefined },
+const optionPeerIpv6 = computed({
+  get: (): boolean => data.value.peer_address_ipv6 !== undefined,
+  set: (v: boolean) => {
+    if (v) data.value.peer_address_ipv6 = ''
+    else delete data.value.peer_address_ipv6
+  },
+})
+
+// Starts from OpenVPN's own default list, so turning it on changes nothing
+// until the list is edited.
+const optionDataCiphers = computed({
+  get: (): boolean => data.value.data_ciphers !== undefined || data.value.data_ciphers_fallback !== undefined,
+  set: (v: boolean) => {
+    if (v) {
+      data.value.data_ciphers = ['AES-256-GCM', 'AES-128-GCM', 'CHACHA20-POLY1305']
+    } else {
+      delete data.value.data_ciphers
+      delete data.value.data_ciphers_fallback
+    }
+  },
+})
+
+const optionAuth = computed({
+  get: (): boolean => data.value.auth !== undefined,
+  set: (v: boolean) => {
+    if (v) data.value.auth = 'SHA256'
+    else delete data.value.auth
+  },
+})
+
+const optionName = computed({
+  get: (): boolean => data.value.name !== undefined,
+  set: (v: boolean) => {
+    if (v) data.value.name = ''
+    else delete data.value.name
+  },
+})
+
+const optionMtu = computed({
+  get: (): boolean => data.value.mtu !== undefined,
+  set: (v: boolean) => {
+    if (v) data.value.mtu = 1500
+    else delete data.value.mtu
+  },
+})
+
+const optionMaxClients = computed({
+  get: (): boolean => data.value.max_clients !== undefined,
+  set: (v: boolean) => {
+    if (v) data.value.max_clients = 100
+    else delete data.value.max_clients
+  },
 })
 </script>

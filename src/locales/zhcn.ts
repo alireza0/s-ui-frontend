@@ -264,6 +264,7 @@ export default {
       system: "系统接口",
       noUdp: "禁用 UDP (DTLS)",
       ipv6Disabled: "禁用 IPv6",
+      options: "OpenConnect 选项",
       tls: {
         ca: "证书颁发机构",
         caPath: "证书颁发机构路径",
@@ -291,6 +292,8 @@ export default {
       duplicateCn: "允许重复 CN",
       dataCiphers: "数据加密算法",
       dataCiphersFallback: "备用数据加密算法",
+      options: "OpenVPN 选项",
+      credentials: "登录凭据",
       tls: {
         ca: "证书颁发机构",
         caPath: "证书颁发机构路径",

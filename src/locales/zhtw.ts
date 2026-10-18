@@ -264,6 +264,7 @@ export default {
       system: "系統介面",
       noUdp: "停用 UDP (DTLS)",
       ipv6Disabled: "停用 IPv6",
+      options: "OpenConnect 選項",
       tls: {
         ca: "憑證授權單位",
         caPath: "憑證授權單位路徑",
@@ -291,6 +292,8 @@ export default {
       duplicateCn: "允許重複 CN",
       dataCiphers: "資料加密演算法",
       dataCiphersFallback: "備用資料加密演算法",
+      options: "OpenVPN 選項",
+      credentials: "登入憑證",
       tls: {
         ca: "憑證授權單位",
         caPath: "憑證授權單位路徑",
