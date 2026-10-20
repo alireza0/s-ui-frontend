@@ -689,7 +689,8 @@ export default {
       secret: "Секрет",
       defaultMode: "Режим по умолчанию",
       allowOrigin: "Разрешить источник",
-      allowPrivate: "Разрешить частную сеть"
+      allowPrivate: "Разрешить частную сеть",
+      gcPercent: "Процент GC",
     },
   },
   quic: {

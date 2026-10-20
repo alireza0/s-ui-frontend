@@ -692,6 +692,7 @@ export default {
       defaultMode: "Default Mode",
       allowOrigin: "Allow Origin",
       allowPrivate: "Allow Private Network",
+      gcPercent: "GC Percent",
     },
   },
   quic: {

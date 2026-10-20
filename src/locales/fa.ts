@@ -690,6 +690,7 @@ export default {
       defaultMode: "حالت پیش‌فرض",
       allowOrigin: "اجازه از مبدا",
       allowPrivate: "اجازه شبکه خصوصی",
+      gcPercent: "درصد GC",
     },
   },
   quic: {

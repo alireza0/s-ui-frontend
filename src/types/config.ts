@@ -77,6 +77,13 @@ interface Experimental {
   cache_file?: CacheFile
   clash_api?: ClashApi
   v2ray_api?: V2rayApi
+  debug?: Debug
+}
+
+interface Debug {
+  listen?: string
+  gc_percent?: number
+  memory_limit?: string
 }
 
 interface CacheFile {

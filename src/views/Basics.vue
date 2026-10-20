@@ -523,6 +523,72 @@
             />
           </v-col>
         </v-row>
+        <v-row>
+          <v-col class="v-card-subtitle">
+            Debug
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col
+            cols="12"
+            sm="6"
+            md="3"
+            lg="2"
+          >
+            <v-switch
+              v-model="enableDebug"
+              color="primary"
+              :label="$t('enable')"
+              hide-details
+            />
+          </v-col>
+          <template v-if="appConfig.experimental.debug">
+            <v-col
+              cols="12"
+              sm="6"
+              md="3"
+              lg="2"
+            >
+              <v-text-field
+                v-model="appConfig.experimental.debug.listen"
+                hide-details
+                clearable
+                placeholder="127.0.0.1:6060"
+                :label="$t('objects.listen')"
+                @click:clear="delete appConfig.experimental.debug.listen"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="3"
+              lg="2"
+            >
+              <v-text-field
+                v-model="debugMemoryLimit"
+                hide-details
+                clearable
+                placeholder="200mb"
+                :label="$t('types.oomKiller.memoryLimit')"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="3"
+              lg="2"
+            >
+              <v-text-field
+                v-model.number="debugGcPercent"
+                type="number"
+                hide-details
+                clearable
+                placeholder="100"
+                :label="$t('basic.exp.gcPercent')"
+              />
+            </v-col>
+          </template>
+        </v-row>
       </v-expansion-panel-text>
     </v-expansion-panel>
   </v-expansion-panels>
@@ -655,6 +721,30 @@ const enableClashApi = computed({
 const enableV2rayApi = computed({
   get() { return appConfig.value.experimental.v2ray_api != undefined },
   set(v:boolean) { appConfig.value.experimental.v2ray_api = v ? { listen: '127.0.0.1:8080', stats: { enabled: false, inbounds: [], outbounds: [], users: [] }} : undefined }
+})
+
+const enableDebug = computed({
+  get() { return appConfig.value.experimental.debug != undefined },
+  set(v:boolean) { appConfig.value.experimental.debug = v ? {} : undefined }
+})
+
+// sing-box rejects an empty memory_limit, so a cleared field drops the key.
+const debugMemoryLimit = computed({
+  get() { return appConfig.value.experimental.debug?.memory_limit ?? '' },
+  set(v:string|null) {
+    if (!appConfig.value.experimental.debug) return
+    if (v) appConfig.value.experimental.debug.memory_limit = v
+    else delete appConfig.value.experimental.debug.memory_limit
+  }
+})
+
+const debugGcPercent = computed({
+  get() { return appConfig.value.experimental.debug?.gc_percent },
+  set(v:number|string|null) {
+    if (!appConfig.value.experimental.debug) return
+    if (typeof v == 'number') appConfig.value.experimental.debug.gc_percent = v
+    else delete appConfig.value.experimental.debug.gc_percent
+  }
 })
 
 const origin = computed({

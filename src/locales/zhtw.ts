@@ -692,6 +692,7 @@ export default {
       defaultMode: "預設模式",
       allowOrigin: "允許的來源",
       allowPrivate: "允許私有網路",
+      gcPercent: "GC 百分比",
     },
   },
   quic: {

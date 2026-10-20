@@ -690,6 +690,7 @@ export default {
       defaultMode: "Chế độ mặc định",
       allowOrigin: "Cho phép nguồn gốc",
       allowPrivate: "Cho phép mạng riêng",
+      gcPercent: "Phần trăm GC",
     },
   },
   quic: {

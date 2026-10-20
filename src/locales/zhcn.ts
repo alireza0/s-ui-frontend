@@ -690,6 +690,7 @@ export default {
       defaultMode: "默认模式",
       allowOrigin: "允许来源",
       allowPrivate: "允许私有网络",
+      gcPercent: "GC 百分比",
     },
   },
   quic: {
