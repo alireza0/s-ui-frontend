@@ -73,6 +73,7 @@
             justify-self="center"
           >
             <v-icon
+              :aria-label="$t('actions.del')"
               color="error"
               icon="mdi-delete"
               @click="data.verify_client_url?.splice(index, 1)"
@@ -123,6 +124,7 @@
             justify-self="center"
           >
             <v-icon
+              :aria-label="$t('actions.del')"
               color="error"
               icon="mdi-delete"
               @click="data.mesh_with?.splice(index, 1)"

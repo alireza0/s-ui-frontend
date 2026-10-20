@@ -27,6 +27,7 @@
               :label="$t('stats.autoRefresh')"
             />
             <v-icon
+              :aria-label="$t('actions.update')"
               icon="mdi-refresh"
               :class="{ 'mdi-spin': loading }"
               @click="loadData"
@@ -39,6 +40,7 @@
               </v-tooltip>
             </v-icon>
             <v-icon
+              :aria-label="$t('actions.close')"
               icon="mdi-close"
               @click="$emit('close')"
             />

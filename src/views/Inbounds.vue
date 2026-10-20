@@ -125,6 +125,7 @@
         <v-divider />
         <v-card-actions style="padding: 0;">
           <v-btn
+            :aria-label="$t('actions.edit')"
             icon="mdi-file-edit"
             @click="showModal(item.id)"
           >
@@ -136,6 +137,7 @@
             />
           </v-btn>
           <v-btn
+            :aria-label="$t('actions.del')"
             icon="mdi-file-remove"
             style="margin-inline-start:0;"
             color="warning"
@@ -178,6 +180,7 @@
             </v-card>
           </v-overlay>
           <v-btn
+            :aria-label="$t('actions.clone')"
             icon="mdi-content-duplicate"
             :loading="cloneLoading"
             @click="clone(item.id)"
@@ -191,6 +194,7 @@
           </v-btn>
           <v-btn
             v-if="Data().enableTraffic"
+            :aria-label="$t('stats.graphTitle')"
             icon="mdi-chart-line"
             @click="showStats(item.tag)"
           >

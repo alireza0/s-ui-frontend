@@ -91,6 +91,7 @@
       >
         <template #activator="{ props }">
           <v-btn
+            :aria-label="$t('a11y.tools')"
             v-bind="props"
             hide-details
             variant="text"
@@ -144,6 +145,7 @@
       >
         <template #activator="{ props }">
           <v-btn
+            :aria-label="$t('a11y.filter')"
             v-bind="props"
             hide-details
             variant="text"
@@ -349,6 +351,7 @@
         </template>
         <template #item.actions="{ item }">
           <v-icon
+            :aria-label="$t('actions.edit')"
             class="me-2"
             @click="showModal(item.id)"
           >
@@ -361,6 +364,7 @@
           >
             <template #activator="{ props }">
               <v-icon
+                :aria-label="$t('actions.del')"
                 class="me-2"
                 color="error"
                 v-bind="props"
@@ -393,6 +397,7 @@
             </v-card>
           </v-menu>
           <v-icon
+            :aria-label="$t('a11y.qrCode')"
             class="me-2"
             @click="showQrCode(item.id)"
           >
@@ -400,6 +405,7 @@
           </v-icon>
           <v-icon
             v-if="Data().enableTraffic"
+            :aria-label="$t('stats.graphTitle')"
             icon="mdi-chart-line"
             @click="showStats(item.name)"
           >

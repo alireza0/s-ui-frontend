@@ -20,6 +20,10 @@ export const i18n = createI18n({
   },
 })
 
+// Screen readers pick their voice from the page language, and index.html can
+// only say "en". A locale change reloads the page, so setting it once is enough.
+document.documentElement.lang = ({ zhHans: 'zh-Hans', zhHant: 'zh-Hant' } as Record<string, string>)[i18n.global.locale.value] ?? i18n.global.locale.value
+
 export const locale = (() => {
   const l = i18n.global.locale.value
   switch (l) {

@@ -154,6 +154,7 @@
               <v-spacer />
               <v-col cols="auto">
                 <v-btn
+                  :aria-label="$t('actions.generate')"
                   variant="tonal"
                   density="compact"
                   icon="mdi-key-star"
@@ -264,6 +265,7 @@
               <v-spacer />
               <v-col cols="auto">
                 <v-btn
+                  :aria-label="$t('actions.generate')"
                   variant="tonal"
                   density="compact"
                   icon="mdi-key-star"

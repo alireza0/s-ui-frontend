@@ -160,6 +160,7 @@
                 </td>
                 <td>
                   <v-icon
+                    :aria-label="$t('actions.del')"
                     icon="mdi-delete"
                     color="error"
                     @click="importPreview.splice(i, 1)"

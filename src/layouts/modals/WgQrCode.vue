@@ -14,6 +14,7 @@
           <v-spacer />
           <v-col cols="auto">
             <v-icon
+              :aria-label="$t('actions.close')"
               icon="mdi-close-box"
               @click="$emit('close')"
             />
@@ -30,6 +31,7 @@
           style="text-align: center;"
         >
           <v-chip>{{ $t('types.wg.peer') + ' ' + (i+1) }}</v-chip> <v-icon
+            :aria-label="$t('a11y.download')"
             icon="mdi-download"
             @click="download(l,i)"
           /><br>

@@ -72,6 +72,7 @@
       >
         <template #activator="{ props }">
           <v-btn
+            :aria-label="$t('a11y.tools')"
             v-bind="props"
             hide-details
             variant="text"
@@ -261,6 +262,7 @@
         <v-divider />
         <v-card-actions style="padding: 0;">
           <v-btn
+            :aria-label="$t('actions.edit')"
             icon="mdi-file-edit"
             @click="showRulesetModal(index)"
           >
@@ -271,6 +273,7 @@
             />
           </v-btn>
           <v-btn
+            :aria-label="$t('actions.del')"
             icon="mdi-file-remove"
             style="margin-inline-start:0;"
             color="warning"
@@ -352,6 +355,7 @@
         <v-divider />
         <v-card-actions style="padding: 0;">
           <v-btn
+            :aria-label="$t('actions.edit')"
             icon="mdi-file-edit"
             @click="showRuleModal(index)"
           >
@@ -362,6 +366,7 @@
             />
           </v-btn>
           <v-btn
+            :aria-label="$t('actions.del')"
             icon="mdi-file-remove"
             style="margin-inline-start:0;"
             color="warning"
@@ -375,6 +380,7 @@
           </v-btn>
           <v-spacer />
           <v-btn
+            :aria-label="$t('actions.moveUp')"
             icon="mdi-arrow-up"
             :disabled="index == 0"
             @click="moveRule(index, -1)"
@@ -386,6 +392,7 @@
             />
           </v-btn>
           <v-btn
+            :aria-label="$t('actions.moveDown')"
             icon="mdi-arrow-down"
             style="margin-inline-start:0;"
             :disabled="index == rules.length - 1"

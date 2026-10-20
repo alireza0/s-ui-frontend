@@ -148,6 +148,7 @@
                 <template #append>
                   <v-icon
                     v-tooltip:top="$t('all')"
+                    :aria-label="$t('all')"
                     icon="mdi-set-all"
                     @click="setAllInbounds"
                   />

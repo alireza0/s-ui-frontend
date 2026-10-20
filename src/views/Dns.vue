@@ -187,6 +187,7 @@
         <v-divider />
         <v-card-actions style="padding: 0;">
           <v-btn
+            :aria-label="$t('actions.edit')"
             icon="mdi-file-edit"
             @click="showDnsModal(index)"
           >
@@ -198,6 +199,7 @@
             />
           </v-btn>
           <v-btn
+            :aria-label="$t('actions.del')"
             icon="mdi-file-remove"
             style="margin-inline-start:0;"
             color="warning"
@@ -302,6 +304,7 @@
         <v-divider />
         <v-card-actions style="padding: 0;">
           <v-btn
+            :aria-label="$t('actions.edit')"
             icon="mdi-file-edit"
             @click="showDnsRuleModal(index)"
           >
@@ -313,6 +316,7 @@
             />
           </v-btn>
           <v-btn
+            :aria-label="$t('actions.del')"
             icon="mdi-file-remove"
             style="margin-inline-start:0;"
             color="warning"
@@ -327,6 +331,7 @@
           </v-btn>
           <v-spacer />
           <v-btn
+            :aria-label="$t('actions.moveUp')"
             icon="mdi-arrow-up"
             :disabled="index == 0"
             @click="moveRule(index, -1)"
@@ -338,6 +343,7 @@
             />
           </v-btn>
           <v-btn
+            :aria-label="$t('actions.moveDown')"
             icon="mdi-arrow-down"
             style="margin-inline-start:0;"
             :disabled="index == dnsRules.length - 1"

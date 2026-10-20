@@ -159,6 +159,15 @@ export default {
     password: "Mật khẩu",
     pwRules: "Mật khẩu không thể trống",
   },
+  a11y: {
+    menu: "Menu",
+    language: "Ngôn ngữ",
+    theme: "Giao diện",
+    filter: "Bộ lọc",
+    tools: "Công cụ",
+    download: "Tải xuống",
+    qrCode: "Mã QR",
+  },
   menu: {
     logout: "Đăng xuất",
   },

@@ -12,6 +12,7 @@
           <v-spacer />
           <v-col cols="auto">
             <v-icon
+              :aria-label="$t('actions.close')"
               icon="mdi-close"
               @click="model.visible = false"
             />
@@ -53,6 +54,7 @@
             justify="center"
           >
             <v-btn
+              :aria-label="$t('actions.update')"
               icon="mdi-refresh"
               variant="tonal"
               :loading="loading"

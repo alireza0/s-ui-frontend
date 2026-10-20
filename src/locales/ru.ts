@@ -159,6 +159,15 @@ export default {
     password: "Пароль",
     pwRules: "Пароль не может быть пустым",
   },
+  a11y: {
+    menu: "Меню",
+    language: "Язык",
+    theme: "Тема",
+    filter: "Фильтр",
+    tools: "Инструменты",
+    download: "Скачать",
+    qrCode: "QR-код",
+  },
   menu: {
     logout: "Выйти",
   },

@@ -191,6 +191,7 @@
                     :key="index"
                   >
                     {{ $t('in.addr') }} #{{ (index+1) }} <v-icon
+                      :aria-label="$t('actions.del')"
                       icon="mdi-delete"
                       color="error"
                       @click="inbound.addrs?.splice(index,1)"

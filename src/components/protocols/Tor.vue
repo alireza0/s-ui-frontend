@@ -61,6 +61,7 @@
         justify-self="center"
       >
         <v-icon
+          :aria-label="$t('actions.del')"
           color="error"
           icon="mdi-delete"
           @click="del_torrc_option(index)"

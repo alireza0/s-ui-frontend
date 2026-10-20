@@ -159,6 +159,15 @@ export default {
     password: "密碼",
     pwRules: "密碼不得為空",
   },
+  a11y: {
+    menu: "選單",
+    language: "語言",
+    theme: "主題",
+    filter: "篩選",
+    tools: "工具",
+    download: "下載",
+    qrCode: "QR 碼",
+  },
   menu: {
     logout: "登出",
   },

@@ -182,6 +182,7 @@
                       >({{ percent }}%)</sup>
                     </div>
                     <v-btn
+                      :aria-label="$t('reset')"
                       density="compact"
                       variant="text"
                       icon="mdi-restore"
@@ -267,6 +268,7 @@
                     <template #append>
                       <v-icon
                         v-tooltip:top="$t('all')"
+                        :aria-label="$t('all')"
                         icon="mdi-set-all"
                         @click="setAllInbounds"
                       />
@@ -303,6 +305,7 @@
                   {{ key }}
                   <v-icon
                     v-tooltip:top="$t('reset')"
+                    :aria-label="$t('reset')"
                     icon="mdi-refresh"
                     @click="shuffle(key)"
                   />

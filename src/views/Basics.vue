@@ -208,6 +208,7 @@
           </template>
           <template #item.actions="{ index }">
             <v-btn
+              :aria-label="$t('actions.edit')"
               icon="mdi-file-edit"
               variant="text"
               density="compact"
@@ -221,6 +222,7 @@
               />
             </v-btn>
             <v-btn
+              :aria-label="$t('actions.del')"
               icon="mdi-file-remove"
               variant="text"
               density="compact"

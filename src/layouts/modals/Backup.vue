@@ -11,6 +11,7 @@
           <v-spacer />
           <v-col cols="auto">
             <v-icon
+              :aria-label="$t('actions.close')"
               icon="mdi-close"
               @click="model.visible = false"
             />

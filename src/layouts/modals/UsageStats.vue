@@ -17,11 +17,13 @@
           <v-col cols="auto">
             <v-icon
               v-tooltip:top="$t('actions.update')"
+              :aria-label="$t('actions.update')"
               icon="mdi-refresh"
               class="me-2"
               @click="refresh"
             />
             <v-icon
+              :aria-label="$t('actions.close')"
               icon="mdi-close"
               @click="$emit('update:visible', false)"
             />

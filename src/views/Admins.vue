@@ -80,6 +80,7 @@
         <v-divider />
         <v-card-actions style="padding: 0;">
           <v-btn
+            :aria-label="$t('actions.edit')"
             icon="mdi-account-edit"
             @click="showEditModal(item)"
           >
@@ -91,6 +92,7 @@
             />
           </v-btn>
           <v-btn
+            :aria-label="$t('admin.changes')"
             icon="mdi-list-box-outline"
             @click="showChangesModal(item.username)"
           >

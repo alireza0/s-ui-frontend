@@ -211,6 +211,7 @@
       <v-card style="margin-top: 1rem;">
         <v-card-subtitle>
           {{ $t('types.wg.peer') + ' ' + (Number(index)+1) }} <v-icon
+            :aria-label="$t('actions.del')"
             color="error"
             icon="mdi-delete"
             @click="delPeer(Number(index))"

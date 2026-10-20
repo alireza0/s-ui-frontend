@@ -57,6 +57,7 @@
           align-self="center"
         >
           <v-icon
+            :aria-label="$t('actions.del')"
             color="error"
             icon="mdi-delete"
             @click="delUser(index)"

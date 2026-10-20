@@ -57,6 +57,7 @@
                 <v-menu>
                   <template #activator="{ props }">
                     <v-btn
+                      :aria-label="$t('a11y.theme')"
                       icon
                       v-bind="props"
                     >

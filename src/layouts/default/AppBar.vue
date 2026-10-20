@@ -2,6 +2,7 @@
   <v-app-bar :elevation="5">
     <v-icon
       v-if="isMobile"
+      :aria-label="$t('a11y.menu')"
       icon="mdi-menu"
       @click="$emit('toggleDrawer')"
     />
@@ -28,6 +29,7 @@
     </v-chip>
     <v-btn
       v-tooltip="$t('donate')"
+      :aria-label="$t('donate')"
       icon
       variant="text"
       href="https://donate.alireza0.dev"
@@ -44,6 +46,7 @@
     <v-menu>
       <template #activator="{ props }">
         <v-btn
+          :aria-label="$t('a11y.language')"
           icon
           v-bind="props"
         >
@@ -64,6 +67,7 @@
     <v-menu>
       <template #activator="{ props }">
         <v-btn
+          :aria-label="$t('a11y.theme')"
           icon
           v-bind="props"
         >

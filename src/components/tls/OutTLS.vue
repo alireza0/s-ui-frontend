@@ -54,6 +54,7 @@
           >
             <template #append>
               <v-icon-btn
+                :aria-label="$t('actions.update')"
                 :loading="loading"
                 icon="mdi-refresh"
                 @click="pingCert()"

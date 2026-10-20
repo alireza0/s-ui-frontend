@@ -50,6 +50,7 @@
                   <v-spacer />
                   <v-col cols="auto">
                     <v-icon
+                      :aria-label="$t('actions.close')"
                       icon="mdi-close"
                       @click="menu = false"
                     />
@@ -140,6 +141,7 @@
               <template v-if="i == 'i-sys'">
                 <v-icon
                   v-tooltip:top="$t('actions.update')"
+                  :aria-label="$t('actions.update')"
                   icon="mdi-update"
                   color="primary"
                   size="small"

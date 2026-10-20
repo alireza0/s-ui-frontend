@@ -50,6 +50,7 @@
               {{ $t('objects.rule') + ' ' + (Number(ruleIndex)+1) }}
               <v-icon
                 v-if="ruleData.rules.length>1"
+                :aria-label="$t('actions.del')"
                 icon="mdi-delete"
                 @click="ruleData.rules.splice(ruleIndex,1)"
               />

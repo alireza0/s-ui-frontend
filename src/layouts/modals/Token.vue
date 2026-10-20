@@ -13,6 +13,7 @@
           <v-spacer />
           <v-col cols="auto">
             <v-icon
+              :aria-label="$t('actions.close')"
               icon="mdi-close-box"
               @click="$emit('close')"
             />
@@ -64,6 +65,7 @@
                 >
                   <template #activator="{ props }">
                     <v-icon
+                      :aria-label="$t('actions.del')"
                       class="me-2"
                       color="error"
                       v-bind="props"
@@ -116,6 +118,7 @@
                 <v-spacer />
                 <v-col cols="auto">
                   <v-icon
+                    :aria-label="$t('actions.close')"
                     icon="mdi-close-box"
                     @click="showNewToken = false"
                   />

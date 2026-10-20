@@ -159,6 +159,15 @@ export default {
     password: "کلمه عبور",
     pwRules: "کلمه عبور نمی‌تواند خالی باشد",
   },
+  a11y: {
+    menu: "منو",
+    language: "زبان",
+    theme: "پوسته",
+    filter: "فیلتر",
+    tools: "ابزارها",
+    download: "دانلود",
+    qrCode: "کد QR",
+  },
   menu: {
     logout: "خروج",
   },

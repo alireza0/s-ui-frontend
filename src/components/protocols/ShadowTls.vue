@@ -105,6 +105,7 @@
           <v-col>
             {{ key }}
             <v-icon
+              :aria-label="$t('actions.del')"
               icon="mdi-delete"
               color="error"
               size="small"

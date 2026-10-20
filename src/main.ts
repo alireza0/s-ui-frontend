@@ -39,6 +39,16 @@ const notivue = createNotivue({
   },
 })
 
+// Vuetify gives a clickable v-icon role="button" and a tab stop but no key
+// handling, so it could be focused from the keyboard and never pressed.
+document.addEventListener('keydown', (e) => {
+  const el = e.target as HTMLElement
+  if ((e.key === 'Enter' || e.key === ' ') && el.classList?.contains('v-icon--clickable')) {
+    e.preventDefault()
+    el.click()
+  }
+})
+
 const loading = ref(false)
 
 const app = createApp(App)

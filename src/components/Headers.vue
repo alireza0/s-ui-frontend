@@ -41,6 +41,7 @@
           >
             <template #append>
               <v-icon
+                :aria-label="$t('actions.del')"
                 color="error"
                 icon="mdi-delete"
                 @click="del_header(index)"
