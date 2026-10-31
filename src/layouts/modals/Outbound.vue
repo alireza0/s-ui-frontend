@@ -54,7 +54,7 @@
                   />
                 </v-col>
               </v-row>
-              <v-row v-if="!NoServer.includes(outbound.type)">
+              <v-row v-if="!NoServer.includes(outbound.type) && !viaRealm">
                 <v-col
                   cols="12"
                   sm="6"
@@ -283,6 +283,12 @@ export default {
       NoDial: [OutTypes.Selector, OutTypes.URLTest],
       NoServer: [OutTypes.Direct, OutTypes.Selector, OutTypes.URLTest, OutTypes.Tor],
     }
+  },
+  computed: {
+    // A hysteria2 outbound on a realm finds the server there and names none.
+    viaRealm(): boolean {
+      return (this.outbound as { realm?: object }).realm != undefined
+    },
   },
   watch: {
     visible(newValue) {

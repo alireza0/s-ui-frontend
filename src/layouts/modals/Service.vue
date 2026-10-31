@@ -73,6 +73,10 @@
           v-if="srv.type == srvTypes.OOMKiller"
           :data="srv"
         />
+        <HysteriaRealm
+          v-if="srv.type == srvTypes.HysteriaRealm"
+          :data="srv"
+        />
         <InTLS
           v-if="HasTls.includes(srv.type)"
           :inbound="srv"
@@ -114,11 +118,12 @@ import Ocm from '@/components/services/Ocm.vue'
 import Ccm from '@/components/services/Ccm.vue'
 import Api from '@/components/services/Api.vue'
 import OomKiller from '@/components/services/OomKiller.vue'
+import HysteriaRealm from '@/components/services/HysteriaRealm.vue'
 import InTLS from '@/components/tls/InTLS.vue'
 import SSMapi from '@/components/services/SSMAPI.vue'
 import Data from '@/store/modules/data'
 export default {
-  components: { DocLink, Listen, InTLS, Derp, Ocm, Ccm, SSMapi, Api, OomKiller },
+  components: { DocLink, Listen, InTLS, Derp, Ocm, Ccm, SSMapi, Api, OomKiller, HysteriaRealm },
   props: {
     visible: { type: Boolean, required: true },
     // A JSON string of the service being edited, empty when adding a new one.
@@ -137,7 +142,7 @@ export default {
       tab: "t1",
       loading: false,
       srvTypes: SrvTypes,
-      HasTls: [SrvTypes.DERP, SrvTypes.SSMAPI, SrvTypes.OCM, SrvTypes.CCM, SrvTypes.API],
+      HasTls: [SrvTypes.DERP, SrvTypes.SSMAPI, SrvTypes.OCM, SrvTypes.CCM, SrvTypes.API, SrvTypes.HysteriaRealm],
       // oom-killer has no listen options at all
       NoListen: [SrvTypes.OOMKiller],
     }

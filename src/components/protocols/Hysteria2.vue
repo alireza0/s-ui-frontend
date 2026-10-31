@@ -242,7 +242,7 @@
               </v-list-item>
             </template>
             <template v-else>
-              <v-list-item>
+              <v-list-item v-if="!optionRealm">
                 <v-switch
                   v-model="optionMPort"
                   color="primary"
@@ -251,10 +251,22 @@
                 />
               </v-list-item>
             </template>
+            <v-list-item>
+              <v-switch
+                v-model="optionRealm"
+                color="primary"
+                :label="$t('types.hy.realm')"
+                hide-details
+              />
+            </v-list-item>
           </v-list>
         </v-card>
       </v-menu>
     </v-card-actions>
+    <Hysteria2Realm
+      v-if="data.realm != undefined"
+      :data="data.realm"
+    />
     <QuicFields
       :data="model"
       quic
@@ -267,9 +279,10 @@ import { computed, ref } from 'vue'
 import QuicFields from '@/components/QuicFields.vue'
 import Network from '@/components/Network.vue'
 import Headers from '@/components/Headers.vue'
+import Hysteria2Realm from '@/components/Hysteria2Realm.vue'
 import { i18n } from '@/locales'
 import { Inbound } from '@/types/inbounds'
-import { Outbound } from '@/types/outbounds'
+import { Outbound, Hysteria2Realm as Realm } from '@/types/outbounds'
 
 // The masquerade is either a bare URL string or one of the object forms; the
 // type field picks which of the object fields apply.
@@ -296,8 +309,11 @@ interface Hysteria2Data {
   }
   masquerade?: string | Hysteria2Masquerade
   password?: string
+  server?: string
+  server_port?: number
   server_ports?: string[]
   hop_interval?: string
+  realm?: Realm
 }
 
 // The parent owns the object and this component edits it in place, so it is a
@@ -309,7 +325,7 @@ const model = defineModel<Inbound | Outbound>('data', { required: true })
 // returns the same object, so edits still reach the parent.
 const data = computed(() => model.value as unknown as Hysteria2Data)
 
-defineProps<{
+const options = defineProps<{
   direction: 'in' | 'out' | 'out_json'
 }>()
 
@@ -368,6 +384,21 @@ const optionObfs = computed({
 const optionMasq = computed({
   get: (): boolean => data.value.masquerade != undefined,
   set: (v: boolean) => { data.value.masquerade = v ? "" : undefined },
+})
+
+// An outbound reaching the server through a realm must not name the server
+// itself, so turning the realm on clears the address and the port hopping.
+const optionRealm = computed({
+  get: (): boolean => data.value.realm != undefined,
+  set: (v: boolean) => {
+    data.value.realm = v ? { server_url: '', realm_id: '', stun_servers: [] } : undefined
+    if (v && options.direction == 'out') {
+      delete data.value.server
+      delete data.value.server_port
+      delete data.value.server_ports
+      delete data.value.hop_interval
+    }
+  },
 })
 
 const optionMPort = computed({

@@ -10,6 +10,7 @@ export const SrvTypes = {
   CCM: 'ccm', 
   API: 'api',
   OOMKiller: 'oom-killer',
+  HysteriaRealm: 'hysteria-realm',
 }
 
 type SrvType = typeof SrvTypes[keyof typeof SrvTypes]
@@ -96,6 +97,13 @@ export interface OOMKiller extends SrvBasics {
   max_interval?: string
 }
 
+// The rendezvous hysteria2 inbounds and outbounds meet on for NAT traversal.
+// Without TLS it serves plain HTTP/1.1.
+export interface HysteriaRealm extends SrvBasics {
+  tls?: iTls
+  users: { name: string; token: string; max_realms?: number }[]
+}
+
 type InterfaceMap = {
   derp: DERP
   resolved: Resolved
@@ -104,6 +112,7 @@ type InterfaceMap = {
   ccm: CCM
   api: API
   'oom-killer': OOMKiller
+  'hysteria-realm': HysteriaRealm
 }
 
 export type Srv = InterfaceMap[keyof InterfaceMap]
@@ -116,6 +125,7 @@ const defaultValues: Record<SrvType, Srv> = {
   ccm: { type: 'ccm', id: 0, tag: '', listen: '::', listen_port: 8080, tls_id: 0, users: [] } as CCM,
   api: <API>{ type: 'api', listen: '127.0.0.1', listen_port: 9090, tls_id: 0 },
   'oom-killer': <OOMKiller>{ type: 'oom-killer' },
+  'hysteria-realm': { type: 'hysteria-realm', id: 0, tag: '', listen: '::', listen_port: 8443, tls_id: 0, users: [] } as HysteriaRealm,
 }
 
 export function createSrv<T extends Srv>(type: string, json?: Partial<T>): Srv {

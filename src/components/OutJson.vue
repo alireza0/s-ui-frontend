@@ -137,7 +137,20 @@
         </v-col>
       </template>
     </v-row>
-    <v-row v-if="[inTypes.Hysteria, inTypes.Hysteria2].includes(type)">
+    <v-row v-if="viaRealm">
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+      >
+        <v-text-field
+          v-model="realmToken"
+          :label="$t('types.hy.clientToken')"
+          hide-details
+        />
+      </v-col>
+    </v-row>
+    <v-row v-else-if="[inTypes.Hysteria, inTypes.Hysteria2].includes(type)">
       <v-col
         cols="12"
         sm="8"
@@ -205,6 +218,7 @@ interface OutJsonFields {
   hop_interval?: string
   udp_relay_mode?: 'native' | 'quic'
   udp_over_stream?: boolean
+  realm?: { token?: string }
 }
 
 interface OutJsonHolder {
@@ -261,6 +275,18 @@ const hysteriaStreamWindow = computed({
     const trimmed = (v ?? '').trim()
     if (trimmed) inData.value.out_json.stream_receive_window = trimmed
     else delete inData.value.out_json.stream_receive_window
+  },
+})
+
+// The rest of the client's realm is copied from the inbound when it is saved;
+// only a token of the clients' own is set here.
+const viaRealm = computed((): boolean => props.type == InTypes.Hysteria2 && (model.value as { realm?: object }).realm != undefined)
+
+const realmToken = computed({
+  get: (): string => inData.value.out_json.realm?.token ?? '',
+  set: (v: string) => {
+    if (v) inData.value.out_json.realm = { ...inData.value.out_json.realm, token: v }
+    else delete inData.value.out_json.realm?.token
   },
 })
 

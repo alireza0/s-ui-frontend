@@ -200,6 +200,23 @@ export interface Hysteria2 extends OutboundBasics, Dial, QuicFields {
   network?: "udp" | "tcp"
   tls: oTls
   brutal_debug?: boolean
+  realm?: Hysteria2Realm
+}
+
+// A hysteria realm rendezvous both sides register on. The server keeps a slot
+// under realm_id and clients find it there; the token must match one of the
+// realm service's users.
+export interface Hysteria2Realm {
+  server_url: string
+  token?: string
+  realm_id: string
+  stun_servers: string[]
+  ip_version?: 0 | 4 | 6
+  port_mapping?: {
+    enabled?: boolean
+    timeout?: string
+    lifetime?: string
+  }
 }
 
 export interface AnyTls extends OutboundBasics, Dial {
