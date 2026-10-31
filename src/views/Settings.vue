@@ -246,6 +246,18 @@
                 hide-details
               />
             </v-col>
+            <v-col
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <v-switch
+                v-model="subRemarkPrefix"
+                color="primary"
+                :label="$t('setting.subRemarkPrefix')"
+                hide-details
+              />
+            </v-col>
           </v-row>
           <v-row>
             <v-col
@@ -411,6 +423,7 @@ const settings = ref({
 	subUpdates: "12",
 	subEncode: "true",
 	subShowInfo: "false",
+	subRemarkPrefix: "true",
 	subURI: "",
 	subCustomHeaders: "",
   subJsonExt: "",
@@ -519,6 +532,11 @@ const subEncode = computed({
 const subShowInfo = computed({
   get: () => { return settings.value.subShowInfo == "true" },
   set: (v:boolean) => { settings.value.subShowInfo = v ? "true" : "false" }
+})
+
+const subRemarkPrefix = computed({
+  get: () => { return settings.value.subRemarkPrefix == "true" },
+  set: (v:boolean) => { settings.value.subRemarkPrefix = v ? "true" : "false" }
 })
 
 const webPort = computed({

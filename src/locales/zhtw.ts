@@ -226,6 +226,7 @@ export default {
     globalResetHint: "Cron 排程；留空 = 停用",
     subEncode: "啟用編碼",
     subInfo: "啟用用戶資訊",
+    subRemarkPrefix: "節點名稱包含用戶備註",
     path: "預設路徑",
     update: "自動更新時間",
     subUri: "訂閱 URI",

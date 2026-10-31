@@ -226,6 +226,7 @@ export default {
     globalResetHint: "Cron 计划；留空 = 关闭",
     subEncode: "启用 Base64 编码",
     subInfo: "启用用户信息",
+    subRemarkPrefix: "节点名称包含用户备注",
     path: "默认路径",
     update: "自动更新时间",
     subUri: "订阅 URI",

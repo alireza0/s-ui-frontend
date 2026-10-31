@@ -226,6 +226,7 @@ export default {
     globalResetHint: "Cron schedule; empty = disabled",
     subEncode: "Enable Encoding",
     subInfo: "Enable Client Info",
+    subRemarkPrefix: "Client Remark in Node Names",
     path: "Default Path",
     update: "Automatic Update Time",
     subUri: "Subscription URI",

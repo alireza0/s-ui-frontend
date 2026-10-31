@@ -226,6 +226,7 @@ export default {
     globalResetHint: "Lịch cron; để trống = tắt",
     subEncode: "Kích hoạt mã hóa",
     subInfo: "Kích hoạt thông tin khách hàng",
+    subRemarkPrefix: "Ghi chú client trong tên node",
     path: "Đường dẫn mặc định",
     update: "Thời gian cập nhật tự động",
     subUri: "URI đăng ký",

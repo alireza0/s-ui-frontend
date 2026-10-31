@@ -226,6 +226,7 @@ export default {
     globalResetHint: "زمان‌بندی cron؛ خالی = غیرفعال",
     subEncode: "رمزگذاری",
     subInfo: "نمایش اطلاعات کاربر",
+    subRemarkPrefix: "نام مستعار کاربر در نام نودها",
     path: "مسیر پیشفرض",
     update: "زمان بروزرسانی خودکار",
     subUri: "آدرس نهایی سابسکریپشن",
