@@ -37,22 +37,24 @@ function _requestKey(config: RequestKeyConfig): string {
 
 api.interceptors.request.use(
     (config) => {
-        // Generate a unique key for the request
-        const requestKey = _requestKey(config)
-        
-        // Check if there is already a pending request with the same key
-        if (pendingRequests.has(requestKey)) {
-            const cancelSource = pendingRequests.get(requestKey)
-            cancelSource?.cancel('Duplicate request cancelled')
+        if (config.method === 'get') {
+            // Generate a unique key for the request
+            const requestKey = _requestKey(config)
+
+            // Check if there is already a pending request with the same key
+            if (pendingRequests.has(requestKey)) {
+                const cancelSource = pendingRequests.get(requestKey)
+                cancelSource?.cancel('Duplicate request cancelled')
+            }
+
+            // Create a new cancel token for the request
+            const cancelSource = axios.CancelToken.source()
+            config.cancelToken = cancelSource.token
+
+            // Store the cancel token in the pending requests map
+            pendingRequests.set(requestKey, cancelSource)
         }
-        
-        // Create a new cancel token for the request
-        const cancelSource = axios.CancelToken.source()
-        config.cancelToken = cancelSource.token
-        
-        // Store the cancel token in the pending requests map
-        pendingRequests.set(requestKey, cancelSource)
-        
+
         if (config.data instanceof FormData) {
             config.headers['Content-Type'] = 'multipart/form-data'
         }

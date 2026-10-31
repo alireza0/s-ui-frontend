@@ -558,18 +558,29 @@ const reloadSys = async () => {
   }
 }
 
-let intervalId: ReturnType<typeof setInterval> | null = null
+// The next poll is scheduled only once the previous one has answered. A fixed
+// interval fired again while a slow api/status was still in flight, and the
+// duplicate cancelled it. The generation stops a poll that was in flight
+// across stopTimer/startTimer from starting a second chain.
+let timerId: ReturnType<typeof setTimeout> | null = null
+let pollGen = 0
 
 const startTimer = () => {
-  intervalId = setInterval(() => {
-    reloadData()
-  }, 2000)
+  const gen = ++pollGen
+  const tick = () => {
+    timerId = setTimeout(async () => {
+      await reloadData()
+      if (gen === pollGen) tick()
+    }, 2000)
+  }
+  tick()
 }
 
 const stopTimer = () => {
-  if (intervalId) {
-    clearInterval(intervalId)
-    intervalId = null
+  pollGen++
+  if (timerId) {
+    clearTimeout(timerId)
+    timerId = null
   }
 }
 
