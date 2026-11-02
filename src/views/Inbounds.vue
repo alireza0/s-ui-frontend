@@ -49,7 +49,20 @@
         elevation="5"
         min-width="200"
         :title="item.tag"
+        :class="{ 'inbound-disabled': item.enable === false }"
       >
+        <template #append>
+          <v-switch
+            :model-value="item.enable !== false"
+            :loading="toggling[item.id]"
+            :disabled="toggling[item.id]"
+            :aria-label="$t('enable')"
+            color="success"
+            density="compact"
+            hide-details
+            @update:model-value="(val:any) => toggleEnable(item, !!val)"
+          />
+        </template>
         <v-card-subtitle style="margin-top: -15px;">
           <v-row>
             <v-col>{{ item.type }}</v-col>
@@ -260,6 +273,19 @@ const delInbound = async (id: number) => {
   if (success) delOverlay.value[index] = false
 }
 
+const toggling = ref<Record<number, boolean>>({})
+
+const toggleEnable = async (item: Inbound, val: boolean) => {
+  if ((item.enable !== false) === val) return
+  toggling.value = { ...toggling.value, [item.id]: true }
+  const full = (await Data().loadInbounds([item.id]))[0]
+  if (full?.id) {
+    full.enable = val
+    await Data().save("inbounds", "edit", full)
+  }
+  toggling.value = { ...toggling.value, [item.id]: false }
+}
+
 let cloneLoading = ref(false)
 
 const clone = async (id: number) => {
@@ -303,3 +329,8 @@ const closeSessions = () => {
   sessions.value.visible = false
 }
 </script>
+<style scoped>
+.inbound-disabled {
+  opacity: 0.6;
+}
+</style>

@@ -56,6 +56,8 @@ interface InboundBasics extends Listen {
   id: number
   type: InType
   tag: string
+  // Absent means enabled; a disabled inbound is kept but not run
+  enable?: boolean
   tls_id: number
   addrs?: Addr[]
   // The outbound block a client link is built from, shaped by protocol.
