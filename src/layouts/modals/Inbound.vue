@@ -301,6 +301,7 @@ export default {
         InTypes.TUIC,
         InTypes.Hysteria2,
         InTypes.Naive,
+        InTypes.Snell,
       ],
       HasTls: [
         InTypes.HTTP,
