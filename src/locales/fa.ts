@@ -385,6 +385,8 @@ export default {
     },
     hy: {
       obfs: "رمز مبهم کننده",
+      minPacketSize: "حداقل اندازهٔ بسته",
+      maxPacketSize: "حداکثر اندازهٔ بسته",
       auth: "رمز احراز هویت",
       hyOptions: "گزینه‌های Hysteria",
       hy2Options: "گزینه‌های Hysteria2",

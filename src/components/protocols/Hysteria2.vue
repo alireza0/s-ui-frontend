@@ -45,9 +45,20 @@
         />
       </v-col>
     </v-row>
-    <v-row>
+    <v-row v-if="data.obfs != undefined">
       <v-col
-        v-if="data.obfs != undefined"
+        cols="12"
+        sm="6"
+        md="4"
+      >
+        <v-select
+          v-model="obfsType"
+          hide-details
+          :label="$t('type')"
+          :items="obfsTypes"
+        />
+      </v-col>
+      <v-col
         cols="12"
         sm="6"
         md="4"
@@ -58,6 +69,36 @@
           hide-details
         />
       </v-col>
+      <template v-if="data.obfs.type == 'gecko'">
+        <v-col
+          cols="12"
+          sm="6"
+          md="4"
+        >
+          <v-text-field
+            v-model.number="minPacketSize"
+            :label="$t('types.hy.minPacketSize')"
+            hide-details
+            type="number"
+            placeholder="512"
+            min="0"
+          />
+        </v-col>
+        <v-col
+          cols="12"
+          sm="6"
+          md="4"
+        >
+          <v-text-field
+            v-model.number="maxPacketSize"
+            :label="$t('types.hy.maxPacketSize')"
+            hide-details
+            type="number"
+            placeholder="1200"
+            min="0"
+          />
+        </v-col>
+      </template>
     </v-row>
     <template v-if="direction == 'in'">
       <v-card
@@ -281,7 +322,7 @@ import Network from '@/components/Network.vue'
 import Headers from '@/components/Headers.vue'
 import Hysteria2Realm from '@/components/Hysteria2Realm.vue'
 import { i18n } from '@/locales'
-import { Inbound } from '@/types/inbounds'
+import { Inbound, Hysteria2Obfs } from '@/types/inbounds'
 import { Outbound, Hysteria2Realm as Realm } from '@/types/outbounds'
 
 // The masquerade is either a bare URL string or one of the object forms; the
@@ -303,10 +344,7 @@ interface Hysteria2Data {
   ignore_client_bandwidth?: boolean
   up_mbps?: number
   down_mbps?: number
-  obfs?: {
-    type?: "salamander"
-    password: string
-  }
+  obfs?: Hysteria2Obfs
   masquerade?: string | Hysteria2Masquerade
   password?: string
   server?: string
@@ -379,6 +417,32 @@ const hop_interval = computed({
 const optionObfs = computed({
   get: (): boolean => data.value.obfs != undefined,
   set: (v: boolean) => { data.value.obfs = v ? { type: "salamander", password: "" } : undefined },
+})
+
+const obfsTypes = ['salamander', 'gecko']
+
+// The packet sizes exist only for gecko, so switching away drops them
+const obfsType = computed({
+  get: (): string => data.value.obfs?.type ?? 'salamander',
+  set: (v: string) => {
+    if (!data.value.obfs) return
+    data.value.obfs.type = <Hysteria2Obfs['type']>v
+    if (v != 'gecko') {
+      delete data.value.obfs.min_packet_size
+      delete data.value.obfs.max_packet_size
+    }
+  },
+})
+
+// Empty leaves the field out, so sing-box applies its own default
+const minPacketSize = computed({
+  get: (): number | undefined => data.value.obfs?.min_packet_size,
+  set: (v: number) => { if (data.value.obfs) data.value.obfs.min_packet_size = v > 0 ? v : undefined },
+})
+
+const maxPacketSize = computed({
+  get: (): number | undefined => data.value.obfs?.max_packet_size,
+  set: (v: number) => { if (data.value.obfs) data.value.obfs.max_packet_size = v > 0 ? v : undefined },
 })
 
 const optionMasq = computed({

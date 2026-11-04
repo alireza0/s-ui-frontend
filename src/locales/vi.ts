@@ -385,6 +385,8 @@ export default {
     },
     hy: {
       obfs: "Mật khẩu đã được Ẩn",
+      minPacketSize: "Kích thước gói tối thiểu",
+      maxPacketSize: "Kích thước gói tối đa",
       auth: "Mật khẩu Xác thực",
       hyOptions: "Tùy chọn Hysteria",
       hy2Options: "Tùy chọn Hysteria2",

@@ -385,6 +385,8 @@ export default {
     },
     hy: {
       obfs: "混淆密码",
+      minPacketSize: "最小包大小",
+      maxPacketSize: "最大包大小",
       auth: "认证密码",
       hyOptions: "Hysteria 选项",
       hy2Options: "Hysteria2 选项",

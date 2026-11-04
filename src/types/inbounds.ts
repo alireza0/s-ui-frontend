@@ -136,13 +136,17 @@ export interface TUIC extends InboundBasics, QuicFields {
   zero_rtt_handshake?: boolean
   heartbeat?: string
 }
+// The packet sizes apply to gecko only; left out, sing-box uses 512 and 1200
+export interface Hysteria2Obfs {
+  type?: "salamander" | "gecko"
+  password: string
+  min_packet_size?: number
+  max_packet_size?: number
+}
 export interface Hysteria2 extends InboundBasics, QuicFields {
   up_mbps?: number
   down_mbps?: number
-  obfs?: {
-    type?: "salamander"
-    password: string
-  }
+  obfs?: Hysteria2Obfs
   ignore_client_bandwidth?: boolean
   masquerade?: string | {
     type: string

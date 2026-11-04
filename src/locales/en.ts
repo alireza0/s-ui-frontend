@@ -385,6 +385,8 @@ export default {
     },
     hy: {
       obfs: "Obfuscated Password",
+      minPacketSize: "Min Packet Size",
+      maxPacketSize: "Max Packet Size",
       auth: "Authentication Password",
       hyOptions: "Hysteria Options",
       hy2Options: "Hysteria2 Options",

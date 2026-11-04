@@ -3,6 +3,7 @@ import { oMultiplex } from "./multiplex"
 import { Transport } from "./transport"
 import { Dial } from "./dial"
 import { QuicFields } from './httpClient'
+import type { Hysteria2Obfs } from './inbounds'
 
 export const OutTypes = {
   Direct: 'direct',
@@ -192,10 +193,7 @@ export interface Hysteria2 extends OutboundBasics, Dial, QuicFields {
   hop_interval: string
   up_mbps?: number
   down_mbps?: number
-  obfs?: {
-    type?: "salamander"
-    password: string
-  }
+  obfs?: Hysteria2Obfs
   password?: string
   network?: "udp" | "tcp"
   tls: oTls
