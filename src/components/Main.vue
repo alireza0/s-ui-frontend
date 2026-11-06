@@ -245,6 +245,7 @@
                   </v-col>
                   <v-col cols="9">
                     <v-chip
+                      v-tooltip:top="{ text: 'Sing-Box v' + tilesData.sys?.coreVersion, disabled: !tilesData.sys?.coreVersion }"
                       density="compact"
                       color="primary"
                     >
@@ -505,6 +506,8 @@ interface SysInfo {
   ipv4: string[]
   ipv6: string[]
   appVersion: string
+  // The linked sing-box module; absent from a binary built without module info
+  coreVersion?: string
   bootTime: number
 }
 
