@@ -48,7 +48,7 @@
             density="compact"
             icon="mdi-key-star"
             :loading="loading"
-            @click="genECH"
+            @click="genDialog = true"
           >
             <v-icon />
             <v-tooltip
@@ -87,7 +87,10 @@
           <v-text-field
             v-model="oTls.ech.query_server_name"
             :label="$t('tls.queryServerName')"
-            hide-details
+            :disabled="hasConfig"
+            :hint="hasConfig ? $t('tls.echQueryDisabled') : ''"
+            :persistent-hint="hasConfig"
+            :hide-details="!hasConfig"
             placeholder="ech.example.com"
           />
         </v-col>
@@ -102,6 +105,50 @@
         </v-col>
       </v-row>
     </template>
+    <v-dialog
+      v-model="genDialog"
+      max-width="520"
+    >
+      <v-card :title="$t('tls.echPublicName')">
+        <v-divider />
+        <v-card-text>
+          <p class="mb-3">
+            {{ $t('tls.echPublicNameAbout') }}
+          </p>
+          <p class="mb-4 text-medium-emphasis">
+            {{ $t('tls.echQueryAbout') }}
+          </p>
+          <v-text-field
+            v-model="publicName"
+            :label="$t('tls.echPublicName')"
+            placeholder="public.example.com"
+            dir="ltr"
+            hide-details
+            autofocus
+            @keyup.enter="genECH"
+          />
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            color="primary"
+            variant="outlined"
+            @click="genDialog = false"
+          >
+            {{ $t('actions.close') }}
+          </v-btn>
+          <v-btn
+            color="primary"
+            variant="tonal"
+            :loading="loading"
+            :disabled="publicName.trim() == ''"
+            @click="genECH"
+          >
+            {{ $t('actions.generate') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-card>
 </template>
 
@@ -145,6 +192,11 @@ const oTls = computed(() => oTlsModel.value as unknown as EchOutTls)
 
 const useEchPath = ref(iTls.value?.ech?.key ? 1 : 0)
 const loading = ref(false)
+// The cleartext outer SNI baked into the generated config. It is only an
+// input to the generator, asked for when generating; sing-box keeps no field
+// for it.
+const genDialog = ref(false)
+const publicName = ref('')
 
 const ech = computed(() => iTls.value.ech as NonNullable<EchInTls['ech']>)
 // The client half is written whenever the server half is, so it is present
@@ -164,20 +216,29 @@ const echKeyText = computed({
   set: (newValue: string) => { ech.value.key = newValue.split('\n') },
 })
 
+// A client with a config uses it and never looks one up, so the query name
+// only matters while the config is empty.
+const hasConfig = computed((): boolean => (oTls.value.ech?.config ?? []).some(l => l.trim() != ''))
+
 const echConfigText = computed({
   get: (): string => oTls.value.ech?.config ? oTls.value.ech.config.join('\n') : '',
   set: (newValue: string) => { oEch.value.config = newValue.split('\n') },
 })
 
 async function genECH() {
+  // Was the real server_name, or the literal '' without one, so the outer SNI
+  // gave away the name ECH is meant to hide
+  const name = publicName.value.trim()
+  if (name == '') return
   loading.value = true
   // The endpoint answers with the generated PEM blocks, one line per entry.
   const msg = await HttpUtils.get<string[]>('api/keypairs', {
     k: "ech",
-    o: iTls.value.server_name ?? "''"
+    o: name
   })
   loading.value = false
   if (msg.success && iTls.value.ech && oTls.value.ech) {
+    genDialog.value = false
     iTls.value.ech.key_path = undefined
     useEchPath.value = 1
     if (msg.obj.length > 0) {
@@ -209,6 +270,8 @@ async function genECH() {
       })
       iTls.value.ech.key = key ?? undefined
       oTls.value.ech.config = config ?? undefined
+      // Has no effect next to the config just written
+      delete oTls.value.ech.query_server_name
 
     } else {
       push.error({
