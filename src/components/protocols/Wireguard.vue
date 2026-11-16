@@ -44,11 +44,11 @@
         md="4"
       >
         <v-text-field
-          v-model.number="data.listen_port"
+          v-model="listenPort"
           :label="$t('in.port')"
           hide-details
           type="number"
-          min="1"
+          min="0"
         />
       </v-col>
       <v-col
@@ -294,6 +294,14 @@ const optionMtu = computed({
 const ifName = computed({
   get: () => data.value.name ?? '',
   set: (v: string) => { data.value.name = v.length > 0 ? v : undefined },
+})
+
+const listenPort = computed({
+  get: () => data.value.listen_port > 0 ? data.value.listen_port : '',
+  set: (v: number | string) => {
+    const port = Number(v)
+    data.value.listen_port = Number.isInteger(port) && port > 0 ? port : 0
+  },
 })
 
 const address = computed({
