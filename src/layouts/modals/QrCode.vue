@@ -97,6 +97,17 @@
                 />
               </v-col>
             </v-row>
+            <v-row>
+              <v-col style="text-align: center;">
+                <v-chip>HAPP (scan only)</v-chip><br>
+                <QrcodeVue
+                  :value="happ"
+                  :size="size"
+                  :margin="1"
+                  style="border-radius: .8rem; cursor: not-allowed;"
+                />
+              </v-col>
+            </v-row>
           </v-window-item>
           <v-window-item value="link">
             <v-row
@@ -150,6 +161,10 @@ export default {
     singbox() {
       const url = Data().subURI + this.client.name + "?format=json"
       return "sing-box://import-remote-profile?url=" +  encodeURIComponent(url) + "#" + this.client.name
+    },
+    // Happ takes the subscription URL as it is, unencoded, after happ://add/.
+    happ() {
+      return "happ://add/" + this.clientSub + "?format=happ"
     },
     clientLinks() {
       return this.client.links?? []
