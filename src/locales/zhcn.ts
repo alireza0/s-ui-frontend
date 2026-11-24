@@ -513,7 +513,9 @@ export default {
     anytls: {
       idleInterval: "空闲会话检查间隔",
       idleTimeout: "空闲会话超时",
-      minIdle: "最小空闲会话数"
+      minIdle: "最小空闲会话数",
+      paddingDefault: "默认",
+      paddingRandom: "随机"
     },
   },
   in: {

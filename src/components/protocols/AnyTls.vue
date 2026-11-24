@@ -14,6 +14,28 @@
           auto-grow
           hide-details
         />
+        <v-btn-toggle
+          :model-value="schemeMode"
+          mandatory
+          density="compact"
+          variant="outlined"
+          class="mt-3"
+        >
+          <v-btn
+            value="default"
+            size="small"
+            @click="useDefaultScheme"
+          >
+            {{ $t('types.anytls.paddingDefault') }}
+          </v-btn>
+          <v-btn
+            value="random"
+            size="small"
+            @click="useRandomScheme"
+          >
+            {{ $t('types.anytls.paddingRandom') }}
+          </v-btn>
+        </v-btn-toggle>
       </v-col>
     </v-row>
     <v-row v-else>
@@ -77,6 +99,7 @@
 import { computed } from 'vue'
 import { Inbound } from '@/types/inbounds'
 import { Outbound } from '@/types/outbounds'
+import { DefaultPaddingScheme, generatePaddingScheme, isDefaultPaddingScheme } from '@/plugins/paddingScheme'
 
 // One form serves both directions: the inbound side carries the padding
 // scheme, the outbound side the password and the idle session tuning.
@@ -108,6 +131,15 @@ const padding_scheme = computed({
   },
   set: (v: string) => { data.value.padding_scheme = v.length > 0 ? v.split("\n") : undefined },
 })
+
+// The scheme switch under the textarea. Its state is derived from the text:
+// the library default reads as "default", anything else as "random".
+// Picking a side rewrites the text -- default restores the library scheme,
+// random rolls a fresh generated one -- and the textarea stays editable
+// either way, so a hand-tuned scheme is just a scheme that is not default.
+const schemeMode = computed(() => (isDefaultPaddingScheme(data.value.padding_scheme) ? 'default' : 'random'))
+const useDefaultScheme = () => { data.value.padding_scheme = [...DefaultPaddingScheme] }
+const useRandomScheme = () => { data.value.padding_scheme = generatePaddingScheme() }
 
 const idleInterval = computed({
   get: (): number => {

@@ -508,6 +508,8 @@ export default {
       idleInterval: "Idle Session Check Interval",
       idleTimeout: "Idle Session Timeout",
       minIdle: "Minimum Idle Session",
+      paddingDefault: "Default",
+      paddingRandom: "Random",
     },
     naive: {
       insecureConcurrency: "Insecure Concurrency",

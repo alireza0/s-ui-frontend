@@ -513,7 +513,9 @@ export default {
     anytls: {
       idleInterval: "Интервал проверки неактивных сессий",
       idleTimeout: "Тайм-аут неактивной сессии",
-      minIdle: "Минимум неактивных сессий"
+      minIdle: "Минимум неактивных сессий",
+      paddingDefault: "По умолчанию",
+      paddingRandom: "Случайная"
     },
   },
   in: {

@@ -508,6 +508,8 @@ export default {
       idleInterval: "閒置工作階段檢查間隔",
       idleTimeout: "閒置工作階段逾時",
       minIdle: "最少閒置工作階段數",
+      paddingDefault: "預設",
+      paddingRandom: "隨機",
     },
     naive: {
       insecureConcurrency: "不安全並行數",
