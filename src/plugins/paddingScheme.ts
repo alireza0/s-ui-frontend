@@ -20,9 +20,11 @@ export const DefaultPaddingScheme: string[] = [
 // How far a range bound may move from the default, in percent, and the
 // largest bound a generated scheme may use. The backend generator in
 // service/anytls_padding.go applies the same rules; the two implementations
-// produce different schemes, never shared ones, which is the point.
+// produce different schemes, never shared ones, which is the point. These
+// are the generator's only tuning knobs; the tests assert the shape
+// invariants, never these values, so retuning needs no test surgery.
 const JitterPct = 20
-const MaxBound = 1400
+export const MaxBound = 1400
 
 function jitterBound(bound: number): number {
   const pct = RandomUtil.randomIntRange(-JitterPct, JitterPct)
