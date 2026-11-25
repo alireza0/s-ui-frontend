@@ -428,6 +428,9 @@ export default {
       ifName: "介面名稱",
       excludeMptcp: "排除 MPTCP",
       fallbackRuleIndex: "iproute2 備援規則索引",
+      endpointIndependentNat: "端點無關 NAT",
+      routeAddr: "路由位址",
+      routeExcludeAddr: "排除路由位址",
     },
     vless: {
       flow: "流控 (Flow)",
@@ -599,6 +602,7 @@ export default {
     rulesetMatchSrc: "規則集 IP CIDR 比對來源",
     preferredBy: "優先使用（出站）",
     interfaceAddr: "介面位址",
+    process: "行程",
     options: "規則選項",
     domainRules: "網域／IP",
     srcIpRules: "來源 IP",

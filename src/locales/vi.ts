@@ -428,6 +428,9 @@ export default {
       ifName: "Tên Giao diện",
       excludeMptcp: "Loại trừ MPTCP",
       fallbackRuleIndex: "Chỉ số quy tắc dự phòng iproute2",
+      endpointIndependentNat: "NAT độc lập endpoint",
+      routeAddr: "Địa chỉ định tuyến",
+      routeExcludeAddr: "Địa chỉ loại trừ định tuyến",
     },
     vless: {
       flow: "Luồng",
@@ -599,6 +602,7 @@ export default {
     rulesetMatchSrc: "Bộ quy tắc IPcidr Phù hợp Nguồn",
     preferredBy: "Ưu tiên theo đầu ra",
     interfaceAddr: "Địa chỉ giao diện",
+    process: "Tiến trình",
     options: "Tùy chọn Quy tắc",
     domainRules: "Tên miền/IP",
     srcIpRules: "IP Nguồn",

@@ -318,6 +318,36 @@
         />
       </v-col>
     </v-row>
+    <v-row v-if="optionProcess">
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+      >
+        <v-select
+          v-model="processOption"
+          hide-details
+          :items="processKeys"
+          @update:model-value="updateProcessOption($event)"
+        />
+      </v-col>
+      <v-col
+        v-if="processKeys.some(k => rule[k] != undefined)"
+        cols="12"
+        sm="6"
+      >
+        <v-textarea
+          v-model="process"
+          :label="$t('rule.process')"
+          hide-details
+          rows="5"
+          no-resize
+          density="compact"
+          append-icon="mdi-arrow-expand"
+          @click:append="openExpTextarea($t('rule.process'), processOption)"
+        />
+      </v-col>
+    </v-row>
     <v-row v-if="optionPreferredBy">
       <v-col
         cols="12"
@@ -481,6 +511,14 @@
             </v-list-item>
             <v-list-item>
               <v-switch
+                v-model="optionProcess"
+                color="primary"
+                :label="$t('rule.process')"
+                hide-details
+              />
+            </v-list-item>
+            <v-list-item>
+              <v-switch
                 v-model="optionPreferredBy"
                 color="primary"
                 :label="$t('rule.preferredBy')"
@@ -536,6 +574,9 @@ interface RuleShape {
   source_ip_is_private?: boolean
   source_port?: number[]
   source_port_range?: string[]
+  process_name?: string[]
+  process_path?: string[]
+  process_path_regex?: string[]
   preferred_by?: string[]
   interface_address?: string[]
   network_interface_address?: string[]
@@ -566,11 +607,16 @@ const interfaceKeys = ['interface_address', 'network_interface_address', 'defaul
 const portKeys = ['port', 'port_range']
 const srcIPKeys = ['source_ip_cidr', 'source_ip_is_private']
 const srcPortKeys = ['source_port', 'source_port_range']
+// Matched against the local process that opened the connection, so these
+// only see traffic originating on the server itself (e.g. through a Tun
+// inbound), never the clients' traffic.
+const processKeys = ['process_name', 'process_path', 'process_path_regex']
 const domainOption = ref('domain')
 const interfaceOption = ref('interface_address')
 const portOption = ref('port')
 const srcIPOption = ref('source_ip_cidr')
 const srcPortOption = ref('source_port')
+const processOption = ref('process_name')
 const protocols = [
   { title: 'HTTP', value: 'http' },
   { title: 'TLS', value: 'tls' },
@@ -660,6 +706,17 @@ const optionSrcPort = computed({
     srcPortOption.value = 'source_port'
   }
 })
+const optionProcess = computed({
+  get() { return processKeys.some(k => rule.value[k] != undefined) },
+  set(v: boolean) {
+    if (v) {
+      rule.value.process_name = []
+    } else {
+      processKeys.forEach(k => delete rule.value[k])
+    }
+    processOption.value = 'process_name'
+  }
+})
 const optionPreferredBy = computed({
   get() { return rule.value.preferred_by != undefined },
   set(v: boolean) { rule.value.preferred_by = v ? [] : undefined }
@@ -741,6 +798,16 @@ const source_port_range = computed({
   get() { return rule.value.source_port_range?.join('\n') ?? '' },
   set(v: string) { rule.value.source_port_range = splitLines(v) }
 })
+const process = computed({
+  get() {
+    const k = processKeys.find(k => rule.value[k] != undefined)
+    return k ? toLines(rule.value[k]) : ''
+  },
+  set(v: string) {
+    const k = processKeys.find(k => rule.value[k] != undefined)
+    if (k) rule.value[k] = splitLines(v)
+  }
+})
 const interface_addr = computed({
   get() {
     const k = interfaceKeys.find(k => rule.value[k] != undefined)
@@ -770,6 +837,10 @@ onMounted(() => {
     const enabledOption = srcPortKeys.filter(k => ruleKeys.includes(k))
     srcPortOption.value = enabledOption.length>0 ? enabledOption[0] : 'source_port'
   }
+  if (optionProcess.value) {
+    const enabledOption = processKeys.filter(k => ruleKeys.includes(k))
+    processOption.value = enabledOption.length>0 ? enabledOption[0] : 'process_name'
+  }
   if (optionInterface.value) {
     const enabledOption = interfaceKeys.filter(k => ruleKeys.includes(k))
     interfaceOption.value = enabledOption.length>0 ? enabledOption[0] : 'interface_address'
@@ -790,6 +861,10 @@ function updateSrcIPOption(option: string) {
 }
 function updateSrcPortOption(option: string) {
   srcPortKeys.forEach(k => delete rule.value[k])
+  rule.value[option] = []
+}
+function updateProcessOption(option: string) {
+  processKeys.forEach(k => delete rule.value[k])
   rule.value[option] = []
 }
 function updateInterfaceOption(option: string) {

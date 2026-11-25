@@ -428,6 +428,9 @@ export default {
       ifName: "Имя интерфейса",
       excludeMptcp: "Исключить MPTCP",
       fallbackRuleIndex: "Индекс правила iproute2 fallback",
+      endpointIndependentNat: "Endpoint Independent NAT",
+      routeAddr: "Маршрутизируемые адреса",
+      routeExcludeAddr: "Исключённые из маршрутизации адреса",
     },
     vless: {
       flow: "Поток",
@@ -599,6 +602,7 @@ export default {
     rulesetMatchSrc: "Набор правил для соответствия источника IPcidr",
     preferredBy: "Предпочтительный исходящий",
     interfaceAddr: "Адрес интерфейса",
+    process: "Процесс",
     options: "Параметры правила",
     domainRules: "Домен/IP",
     srcIpRules: "Источник IP",

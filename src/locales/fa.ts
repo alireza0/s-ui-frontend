@@ -428,6 +428,9 @@ export default {
       ifName: "نام اینترفیس",
       excludeMptcp: "حذف MPTCP",
       fallbackRuleIndex: "شاخص قوانین fallback در iproute2",
+      endpointIndependentNat: "NAT مستقل از endpoint",
+      routeAddr: "آدرس‌های مسیریابی",
+      routeExcludeAddr: "آدرس‌های مستثنی از مسیریابی",
     },
     vless: {
       flow: "جریان",
@@ -599,6 +602,7 @@ export default {
     rulesetMatchSrc: "تطابق آدرس‌های مبدا با مجموعه قوانین",
     preferredBy: "ترجیح داده شده توسط",
     interfaceAddr: "آدرس رابط شبکه",
+    process: "پروسه",
     options: "گزینه‌های قوانین",
     domainRules: "دامنه/آدرس",
     srcIpRules: "آدرس مبدا",

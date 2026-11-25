@@ -166,6 +166,7 @@ export interface Tun extends InboundBasics {
   mtu?: number
   udp_timeout?: string
   stack?: string
+  endpoint_independent_nat?: boolean
   auto_route?: boolean
   strict_route?: boolean
   auto_redirect?: boolean
@@ -173,8 +174,8 @@ export interface Tun extends InboundBasics {
   auto_redirect_iproute2_fallback_rule_index?: number
   // auto_redirect_input_mark?: string
   // auto_redirect_output_mark?: string
-  // route_address?: string[]
-  // route_exclude_address?: string[]
+  route_address?: string[]
+  route_exclude_address?: string[]
   // include_interface?: string[]
   // exclude_interface?: string[]
   // include_uid?: string[]

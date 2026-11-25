@@ -428,6 +428,9 @@ export default {
       ifName: "Interface Name",
       excludeMptcp: "Exclude MPTCP",
       fallbackRuleIndex: "iproute2 Fallback Rule Index",
+      endpointIndependentNat: "Endpoint Independent NAT",
+      routeAddr: "Route Addresses",
+      routeExcludeAddr: "Route Exclude Addresses",
     },
     vless: {
       flow: "Flow",
@@ -599,6 +602,7 @@ export default {
     rulesetMatchSrc: "Ruleset IPcidr Match Source",
     preferredBy: "Preferred By (Outbound)",
     interfaceAddr: "Interface Address",
+    process: "Process",
     options: "Rule Options",
     domainRules: "Domain/IP",
     srcIpRules: "Source IP",
