@@ -47,7 +47,7 @@
         </v-row>
       </v-card-title>
       <v-card-subtitle style="margin-top: -20px">
-        {{ $t('objects.' + resource) + " : " + tag }}
+        {{ (displayResource || $t('objects.' + resource)) + " : " + (displayName || tag) }}
       </v-card-subtitle>
       <v-card-text
         class="text-center"
@@ -229,6 +229,8 @@ export default {
     visible: { type: Boolean, required: true },
     resource: { type: String, required: true },
     tag: { type: String, required: true },
+    displayResource: { type: String, default: '' },
+    displayName: { type: String, default: '' },
   },
   emits: ['close'],
   data() {

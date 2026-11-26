@@ -85,6 +85,9 @@
                   />
                 </v-col>
               </v-row>
+              <v-row v-if="actionMode === 'add_nodes' || actionMode === 'remove_nodes'">
+                <v-col><NodeSelect v-model="editData.inboundTags" /></v-col>
+              </v-row>
             </v-card-text>
           </v-card>
 
@@ -124,6 +127,7 @@ import { i18n } from '@/locales'
 import Data from '@/store/modules/data';
 import { Client } from '@/types/clients';
 import type { PropType } from 'vue'
+import NodeSelect from '@/features/nodes/components/NodeSelect.vue'
 
 // An inbound the clients can be attached to, as the parent lists them.
 interface InboundTag {
@@ -132,7 +136,7 @@ interface InboundTag {
 }
 
 export default {
-  components: { Users },
+  components: { Users, NodeSelect },
   props: {
     visible: { type: Boolean, required: true },
     clients: { type: Array as PropType<Client[]>, required: true },
@@ -147,6 +151,8 @@ export default {
         { title: i18n.global.t('bulk.changeLimits'), value: 'change_limits' },
         { title: i18n.global.t('bulk.addInbounds'), value: 'add_inbounds' },
         { title: i18n.global.t('bulk.removeInbounds'), value: 'remove_inbounds' },
+        { title: i18n.global.t('nodeUI.addNodes'), value: 'add_nodes' },
+        { title: i18n.global.t('nodeUI.removeNodes'), value: 'remove_nodes' },
         { title: i18n.global.t('actions.delbulk'), value: 'delete_bulk' },
       ],
       editData: {
@@ -225,6 +231,12 @@ export default {
             c.inbounds = c.inbounds.filter((i: number) => !this.editData.inboundTags.includes(i))
           })
           break
+        case 'add_nodes':
+          targetClients.forEach((c:Client)=>{c.nodes=[...new Set([...(c.nodes??[]),...this.editData.inboundTags])].sort((a,b)=>a-b)})
+          break
+        case 'remove_nodes':
+          targetClients.forEach((c:Client)=>{c.nodes=(c.nodes??[]).filter(id=>!this.editData.inboundTags.includes(id))})
+          break
         case 'delete_bulk': {
           const success = await Data().save("clients", "delbulk", targetClients.map((c: Client) => c.id))
           if (success) this.closeModal()
@@ -232,6 +244,7 @@ export default {
           return
         }
       }
+      targetClients.forEach((client) => { delete client.nodeinbounds })
       const success = await Data().save("clients", 'editbulk', targetClients)
       if (success) this.closeModal()
       this.loading = false

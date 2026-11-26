@@ -84,6 +84,21 @@
                   style="border-radius: 1rem; cursor: copy;"
                   @click="copyToClipboard(clientSub + '?format=clash')"
                 />
+                <div class="d-flex justify-center flex-wrap ga-2">
+                  <v-btn
+                    variant="text"
+                    @click="copyToClipboard(clientSub+'?format=clash')"
+                  >
+                    {{ $t('nodeUI.copyClash') }}
+                  </v-btn><v-btn
+                    variant="text"
+                    :href="clientSub+'?format=clash'"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    {{ $t('nodeUI.openClash') }}
+                  </v-btn>
+                </div>
               </v-col>
             </v-row>
             <v-row>
@@ -110,21 +125,28 @@
             </v-row>
           </v-window-item>
           <v-window-item value="link">
-            <v-row
-              v-for="(l, index) in clientLinks"
-              :key="index"
+            <NodeClientLinks
+              v-slot="{ links: displayedLinks }"
+              :client-id="id"
+              :active="visible && tab === 'link' && !!client.nodes?.length"
+              :local-links="clientLinks"
             >
-              <v-col style="text-align: center;">
-                <v-chip>{{ l.remark?? $t('client.' + l.type) }}</v-chip><br>
-                <QrcodeVue
-                  :value="l.uri"
-                  :size="size"
-                  :margin="1"
-                  style="border-radius: .5rem; cursor: copy;"
-                  @click="copyToClipboard(l.uri)"
-                />
-              </v-col>
-            </v-row>
+              <v-row
+                v-for="(l, index) in displayedLinks"
+                :key="index"
+              >
+                <v-col style="text-align: center;">
+                  <v-chip>{{ l.remark?? $t('client.' + l.type) }}</v-chip><br>
+                  <QrcodeVue
+                    :value="l.uri"
+                    :size="size"
+                    :margin="1"
+                    style="border-radius: .5rem; cursor: copy;"
+                    @click="copyToClipboard(l.uri)"
+                  />
+                </v-col>
+              </v-row>
+            </NodeClientLinks>
           </v-window-item>
         </v-window>
       </v-card-text>
@@ -134,6 +156,7 @@
 
 <script lang="ts">
 import QrcodeVue from 'qrcode.vue'
+import NodeClientLinks from '@/features/nodes/components/NodeClientLinks.vue'
 import Data from '@/store/modules/data'
 import Clipboard from 'clipboard'
 import { i18n } from '@/locales'
@@ -141,7 +164,7 @@ import { push } from 'notivue'
 import { Client } from '@/types/clients'
 
 export default {
-  components: { QrcodeVue },
+  components: { QrcodeVue, NodeClientLinks },
   props: {
     id: { type: Number, required: true },
     visible: { type: Boolean, required: true },
@@ -190,7 +213,16 @@ export default {
       this.client = newData
       this.loading = false
     },
-    copyToClipboard(txt:string) {
+    async copyToClipboard(txt:string) {
+      if (navigator.clipboard?.writeText) {
+        try {
+          await navigator.clipboard.writeText(txt)
+          push.success({ message: i18n.global.t('success') + ": " + i18n.global.t('copyToClipboard'), duration: 5000 })
+          return
+        } catch {
+          // Older browsers and restricted contexts use the existing fallback.
+        }
+      }
       const hiddenButton = document.createElement('button')
       hiddenButton.className = 'clipboard-btn'
       document.body.appendChild(hiddenButton)

@@ -146,7 +146,10 @@
         <v-text-field
           v-model="realmToken"
           :label="$t('types.hy.clientToken')"
+          :type="managedRealmToken ? 'password' : 'text'"
+          :clearable="managedRealmToken && (realmTokenConfigured || !!realmToken)"
           hide-details
+          @click:clear="realmToken = ''"
         />
       </v-col>
     </v-row>
@@ -235,6 +238,8 @@ const inData = computed(() => model.value as unknown as OutJsonHolder)
 
 const props = defineProps<{
   type: string
+  managedRealmToken?: boolean
+  realmTokenConfigured?: boolean
 }>()
 
 // AnyTls and Naive take a whole outbound; they edit the very same object.
@@ -284,8 +289,8 @@ const viaRealm = computed((): boolean => props.type == InTypes.Hysteria2 && (mod
 
 const realmToken = computed({
   get: (): string => inData.value.out_json.realm?.token ?? '',
-  set: (v: string) => {
-    if (v) inData.value.out_json.realm = { ...inData.value.out_json.realm, token: v }
+  set: (v: string | null) => {
+    if (v || props.managedRealmToken) inData.value.out_json.realm = { ...inData.value.out_json.realm, token: v ?? '' }
     else delete inData.value.out_json.realm?.token
   },
 })

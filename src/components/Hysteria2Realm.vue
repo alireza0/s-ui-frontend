@@ -24,6 +24,7 @@
         />
       </v-col>
       <v-col
+        v-if="!hideToken"
         cols="12"
         sm="6"
         md="4"
@@ -31,7 +32,10 @@
         <v-text-field
           v-model="token"
           :label="$t('types.hy.token')"
+          :type="managedToken ? 'password' : 'text'"
+          :clearable="managedToken && (tokenConfigured || !!token)"
           hide-details
+          @click:clear="token = ''"
         />
       </v-col>
       <v-col
@@ -109,6 +113,7 @@ import { Hysteria2Realm } from '@/types/outbounds'
 
 // The parent owns the realm object and this component edits it in place.
 const data = defineModel<Hysteria2Realm>('data', { required: true })
+const props = defineProps<{ hideToken?: boolean; managedToken?: boolean; tokenConfigured?: boolean }>()
 
 const ipVersions = [
   { title: i18n.global.t('all'), value: 0 },
@@ -118,7 +123,7 @@ const ipVersions = [
 
 const token = computed({
   get: (): string => data.value.token ?? '',
-  set: (v: string) => { data.value.token = v.length > 0 ? v : undefined },
+  set: (v: string | null) => { data.value.token = v || (props.managedToken ? '' : undefined) },
 })
 
 // sing-box requires the list, so an empty field keeps an empty one.

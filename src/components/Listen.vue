@@ -6,7 +6,9 @@
         sm="6"
         md="4"
       >
+        <slot name="address-source" />
         <v-text-field
+          v-if="!addressFromSource"
           v-model="data.listen"
           :label="$t('in.addr')"
           hide-details
@@ -14,24 +16,27 @@
         />
       </v-col>
       <v-col
+        v-if="!autoPort"
         cols="12"
         sm="6"
         md="4"
       >
         <v-text-field
           v-model.number="data.listen_port"
+          :disabled="autoPort"
           :label="$t('in.port')"
           hide-details
           type="number"
           min="1"
           max="65535"
           required
+          @input="emit('port-input')"
         />
       </v-col>
     </v-row>
     <v-row>
       <v-col
-        v-if="optionDetour"
+        v-if="allowDetour && optionDetour"
         cols="12"
         sm="6"
         md="4"
@@ -152,7 +157,7 @@
         </template>
         <v-card>
           <v-list>
-            <v-list-item>
+            <v-list-item v-if="allowDetour">
               <v-switch
                 v-model="optionDetour"
                 color="primary"
@@ -221,9 +226,13 @@ const model = defineModel<Inbound | Srv>('data', { required: true })
 const data = computed(() => model.value as unknown as ListenData)
 
 // Destructured so the name does not collide with the v-menu activator slot.
-const { inTags } = defineProps<{
-  inTags: string[]
+const { inTags, autoPort = false, addressFromSource = false, allowDetour = true } = defineProps<{
+  inTags: string[] | {title: string; value: string}[]
+  autoPort?: boolean
+  addressFromSource?: boolean
+  allowDetour?: boolean
 }>()
+const emit=defineEmits<{'port-input':[]}>()
 
 const menu = ref(false)
 
@@ -256,7 +265,11 @@ const optionUDP = computed({
 
 const optionDetour = computed({
   get: (): boolean => data.value.detour != undefined,
-  set: (v: boolean) => { data.value.detour = v ? inTags[0] ?? '' : undefined },
+  set: (v: boolean) => {
+    const first = inTags[0]
+    if (!v) data.value.detour = undefined
+    else data.value.detour = typeof first === 'string' ? first : first?.value ?? ''
+  },
 })
 
 const optionTcpKeepAlive = computed({

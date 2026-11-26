@@ -9,13 +9,13 @@
         <v-select
           v-model="version"
           hide-details
-          :items="[1,2,3]"
+          :items="allowedVersions ?? [1,2,3]"
           :label="$t('version')"
           :disabled="data.id > 0"
         />
       </v-col>
       <v-col
-        v-if="data.password != undefined"
+        v-if="!hidePassword && data.password != undefined"
         cols="12"
         sm="6"
         md="4"
@@ -172,6 +172,8 @@ interface ShadowTlsData {
 
 // The parent owns the object and this component edits it in place, so it is a
 // model rather than a plain prop.
+defineProps<{ allowedVersions?: (1 | 2 | 3)[]; hidePassword?: boolean }>()
+
 const model = defineModel<Inbound>('data', { required: true })
 
 // The parent holds a union and picks this component with a v-if on the type,

@@ -7,6 +7,17 @@ import Data from '@/store/modules/data'
 import axios from 'axios'
 import type { AxiosRequestConfig } from 'axios'
 
+interface HttpHooks {
+  onLogout?: () => void
+  errorMessage?: (message: string) => string | undefined
+}
+
+let httpHooks: HttpHooks = {}
+
+export function registerHttpHooks(hooks: HttpHooks): void {
+  httpHooks = hooks
+}
+
 // The envelope every endpoint answers with. What rides in `obj` depends on the
 // endpoint, so it is unknown until a caller names it: HttpUtils.get<Foo>(url).
 export interface Msg<T = unknown> {
@@ -57,7 +68,7 @@ function _handleMsg(msg: unknown): void {
     } else {
       push.error({
         title: i18n.global.t('failed'),
-        message: msg.msg
+        message: httpHooks.errorMessage?.(msg.msg) ?? msg.msg
       })
     }
   }
@@ -75,6 +86,7 @@ export const logout = async () => {
     // for a moment.
     clearAuthenticated()
     Data().$reset()
+    httpHooks.onLogout?.()
     router.push('/login')
   }
 }
