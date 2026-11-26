@@ -517,6 +517,8 @@ export default {
       idleInterval: "فاصله بررسی جلسه غیرفعال",
       idleTimeout: "زمان پایان جلسه غیرفعال",
       minIdle: "حداقل جلسات غیرفعال",
+      paddingDefault: "پیش‌فرض",
+      paddingRandom: "تصادفی",
     },
   },
   in: {

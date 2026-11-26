@@ -516,7 +516,9 @@ export default {
     anytls: {
       idleInterval: "Khoảng kiểm tra phiên nhàn rỗi",
       idleTimeout: "Thời gian chờ phiên nhàn rỗi",
-      minIdle: "Số phiên nhàn rỗi tối thiểu"
+      minIdle: "Số phiên nhàn rỗi tối thiểu",
+      paddingDefault: "Mặc định",
+      paddingRandom: "Ngẫu nhiên"
     },
   },
   in: {

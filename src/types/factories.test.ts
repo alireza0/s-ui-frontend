@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { InTypes, createInbound } from './inbounds'
+import { DefaultPaddingScheme } from '@/plugins/paddingScheme'
 import { OutTypes, createOutbound } from './outbounds'
 import { EpTypes, createEndpoint } from './endpoints'
 import { SrvTypes, createSrv } from './services'
@@ -91,5 +92,21 @@ describe('inbound secrets', () => {
     const direct = createInbound(InTypes.Direct) as { psk?: string, password?: string }
     expect(direct.psk).toBeUndefined()
     expect(direct.password).toBeUndefined()
+  })
+})
+
+// A created AnyTLS inbound starts from the library default padding scheme;
+// the form's scheme switch is where the operator trades it for a generated
+// one. A scheme the caller supplies -- an edit, a duplicate -- is kept.
+describe('anytls padding scheme default', () => {
+  it('starts a new inbound from the default scheme', () => {
+    const made = createInbound(InTypes.AnyTls) as { padding_scheme?: string[] }
+    expect(made.padding_scheme).toEqual(DefaultPaddingScheme)
+  })
+
+  it('keeps a scheme the caller supplied', () => {
+    const custom = ['stop=4', '0=20-20', '1=200-300']
+    const made = createInbound(InTypes.AnyTls, { padding_scheme: custom }) as { padding_scheme?: string[] }
+    expect(made.padding_scheme).toEqual(custom)
   })
 })
