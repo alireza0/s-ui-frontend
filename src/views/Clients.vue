@@ -242,6 +242,9 @@
             @update:model-value="(val:any) => toggleEnable(item, !!val)"
           />
         </template>
+        <template #item.nodes="{ item }">
+          {{ nodeCount(item) }}
+        </template>
         <template #item.inbounds="{ item }">
           <span>
             <v-tooltip
@@ -437,6 +440,9 @@ import { useDisplay } from 'vuetify'
 import HttpUtils from '@/plugins/httputil'
 
 const { smAndDown } = useDisplay()
+function nodeCount(client: Client) {
+  return client.nodes?.length ?? 0
+}
 
 // A client as it comes back from the panel: saved, so it carries the id and
 // the timestamps that only a client built in the browser is still without.
@@ -494,6 +500,7 @@ const headers = [
   { title: i18n.global.t('client.desc'), key: 'desc' },
   { title: i18n.global.t('client.group'), key: 'group' },
   { title: i18n.global.t('pages.inbounds'), key: 'inbounds', width: 10 },
+  { title: i18n.global.t('nodes.title'), key: 'nodes', width: 10, sortRaw: (a: Client, b: Client) => nodeCount(a) - nodeCount(b) },
   { title: i18n.global.t('actions.action'), key: 'actions', sortable: false },
   // Sorted by what was used, not by the quota: with unlimited clients every
   // volume is 0 and the column did not sort at all (#1277).

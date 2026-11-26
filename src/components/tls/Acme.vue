@@ -196,6 +196,7 @@
       >
         <v-text-field
           v-model="acme.dns01_challenge[item]"
+          :type="/token|secret|password/.test(item) ? 'password' : 'text'"
           :label="$t('tls.acme.dns01Params.' + item)"
           hide-details
         />
@@ -310,7 +311,8 @@ export default {
     // The modal holds the provider union and picks this form with a v-if on
     // the type, which the template checker cannot follow, so it is narrowed by
     // the computed below.
-    data: { type: Object as PropType<certProvider>, required: true }
+    data: { type: Object as PropType<certProvider>, required: true },
+    httpClientItems: { type: Array as PropType<string[]>, default: undefined }
   },
   data() {
     return {
@@ -332,7 +334,7 @@ export default {
       return <acme>this.$props.data
     },
     httpClients(): string[] {
-      return httpClientTags()
+      return this.httpClientItems ?? httpClientTags()
     },
     // Preselect a declared client so the option never leaves an empty
     // reference behind; with none declared the select simply has nothing.

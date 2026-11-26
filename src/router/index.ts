@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from '@/views/Login.vue'
 import Data from '@/store/modules/data'
 import { isAuthenticated } from '@/plugins/auth'
+import { nodeRoute } from '@/features/nodes/navigation'
 
 const routes = [
   {
@@ -35,6 +36,7 @@ const routes = [
         name: 'pages.outbounds',
         component: () => import('@/views/Outbounds.vue'),
       },
+      nodeRoute,
       {
         path: '/services',
         name: 'pages.services',

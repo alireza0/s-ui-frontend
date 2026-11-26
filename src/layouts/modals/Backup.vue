@@ -20,6 +20,11 @@
       </v-card-title>
       <v-divider />
       <v-card-text>
+        <v-checkbox
+          v-model="fullBackup"
+          :label="$t('nodeOnboarding.fullBackup')"
+          hide-details
+        />
         <v-row>
           <v-col cols="auto">
             <v-checkbox
@@ -103,6 +108,7 @@ const props = defineProps<{
 }>()
 
 const exclude = ref<string[]>(["stats", "changes"])
+const fullBackup = ref(true)
 
 watch(() => props.visible, (v) => {
   if (v) {
@@ -111,7 +117,10 @@ watch(() => props.visible, (v) => {
 })
 
 function backup() {
-  const excludeOption = exclude.value.length>0 ? '?exclude=' +exclude.value.join(',') : ''
+  const params = new URLSearchParams()
+  if (exclude.value.length) params.set('exclude', exclude.value.join(','))
+  if (fullBackup.value) params.set('format', 'archive')
+  const excludeOption=params.size?'?'+params.toString():''
   window.location.href = 'api/getdb' + excludeOption
 }
 
@@ -122,7 +131,7 @@ function config() {
 function restore() {
   const fileInput = document.createElement('input')
   fileInput.type = 'file'
-  fileInput.accept = '.db'
+  fileInput.accept = '.db,.zip'
 
   fileInput.addEventListener('change', async (event: Event) => {
     const inputElement = event.target as HTMLInputElement

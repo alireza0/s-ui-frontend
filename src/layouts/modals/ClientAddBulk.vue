@@ -156,6 +156,9 @@
               </v-select>
             </v-col>
           </v-row>
+          <v-row>
+            <v-col><NodeSelect v-model="bulkData.nodes" /></v-col>
+          </v-row>
         </v-container>
       </v-card-text>
       <v-card-actions>
@@ -182,6 +185,7 @@
 
 <script lang="ts">
 import DatePick from '@/components/DateTime.vue'
+import NodeSelect from '@/features/nodes/components/NodeSelect.vue'
 import { push } from 'notivue'
 import RandomUtil from '@/plugins/randomUtil'
 import { Client, createClient, randomConfigs } from '@/types/clients'
@@ -204,7 +208,7 @@ interface PatternToken {
 type PatternPart = string | PatternToken
 
 export default {
-  components: { DatePick },
+  components: { DatePick, NodeSelect },
   props: {
     visible: { type: Boolean, required: true },
     inboundTags: { type: Array as PropType<InboundTag[]>, required: true },
@@ -220,6 +224,7 @@ export default {
         desc: <PatternPart[]>[],
         group: '',
         clientInbounds: <number[]>[],
+        nodes: <number[]>[],
         expiry: 0,
         Volume: 0,
         delayStart: false,
@@ -250,6 +255,7 @@ export default {
         desc: [],
         group: '',
         clientInbounds: [],
+        nodes: [],
         expiry: 0,
         Volume: 0,
         delayStart: false,
@@ -275,6 +281,7 @@ export default {
           name: name,
           config: randomConfigs(name),
           inbounds: this.bulkData.clientInbounds.length > 0 ? this.bulkData.clientInbounds.sort() : [],
+          nodes: [...this.bulkData.nodes].sort((a, b) => a - b),
           links: [],
           volume: this.bulkData.Volume*(1024 ** 3),
           expiry: (this.bulkData.delayStart && !this.bulkData.autoReset) ? 0 : this.bulkData.expiry,

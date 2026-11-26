@@ -26,10 +26,19 @@
           :items="Object.keys(trspTypes).map((key,index) => ({title: key, value: Object.values(trspTypes)[index]}))"
         />
       </v-col>
+      <v-col
+        v-if="$slots['host-source'] && (Transport.type === trspTypes.HTTP || Transport.type === trspTypes.HTTPUpgrade)"
+        cols="12"
+        sm="6"
+        md="4"
+      >
+        <slot name="host-source" />
+      </v-col>
     </v-row>
     <Http
       v-if="Transport.type == trspTypes.HTTP"
       :transport="Transport"
+      :hide-hosts="hostFromSource"
     />
     <WebSocket
       v-if="Transport.type == trspTypes.WebSocket"
@@ -42,6 +51,7 @@
     <HttpUpgrade
       v-if="Transport.type == trspTypes.HTTPUpgrade"
       :transport="Transport"
+      :hide-hosts="hostFromSource"
     />
   </v-card>
 </template>
@@ -65,7 +75,8 @@ export default {
   props: {
     // Inbounds and outbounds both bind here, so the prop asks only for an
     // object and the narrowing happens below.
-    data: { type: Object as PropType<object>, required: true }
+    data: { type: Object as PropType<object>, required: true },
+    hostFromSource: Boolean
   },
   data() {
     return {

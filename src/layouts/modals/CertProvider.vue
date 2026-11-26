@@ -6,6 +6,10 @@
     <v-card class="rounded-lg">
       <v-card-title class="d-flex align-center">
         {{ $t('actions.' + title) + " " + $t('tls.provider.title') }}
+        <span
+          v-if="contextName"
+          class="ms-2 text-body-2"
+        >{{ contextName }}</span>
         <v-spacer />
         <DocLink section="tls" />
       </v-card-title>
@@ -50,10 +54,12 @@
         <AcmeVue
           v-if="provider.type == 'acme'"
           :data="provider"
+          :http-client-items="httpClients"
         />
         <OriginCaVue
           v-else-if="provider.type == 'cloudflare-origin-ca'"
           :data="provider"
+          :http-client-items="httpClients"
         />
         <v-row v-else-if="provider.type == 'tailscale'">
           <v-col cols="12">
@@ -108,6 +114,9 @@ export default {
     data: { type: String, required: true },
     index: { type: Number, required: true },
     tags: { type: Array as PropType<string[]>, required: true },
+    contextName: { type: String, default: '' },
+    remote: { type: Boolean, default: false },
+    httpClients: { type: Array as PropType<string[]>, default: undefined },
   },
   emits: ['close', 'save'],
   data() {
@@ -126,6 +135,7 @@ export default {
         { title: 'Tailscale', value: 'tailscale' },
         { title: 'Cloudflare Origin CA', value: 'cloudflare-origin-ca' },
       ]
+      if (this.remote) return all.filter(t => t.value !== 'tailscale')
       if (Data().os === 'windows' && this.provider.type !== 'acme') {
         return all.filter(t => t.value !== 'acme')
       }

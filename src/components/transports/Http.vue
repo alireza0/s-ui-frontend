@@ -1,6 +1,7 @@
 <template>
   <v-row>
     <v-col
+      v-if="!hideHosts"
       cols="12"
       sm="6"
       md="4"
@@ -89,6 +90,7 @@ interface HttpData {
 // The parent owns the object and this component edits it in place, so it is a
 // model rather than a plain prop.
 const model = defineModel<Transport>('transport', { required: true })
+defineProps<{hideHosts?: boolean}>()
 
 // The parent holds a union and picks this component with a v-if on the type,
 // which the template checker cannot follow, so narrow once here. The computed

@@ -109,6 +109,8 @@ import { computed } from 'vue'
 import { httpClientTags } from '@/plugins/httpClient'
 import { certProvider, originCaProvider } from '@/types/tls'
 
+const props = defineProps<{ httpClientItems?: string[] }>()
+
 // The parent owns the object and this component edits it in place, so it is a
 // model rather than a plain prop.
 const model = defineModel<certProvider>('data', { required: true })
@@ -126,7 +128,7 @@ const requestTypes: { title: string, value: 'origin-rsa' | 'origin-ecc' }[] = [
 // The only validities Cloudflare accepts, in days.
 const validities: number[] = [7, 30, 90, 365, 730, 1095, 5475]
 
-const httpClients = computed((): string[] => httpClientTags())
+const httpClients = computed((): string[] => props.httpClientItems ?? httpClientTags())
 
 const domains = computed({
   get: (): string => data.value.domain ? data.value.domain.join(',') : '',

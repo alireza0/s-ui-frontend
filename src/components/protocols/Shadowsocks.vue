@@ -10,8 +10,9 @@
           v-model="data.method"
           hide-details
           :label="$t('in.ssMethod')"
-          :items="ssMethods"
-          @update:model-value="direction == 'in' ? changeMethod($event) : undefined"
+          :items="allowedMethods ?? ssMethods"
+          :readonly="methodReadonly"
+          @update:model-value="direction == 'in' && !hidePassword ? changeMethod($event) : undefined"
         />
       </v-col>
       <v-col
@@ -30,7 +31,7 @@
         <UoT :data="data" />
       </v-col>
       <v-col
-        v-if="direction == 'in'"
+        v-if="direction == 'in' && !hideManaged"
         cols="12"
         sm="6"
         md="4"
@@ -43,7 +44,7 @@
         />
       </v-col>
     </v-row>
-    <v-row v-if="data.method != 'none' || direction == 'out'">
+    <v-row v-if="!hidePassword && (data.method != 'none' || direction == 'out')">
       <v-col
         cols="12"
         sm="8"
@@ -114,6 +115,10 @@ const model = defineModel<Inbound | Outbound>('data', { required: true })
 const data = computed(() => model.value as unknown as ShadowsocksData)
 
 defineProps<{
+  allowedMethods?: string[]
+  hideManaged?: boolean
+  hidePassword?: boolean
+  methodReadonly?: boolean
   direction: 'in' | 'out'
 }>()
 

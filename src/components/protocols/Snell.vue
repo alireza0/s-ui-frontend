@@ -22,6 +22,7 @@
         md="4"
       >
         <v-text-field
+          v-if="!hidePsk"
           v-model="data.psk"
           :label="$t('types.snell.psk')"
           hide-details
@@ -137,6 +138,7 @@ const model = defineModel<Inbound | Outbound>('data', { required: true })
 const data = computed(() => model.value as unknown as SnellData)
 
 const props = defineProps<{
+  hidePsk?: boolean
   direction: 'in' | 'out' | 'out_json'
 }>()
 

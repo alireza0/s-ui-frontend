@@ -59,6 +59,7 @@
         />
       </v-col>
       <v-col
+        v-if="!options.managedObfs"
         cols="12"
         sm="6"
         md="4"
@@ -101,6 +102,33 @@
       </template>
     </v-row>
     <template v-if="direction == 'in'">
+      <v-row>
+        <v-col
+          cols="12"
+          sm="6"
+          md="4"
+        >
+          <v-select
+            v-model="data.bbr_profile"
+            :items="['standard', 'conservative', 'aggressive']"
+            label="BBR Profile"
+            clearable
+            hide-details
+          />
+        </v-col>
+        <v-col
+          cols="12"
+          sm="6"
+          md="4"
+        >
+          <v-switch
+            v-model="data.brutal_debug"
+            label="Brutal Debug"
+            color="primary"
+            hide-details
+          />
+        </v-col>
+      </v-row>
       <v-card
         v-if="data.masquerade != undefined"
         subtitle="Hysteria2 Masquerade"
@@ -268,7 +296,7 @@
               <v-switch
                 v-model="optionObfs"
                 color="primary"
-                :label="$t('types.hy.obfs')"
+                :label="options.obfsLabel ?? $t('types.hy.obfs')"
                 hide-details
               />
             </v-list-item>
@@ -307,6 +335,9 @@
     <Hysteria2Realm
       v-if="data.realm != undefined"
       :data="data.realm"
+      :hide-token="options.hideRealmToken"
+      :managed-token="options.managedObfs"
+      :token-configured="options.realmTokenConfigured"
     />
     <QuicFields
       :data="model"
@@ -346,6 +377,8 @@ interface Hysteria2Data {
   down_mbps?: number
   obfs?: Hysteria2Obfs
   masquerade?: string | Hysteria2Masquerade
+  bbr_profile?: 'standard' | 'conservative' | 'aggressive'
+  brutal_debug?: boolean
   password?: string
   server?: string
   server_port?: number
@@ -365,6 +398,10 @@ const data = computed(() => model.value as unknown as Hysteria2Data)
 
 const options = defineProps<{
   direction: 'in' | 'out' | 'out_json'
+  managedObfs?: boolean
+  obfsLabel?: string
+  hideRealmToken?: boolean
+  realmTokenConfigured?: boolean
 }>()
 
 const menu = ref(false)
