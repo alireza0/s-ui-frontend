@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { DefaultPaddingScheme, MaxBound, generatePaddingScheme, isDefaultPaddingScheme } from './paddingScheme'
+import { DefaultPaddingScheme, MaxBound, generatePaddingScheme, isDefaultPaddingScheme, paddingSchemeMode } from './paddingScheme'
 
 // A generated scheme must keep the default's shape exactly -- same lines,
 // same segments, same check marks, same fixed sizes -- and move only the
@@ -50,5 +50,15 @@ describe('generatePaddingScheme', () => {
     expect(isDefaultPaddingScheme(generatePaddingScheme())).toBe(false)
     expect(isDefaultPaddingScheme([])).toBe(false)
     expect(isDefaultPaddingScheme(undefined)).toBe(false)
+  })
+
+  it('reads an empty field as the default side of the switch', () => {
+    // Empty means the core default, so the switch must not call it random.
+    expect(paddingSchemeMode(undefined)).toBe('default')
+    expect(paddingSchemeMode([])).toBe('default')
+    expect(paddingSchemeMode(['', '  '])).toBe('default')
+    expect(paddingSchemeMode([...DefaultPaddingScheme])).toBe('default')
+    expect(paddingSchemeMode(generatePaddingScheme())).toBe('random')
+    expect(paddingSchemeMode(['stop=4', '0=20-20'])).toBe('random')
   })
 })

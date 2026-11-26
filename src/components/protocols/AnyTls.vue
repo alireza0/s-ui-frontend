@@ -99,7 +99,7 @@
 import { computed } from 'vue'
 import { Inbound } from '@/types/inbounds'
 import { Outbound } from '@/types/outbounds'
-import { DefaultPaddingScheme, generatePaddingScheme, isDefaultPaddingScheme } from '@/plugins/paddingScheme'
+import { DefaultPaddingScheme, generatePaddingScheme, paddingSchemeMode } from '@/plugins/paddingScheme'
 
 // One form serves both directions: the inbound side carries the padding
 // scheme, the outbound side the password and the idle session tuning.
@@ -133,11 +133,13 @@ const padding_scheme = computed({
 })
 
 // The scheme switch under the textarea. Its state is derived from the text:
-// the library default reads as "default", anything else as "random".
-// Picking a side rewrites the text -- default restores the library scheme,
-// random rolls a fresh generated one -- and the textarea stays editable
-// either way, so a hand-tuned scheme is just a scheme that is not default.
-const schemeMode = computed(() => (isDefaultPaddingScheme(data.value.padding_scheme) ? 'default' : 'random'))
+// the library default -- and an empty field, which means the core default --
+// read as "default", anything else as "random". Picking a side rewrites the
+// text -- default restores the library scheme, random rolls a fresh
+// generated one -- and the textarea stays editable either way, so a
+// hand-tuned scheme is just a scheme that is not default, and clearing the
+// field is a real choice that nothing rewrites.
+const schemeMode = computed(() => paddingSchemeMode(data.value.padding_scheme))
 const useDefaultScheme = () => { data.value.padding_scheme = [...DefaultPaddingScheme] }
 const useRandomScheme = () => { data.value.padding_scheme = generatePaddingScheme() }
 

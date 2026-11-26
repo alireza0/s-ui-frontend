@@ -18,11 +18,9 @@ export const DefaultPaddingScheme: string[] = [
 ]
 
 // How far a range bound may move from the default, in percent, and the
-// largest bound a generated scheme may use. The backend generator in
-// service/anytls_padding.go applies the same rules; the two implementations
-// produce different schemes, never shared ones, which is the point. These
-// are the generator's only tuning knobs; the tests assert the shape
-// invariants, never these values, so retuning needs no test surgery.
+// largest bound a generated scheme may use. These are the generator's only
+// tuning knobs; the tests assert the shape invariants, never these values,
+// so retuning needs no test surgery.
 const JitterPct = 20
 export const MaxBound = 1400
 
@@ -48,6 +46,21 @@ function jitterRange(lo: number, hi: number): [number, number] {
   return [newLo, newHi]
 }
 
+// Processes a single segment string (e.g., "100-400" or "c").
+// If it's a jitter-able range, returns a new jittered range string.
+// Otherwise, returns the original segment.
+function processSegment(segment: string): string {
+  const match = /^(\d+)-(\d+)$/.exec(segment)
+  if (!match) return segment // Not a range (e.g., "c")
+
+  const lo = Number(match[1])
+  const hi = Number(match[2])
+  if (lo === hi) return segment // Fixed range (e.g., "30-30")
+
+  const [newLo, newHi] = jitterRange(lo, hi)
+  return `${newLo}-${newHi}`
+}
+
 // Derive one installation's scheme from the default. The structure is
 // preserved exactly -- same stop, same packet lines, same segment order,
 // same check marks -- because the shape is what makes the traffic
@@ -56,26 +69,29 @@ function jitterRange(lo: number, hi: number): [number, number] {
 // lives.
 export function generatePaddingScheme(): string[] {
   return DefaultPaddingScheme.map((line) => {
-    const eq = line.indexOf('=')
-    if (eq < 0) return line
-    const key = line.slice(0, eq)
-    if (key === 'stop') return line
-    const segments = line
-      .slice(eq + 1)
-      .split(',')
-      .map((segment) => {
-        const match = /^(\d+)-(\d+)$/.exec(segment)
-        if (!match) return segment
-        const lo = Number(match[1])
-        const hi = Number(match[2])
-        if (lo === hi) return segment
-        const [newLo, newHi] = jitterRange(lo, hi)
-        return `${newLo}-${newHi}`
-      })
-    return `${key}=${segments.join(',')}`
+    const [key, value] = line.split('=', 2)
+    if (value === undefined || key === 'stop') {
+      return line
+    }
+    const newSegments = value.split(',').map(processSegment)
+    return `${key}=${newSegments.join(',')}`
   })
 }
 
 export function isDefaultPaddingScheme(lines?: string[]): boolean {
-  return !!lines && lines.join('\n') === DefaultPaddingScheme.join('\n')
+  if (!lines || lines.length !== DefaultPaddingScheme.length) {
+    return false
+  }
+  return lines.every((line, index) => line === DefaultPaddingScheme[index])
+}
+
+// Which side of the form's Default / Random switch a scheme belongs to.
+// An empty field is the default side: leaving the scheme empty means the
+// core default, and it keeps following the library when the library's
+// default changes, so empty must never read as "random".
+export function paddingSchemeMode(lines?: string[]): 'default' | 'random' {
+  if (!lines || lines.join('').trim() === '') {
+    return 'default'
+  }
+  return isDefaultPaddingScheme(lines) ? 'default' : 'random'
 }
