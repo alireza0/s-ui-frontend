@@ -563,6 +563,7 @@ export default {
     idleTimeout: "Таймаут бездействия",
     pingTimeout: "Таймаут пинга",
     grpcServiceName: "Имя службы",
+    grpcServiceNameSlash: "Содержит «/»: большинство клиентов (Xray, sing-box) не подключатся. Используйте буквы, цифры, - _ .",
     grpcPws: "Разрешить без потока",
   },
   mux: {

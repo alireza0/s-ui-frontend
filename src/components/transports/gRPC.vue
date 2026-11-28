@@ -8,7 +8,11 @@
       <v-text-field
         v-model="transport.service_name"
         :label="$t('transport.grpcServiceName')"
-        hide-details
+        :hint="hasSlash ? $t('transport.grpcServiceNameSlash') : ''"
+        :persistent-hint="hasSlash"
+        :hide-details="!hasSlash"
+        :base-color="hasSlash ? 'warning' : undefined"
+        :color="hasSlash ? 'warning' : undefined"
       />
     </v-col>
     <v-col
@@ -76,6 +80,11 @@ const model = defineModel<Transport>('transport', { required: true })
 // which the template checker cannot follow, so narrow once here. The computed
 // returns the same object, so edits still reach the parent.
 const transport = computed(() => model.value as unknown as GrpcData)
+
+// Clients build the gRPC path from a name with "/" in different ways: the
+// lite sing-box client escapes it, Xray reads a leading "/" as a custom path.
+// Only another full-gRPC sing-box, such as another panel, matches this server.
+const hasSlash = computed(() => (transport.value.service_name ?? '').includes('/'))
 
 const idle_timeout = computed({
   get: (): number | '' => transport.value.idle_timeout ? parseInt(transport.value.idle_timeout.replace('s', '')) : '',

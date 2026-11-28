@@ -563,6 +563,7 @@ export default {
     idleTimeout: "閒置逾時",
     pingTimeout: "Ping 逾時",
     grpcServiceName: "服務名稱",
+    grpcServiceNameSlash: "包含 \"/\"：大多數用戶端（Xray、sing-box）將無法連線。請僅使用字母、數字和 - _ .",
     grpcPws: "允許無串流時保持連線",
   },
   mux: {

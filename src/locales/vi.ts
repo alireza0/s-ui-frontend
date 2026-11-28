@@ -563,6 +563,7 @@ export default {
     idleTimeout: "Thời gian Chờ Chờ đợi",
     pingTimeout: "Thời gian Chờ Ping",
     grpcServiceName: "Tên Dịch vụ",
+    grpcServiceNameSlash: "Chứa \"/\": hầu hết client (Xray, sing-box) sẽ không kết nối được. Chỉ dùng chữ, số và - _ .",
     grpcPws: "Cho phép mà không Có Luồng",
   },
   mux: {

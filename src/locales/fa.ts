@@ -563,6 +563,7 @@ export default {
     idleTimeout: "مهلت بیکاری",
     pingTimeout: "مهلت پینگ",
     grpcServiceName: "نام سرویس",
+    grpcServiceNameSlash: "شامل «/» است: بیشتر کلاینت‌ها (Xray و sing-box) وصل نمی‌شوند. فقط از حروف، اعداد و - _ . استفاده کنید",
     grpcPws: "حفظ ارتباط بدون دیتا",
   },
   mux: {

@@ -563,6 +563,7 @@ export default {
     idleTimeout: "Idle Timeout",
     pingTimeout: "Ping Timeout",
     grpcServiceName: "Service Name",
+    grpcServiceNameSlash: "Contains \"/\": most clients (Xray, sing-box) will not connect. Use letters, digits, - _ .",
     grpcPws: "Permit Without Stream",
   },
   mux: {
